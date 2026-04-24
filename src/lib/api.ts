@@ -141,7 +141,12 @@ export type RealBalances = {
 
 export type WsbTicker = {
   ticker: string;
+  name: string | null;
   mentions: number;
+  mentions_24h_ago: number;
+  rank: number | null;
+  rank_24h_ago: number | null;
+  upvotes: number;
   bullish: number;
   bearish: number;
   neutral: number;
