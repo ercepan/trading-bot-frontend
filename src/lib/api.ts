@@ -182,6 +182,33 @@ export type WsbSnapshotMeta = {
   total_mentions: number;
 };
 
+export type StockSignal = {
+  id: number;
+  ticker: string;
+  signal_type: string;
+  confidence: number;
+  current_price: number | null;
+  entry_zone_low: number | null;
+  entry_zone_high: number | null;
+  stop_loss: number | null;
+  target: number | null;
+  risk_reward: number | null;
+  reasoning: string | null;
+  analyst_score: number | null;
+  news_score: number | null;
+  social_score: number | null;
+  final_score: number | null;
+  rsi_14: number | null;
+  atr_14: number | null;
+  price_5d_change_pct: number | null;
+  price_30d_change_pct: number | null;
+  state: string;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  outcome: string | null;
+};
+
 export type LabRun = {
   id: number;
   created_at: string;
@@ -228,6 +255,9 @@ export const api = {
     fetchJson<WsbTicker[]>(
       `/api/wsb/snapshot/${encodeURIComponent(scraped_at)}?limit=${limit}`,
     ),
+  signals: () => fetchJson<StockSignal[]>(`/api/signals`),
+  signals_history: (limit = 50) =>
+    fetchJson<StockSignal[]>(`/api/signals/history?limit=${limit}`),
   lab_runs: (limit = 30) => fetchJson<LabRun[]>(`/api/lab/runs?limit=${limit}`),
   lab_top: (limit = 10) => fetchJson<LabRun[]>(`/api/lab/top?limit=${limit}`),
   lab_run_detail: (id: number) =>
