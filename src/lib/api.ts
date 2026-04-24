@@ -23,6 +23,32 @@ export type PortfolioSummary = {
   tiers: Tier[];
 };
 
+type RawTier = {
+  tier_id: string;
+  equity: number;
+  initial_equity: number;
+  last_updated?: string;
+};
+
+type RawConfig = {
+  name: string;
+  allocation: number;
+  market: string;
+  leverage: number;
+  risk_pct: number;
+  symbol_spot: string | null;
+  symbol_fut: string | null;
+  description?: string;
+};
+
+type RawPortfolio = {
+  tiers: RawTier[];
+  total_equity: number;
+  total_initial: number;
+  total_pnl_pct: number;
+  tier_config: Record<string, RawConfig>;
+};
+
 export type Position = {
   id: number;
   tier_id: string;
@@ -76,8 +102,37 @@ async function fetchJson<T>(path: string): Promise<T> {
   return res.json();
 }
 
+async function fetchPortfolio(): Promise<PortfolioSummary> {
+  const raw = await fetchJson<RawPortfolio>("/api/portfolio");
+  const tiers: Tier[] = raw.tiers.map((t) => {
+    const cfg = raw.tier_config[t.tier_id];
+    const pnl_pct =
+      t.initial_equity > 0 ? ((t.equity - t.initial_equity) / t.initial_equity) * 100 : 0;
+    return {
+      tier_id: t.tier_id,
+      name: cfg?.name ?? t.tier_id,
+      equity: t.equity,
+      initial_equity: t.initial_equity,
+      pnl_pct,
+      market: cfg?.market ?? "—",
+      allocation: cfg?.allocation ?? 0,
+      leverage: cfg?.leverage ?? 1,
+      risk_pct: cfg?.risk_pct ?? 0,
+      symbol: cfg?.symbol_fut ?? cfg?.symbol_spot ?? null,
+    };
+  });
+  const total_pnl = raw.total_equity - raw.total_initial;
+  return {
+    total_equity: raw.total_equity,
+    starting_capital: raw.total_initial,
+    total_pnl,
+    total_pnl_pct: raw.total_pnl_pct,
+    tiers,
+  };
+}
+
 export const api = {
-  portfolio: () => fetchJson<PortfolioSummary>("/api/portfolio"),
+  portfolio: fetchPortfolio,
   positions: () => fetchJson<Position[]>("/api/positions"),
   history: () => fetchJson<Trade[]>("/api/history"),
   stats: () => fetchJson<TradeStats>("/api/stats"),

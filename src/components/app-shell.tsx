@@ -106,14 +106,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   const active =
                     item.href === "/"
                       ? pathname === "/"
-                      : pathname?.startsWith(item.href);
+                      : !!pathname?.startsWith(item.href);
                   return (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton asChild isActive={active} tooltip={item.label}>
-                        <Link href={item.href}>
-                          <Icon className="size-4" />
-                          <span>{item.label}</span>
-                        </Link>
+                      <SidebarMenuButton
+                        render={<Link href={item.href} />}
+                        isActive={active}
+                        tooltip={item.label}
+                      >
+                        <Icon className="size-4" />
+                        <span>{item.label}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
