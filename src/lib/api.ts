@@ -162,6 +162,24 @@ export type WsbHistory = {
   scraped_at: string;
 };
 
+export type LabRun = {
+  id: number;
+  created_at: string;
+  model: string;
+  indicators_used: string;
+  timeframe: string;
+  strategy_name: string;
+  baseline_name: string;
+  baseline_return: number;
+  baseline_dd: number;
+  new_return: number;
+  new_dd: number;
+  new_calmar: number;
+  new_trades: number;
+  new_win_rate: number;
+  beats_baseline: number;
+};
+
 export const api = {
   portfolio: fetchPortfolio,
   positions: () => fetchJson<Position[]>("/api/positions"),
@@ -173,6 +191,8 @@ export const api = {
   wsb_radar: (limit = 20) => fetchJson<WsbTicker[]>(`/api/wsb/radar?limit=${limit}`),
   wsb_ticker: (ticker: string, days = 7) =>
     fetchJson<WsbHistory[]>(`/api/wsb/ticker/${encodeURIComponent(ticker)}?days=${days}`),
+  lab_runs: (limit = 30) => fetchJson<LabRun[]>(`/api/lab/runs?limit=${limit}`),
+  lab_top: (limit = 10) => fetchJson<LabRun[]>(`/api/lab/top?limit=${limit}`),
   health: () => fetchJson<{ status: string }>("/health"),
 };
 

@@ -10,6 +10,7 @@ import {
   Wifi,
   WifiOff,
   Radar,
+  FlaskConical,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,6 +39,7 @@ const nav = [
   { href: "/positions", label: "Açık Pozisyonlar", icon: TrendingUp },
   { href: "/history", label: "Geçmiş", icon: History },
   { href: "/wsb", label: "WSB Radar", icon: Radar },
+  { href: "/lab", label: "Strategy Lab", icon: FlaskConical },
   { href: "/errors", label: "Hatalar", icon: AlertTriangle },
   { href: "/settings", label: "Ayarlar", icon: Settings },
 ];
