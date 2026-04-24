@@ -24,7 +24,8 @@ import {
   Activity,
   Target,
 } from "lucide-react";
-import { api, fmtPct, fmtUsd, PortfolioSummary, TradeStats } from "@/lib/api";
+import { api, fmtPct, fmtUsd, PortfolioSummary, RealBalances, TradeStats } from "@/lib/api";
+import { Wallet, Coins } from "lucide-react";
 
 function KpiCard({
   title,
@@ -68,6 +69,7 @@ function KpiCard({
 export default function DashboardPage() {
   const [portfolio, setPortfolio] = useState<PortfolioSummary | null>(null);
   const [stats, setStats] = useState<TradeStats | null>(null);
+  const [balances, setBalances] = useState<RealBalances | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
@@ -75,10 +77,15 @@ export default function DashboardPage() {
     let alive = true;
     const load = async () => {
       try {
-        const [p, s] = await Promise.all([api.portfolio(), api.stats()]);
+        const [p, s, b] = await Promise.all([
+          api.portfolio(),
+          api.stats(),
+          api.real_balances().catch(() => null),
+        ]);
         if (!alive) return;
         setPortfolio(p);
         setStats(s);
+        setBalances(b);
         setErr(null);
       } catch (e: unknown) {
         if (!alive) return;
@@ -115,15 +122,13 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <KpiCard
-          title="Toplam Equity"
-          value={fmtUsd(portfolio?.total_equity)}
+          title="MEXC Gerçek Bakiye"
+          value={fmtUsd(balances?.total_usdt, 4)}
           delta={
-            portfolio
+            balances && portfolio
               ? {
-                  value: `${fmtUsd(portfolio.total_pnl)} (${fmtPct(
-                    portfolio.total_pnl_pct,
-                  )})`,
-                  positive: portfolio.total_pnl >= 0,
+                  value: `Sanal: ${fmtUsd(portfolio.total_equity)}`,
+                  positive: true,
                 }
               : null
           }
@@ -173,6 +178,64 @@ export default function DashboardPage() {
           loading={loading}
         />
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>MEXC Bakiye Dağılımı</CardTitle>
+          <CardDescription>
+            Canlı hesaptaki gerçek USDT — spot + futures cüzdanı (kuruşu kuruşuna)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-md border border-border/50 p-4 space-y-1">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Wallet className="size-3.5" /> Spot Cüzdan
+              </div>
+              {loading ? (
+                <Skeleton className="h-7 w-28" />
+              ) : (
+                <div className="text-xl font-semibold tabular-nums">
+                  {fmtUsd(balances?.spot_usdt, 4)}
+                </div>
+              )}
+              {balances?.spot_error ? (
+                <div className="text-[11px] text-red-400">{balances.spot_error}</div>
+              ) : null}
+            </div>
+            <div className="rounded-md border border-border/50 p-4 space-y-1">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Coins className="size-3.5" /> Futures Cüzdan
+              </div>
+              {loading ? (
+                <Skeleton className="h-7 w-28" />
+              ) : (
+                <div className="text-xl font-semibold tabular-nums">
+                  {fmtUsd(balances?.futures_usdt, 4)}
+                </div>
+              )}
+              {balances?.futures_error ? (
+                <div className="text-[11px] text-red-400">{balances.futures_error}</div>
+              ) : null}
+            </div>
+            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-1">
+              <div className="flex items-center gap-2 text-xs text-emerald-400">
+                <DollarSign className="size-3.5" /> Toplam (Live)
+              </div>
+              {loading ? (
+                <Skeleton className="h-7 w-28" />
+              ) : (
+                <div className="text-xl font-semibold tabular-nums text-emerald-400">
+                  {fmtUsd(balances?.total_usdt, 4)}
+                </div>
+              )}
+              <div className="text-[11px] text-muted-foreground">
+                Sanal başlangıç: {fmtUsd(portfolio?.starting_capital)}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

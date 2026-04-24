@@ -131,12 +131,22 @@ async function fetchPortfolio(): Promise<PortfolioSummary> {
   };
 }
 
+export type RealBalances = {
+  spot_usdt: number | null;
+  futures_usdt: number | null;
+  total_usdt: number | null;
+  spot_error: string | null;
+  futures_error: string | null;
+};
+
 export const api = {
   portfolio: fetchPortfolio,
   positions: () => fetchJson<Position[]>("/api/positions"),
   history: () => fetchJson<Trade[]>("/api/history"),
   stats: () => fetchJson<TradeStats>("/api/stats"),
   errors: () => fetchJson<ErrorLog[]>("/api/errors"),
+  errors_full: () => fetchJson<ErrorLog[]>("/api/errors"),
+  real_balances: () => fetchJson<RealBalances>("/api/real_balances"),
   health: () => fetchJson<{ status: string }>("/health"),
 };
 
