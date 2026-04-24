@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 import { api, fmtDate, WsbSnapshotMeta, WsbTicker } from "@/lib/api";
 import {
   TrendingUp,
@@ -270,14 +271,19 @@ export default function WsbPage() {
                       {r.rank ?? "—"}
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-semibold font-mono">${r.ticker}</span>
+                      <Link
+                        href={`/wsb/${r.ticker}`}
+                        className="flex flex-col hover:text-foreground group"
+                      >
+                        <span className="font-semibold font-mono group-hover:underline">
+                          ${r.ticker}
+                        </span>
                         {r.name && (
                           <span className="text-[11px] text-muted-foreground truncate max-w-[180px]">
                             {r.name.replace(/&amp;/g, "&")}
                           </span>
                         )}
-                      </div>
+                      </Link>
                     </TableCell>
                     <TableCell className="text-right tabular-nums font-semibold">
                       {r.mentions}

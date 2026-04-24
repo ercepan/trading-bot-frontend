@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { api, fmtPct, fmtUsd, PortfolioSummary, RealBalances, TradeStats } from "@/lib/api";
 import { Wallet, Coins } from "lucide-react";
+import { EquityCurve } from "@/components/equity-curve";
 
 function KpiCard({
   title,
@@ -178,6 +179,8 @@ export default function DashboardPage() {
           loading={loading}
         />
       </div>
+
+      <EquityCurve />
 
       <Card>
         <CardHeader>

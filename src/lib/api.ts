@@ -194,6 +194,17 @@ export const api = {
   errors: () => fetchJson<ErrorLog[]>("/api/errors"),
   errors_full: () => fetchJson<ErrorLog[]>("/api/errors"),
   real_balances: () => fetchJson<RealBalances>("/api/real_balances"),
+  equity_curve: (days = 90) =>
+    fetchJson<
+      {
+        snapshot_at: string;
+        total_equity: number;
+        total_initial: number;
+        real_spot: number | null;
+        real_futures: number | null;
+        real_total: number | null;
+      }[]
+    >(`/api/equity_curve?days=${days}`),
   wsb_radar: (limit = 20) => fetchJson<WsbTicker[]>(`/api/wsb/radar?limit=${limit}`),
   wsb_ticker: (ticker: string, days = 7) =>
     fetchJson<WsbHistory[]>(`/api/wsb/ticker/${encodeURIComponent(ticker)}?days=${days}`),
@@ -205,6 +216,8 @@ export const api = {
     ),
   lab_runs: (limit = 30) => fetchJson<LabRun[]>(`/api/lab/runs?limit=${limit}`),
   lab_top: (limit = 10) => fetchJson<LabRun[]>(`/api/lab/top?limit=${limit}`),
+  lab_run_detail: (id: number) =>
+    fetchJson<Record<string, unknown>>(`/api/lab/run/${id}`),
   health: () => fetchJson<{ status: string }>("/health"),
 };
 

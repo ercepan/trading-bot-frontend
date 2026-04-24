@@ -19,6 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 import { api, fmtDate, LabRun } from "@/lib/api";
 import { FlaskConical, Trophy, Zap } from "lucide-react";
 
@@ -52,7 +53,9 @@ function RunRow({ run }: { run: LabRun }) {
   return (
     <TableRow>
       <TableCell className="text-xs text-muted-foreground font-mono whitespace-nowrap">
-        #{run.id}
+        <Link href={`/lab/${run.id}`} className="hover:text-foreground hover:underline">
+          #{run.id}
+        </Link>
       </TableCell>
       <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
         {fmtDate(run.created_at)}
