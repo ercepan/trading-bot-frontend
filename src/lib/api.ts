@@ -162,6 +162,12 @@ export type WsbHistory = {
   scraped_at: string;
 };
 
+export type WsbSnapshotMeta = {
+  scraped_at: string;
+  ticker_count: number;
+  total_mentions: number;
+};
+
 export type LabRun = {
   id: number;
   created_at: string;
@@ -191,6 +197,12 @@ export const api = {
   wsb_radar: (limit = 20) => fetchJson<WsbTicker[]>(`/api/wsb/radar?limit=${limit}`),
   wsb_ticker: (ticker: string, days = 7) =>
     fetchJson<WsbHistory[]>(`/api/wsb/ticker/${encodeURIComponent(ticker)}?days=${days}`),
+  wsb_snapshots: (limit = 30) =>
+    fetchJson<WsbSnapshotMeta[]>(`/api/wsb/snapshots?limit=${limit}`),
+  wsb_snapshot_at: (scraped_at: string, limit = 30) =>
+    fetchJson<WsbTicker[]>(
+      `/api/wsb/snapshot/${encodeURIComponent(scraped_at)}?limit=${limit}`,
+    ),
   lab_runs: (limit = 30) => fetchJson<LabRun[]>(`/api/lab/runs?limit=${limit}`),
   lab_top: (limit = 10) => fetchJson<LabRun[]>(`/api/lab/top?limit=${limit}`),
   health: () => fetchJson<{ status: string }>("/health"),

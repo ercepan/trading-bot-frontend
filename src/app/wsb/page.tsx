@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { api, fmtDate, WsbTicker } from "@/lib/api";
+import { api, fmtDate, WsbSnapshotMeta, WsbTicker } from "@/lib/api";
 import {
   TrendingUp,
   TrendingDown,
@@ -27,7 +27,14 @@ import {
   Radar,
   ArrowUp,
   ArrowDown,
+  Clock,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function SentimentBadge({ score }: { score: number }) {
   if (score > 0.2) {
@@ -98,14 +105,42 @@ function MentionChange({ now, prev }: { now: number; prev: number }) {
 
 export default function WsbPage() {
   const [rows, setRows] = useState<WsbTicker[] | null>(null);
+  const [snapshots, setSnapshots] = useState<WsbSnapshotMeta[]>([]);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
+  // Snapshot listesini yükle
+  useEffect(() => {
+    let alive = true;
+    api
+      .wsb_snapshots(30)
+      .then((s) => {
+        if (alive) setSnapshots(s);
+      })
+      .catch(() => {});
+    const t = setInterval(() => {
+      api
+        .wsb_snapshots(30)
+        .then((s) => {
+          if (alive) setSnapshots(s);
+        })
+        .catch(() => {});
+    }, 120_000);
+    return () => {
+      alive = false;
+      clearInterval(t);
+    };
+  }, []);
+
+  // Seçili snapshot veya en son
   useEffect(() => {
     let alive = true;
     const load = async () => {
       try {
-        const r = await api.wsb_radar(30);
+        const r = selectedSnapshot
+          ? await api.wsb_snapshot_at(selectedSnapshot, 30)
+          : await api.wsb_radar(30);
         if (alive) {
           setRows(r);
           setErr(null);
@@ -121,12 +156,18 @@ export default function WsbPage() {
       }
     };
     load();
-    const t = setInterval(load, 60_000);
+    // Sadece "latest" görünümünde 60sn'de bir yenile
+    if (!selectedSnapshot) {
+      const t = setInterval(load, 60_000);
+      return () => {
+        alive = false;
+        clearInterval(t);
+      };
+    }
     return () => {
       alive = false;
-      clearInterval(t);
     };
-  }, []);
+  }, [selectedSnapshot]);
 
   const scrapedAt = rows && rows.length > 0 ? rows[0].scraped_at : null;
 
@@ -142,12 +183,45 @@ export default function WsbPage() {
             mention momentum
           </p>
         </div>
-        {scrapedAt && (
-          <div className="text-right text-xs text-muted-foreground">
-            <div>Son tarama:</div>
-            <div className="font-mono">{fmtDate(scrapedAt)}</div>
-          </div>
-        )}
+        <div className="flex flex-col items-end gap-2">
+          {snapshots.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="inline-flex items-center gap-2 text-xs rounded-md border border-border bg-background px-3 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors">
+                <Clock className="size-3.5" />
+                {selectedSnapshot ? fmtDate(selectedSnapshot) : "Son tarama"}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="max-h-[400px] overflow-y-auto">
+                <DropdownMenuItem onClick={() => setSelectedSnapshot(null)}>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">Son tarama (canlı)</span>
+                    <span className="text-[11px] text-muted-foreground">
+                      otomatik yenilenir
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+                {snapshots.map((s) => (
+                  <DropdownMenuItem
+                    key={s.scraped_at}
+                    onClick={() => setSelectedSnapshot(s.scraped_at)}
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-sm font-mono">{fmtDate(s.scraped_at)}</span>
+                      <span className="text-[11px] text-muted-foreground">
+                        {s.ticker_count} ticker · {s.total_mentions} mention
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {scrapedAt && (
+            <div className="text-right text-xs text-muted-foreground">
+              <div>Görüntülenen:</div>
+              <div className="font-mono">{fmtDate(scrapedAt)}</div>
+            </div>
+          )}
+        </div>
       </div>
 
       {err && (
