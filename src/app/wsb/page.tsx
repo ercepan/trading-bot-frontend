@@ -59,6 +59,60 @@ function SentimentBadge({ score }: { score: number }) {
   );
 }
 
+function ScoreDot({ score, label }: { score: number | null | undefined; label: string }) {
+  if (score == null) {
+    return (
+      <span
+        className="text-[10px] text-muted-foreground/50 tabular-nums"
+        title={`${label}: veri yok`}
+      >
+        —
+      </span>
+    );
+  }
+  const color =
+    score > 0.2
+      ? "text-emerald-400"
+      : score < -0.2
+      ? "text-red-400"
+      : "text-muted-foreground";
+  return (
+    <span
+      className={`text-[10px] tabular-nums ${color}`}
+      title={`${label}: ${score.toFixed(2)}`}
+    >
+      {score >= 0 ? "+" : ""}
+      {score.toFixed(2)}
+    </span>
+  );
+}
+
+function SourceBreakdown({ r }: { r: WsbTicker }) {
+  return (
+    <div className="flex flex-col gap-0.5 font-mono">
+      <div className="flex items-center gap-1">
+        <span className="text-[9px] text-muted-foreground w-8">AN</span>
+        <ScoreDot score={r.analyst_score} label="Analyst" />
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="text-[9px] text-muted-foreground w-8">NW</span>
+        <ScoreDot score={r.news_score} label="News" />
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="text-[9px] text-muted-foreground w-8">PR</span>
+        <ScoreDot
+          score={r.price_change_pct != null ? Math.max(-1, Math.min(1, r.price_change_pct / 5)) : null}
+          label="Price"
+        />
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="text-[9px] text-muted-foreground w-8">SC</span>
+        <ScoreDot score={r.social_score} label="Social" />
+      </div>
+    </div>
+  );
+}
+
 function RankChange({
   rank,
   rank24h,
@@ -256,12 +310,13 @@ export default function WsbPage() {
                 <TableRow>
                   <TableHead className="w-12">#</TableHead>
                   <TableHead>Ticker</TableHead>
-                  <TableHead className="text-right">Mentions</TableHead>
+                  <TableHead className="text-right">Price</TableHead>
+                  <TableHead className="text-right">Mention</TableHead>
                   <TableHead className="text-right">24h Δ</TableHead>
-                  <TableHead>Rank Δ</TableHead>
-                  <TableHead>Sentiment</TableHead>
-                  <TableHead className="text-right">Upvotes</TableHead>
-                  <TableHead>Reddit</TableHead>
+                  <TableHead>Rank</TableHead>
+                  <TableHead>Kaynaklar</TableHead>
+                  <TableHead>Final</TableHead>
+                  <TableHead>Neden</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -285,6 +340,25 @@ export default function WsbPage() {
                         )}
                       </Link>
                     </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {r.price_current != null ? (
+                        <div className="flex flex-col items-end">
+                          <span>${r.price_current.toFixed(2)}</span>
+                          <span
+                            className={`text-[10px] ${
+                              (r.price_change_pct ?? 0) >= 0
+                                ? "text-emerald-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            {(r.price_change_pct ?? 0) >= 0 ? "+" : ""}
+                            {(r.price_change_pct ?? 0).toFixed(1)}%
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
                     <TableCell className="text-right tabular-nums font-semibold">
                       {r.mentions}
                     </TableCell>
@@ -295,22 +369,18 @@ export default function WsbPage() {
                       <RankChange rank={r.rank} rank24h={r.rank_24h_ago} />
                     </TableCell>
                     <TableCell>
-                      <SentimentBadge score={r.sentiment_score} />
-                    </TableCell>
-                    <TableCell className="text-right tabular-nums text-muted-foreground">
-                      {r.upvotes.toLocaleString()}
+                      <SourceBreakdown r={r} />
                     </TableCell>
                     <TableCell>
-                      {r.sample_url ? (
-                        <a
-                          href={r.sample_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
-                        >
-                          search <ExternalLink className="size-3" />
-                        </a>
-                      ) : null}
+                      <SentimentBadge score={r.final_score ?? r.sentiment_score} />
+                    </TableCell>
+                    <TableCell className="max-w-[260px]">
+                      <span
+                        className="text-[11px] text-muted-foreground line-clamp-2"
+                        title={r.news_reason ?? ""}
+                      >
+                        {r.news_reason ?? "—"}
+                      </span>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -154,6 +154,20 @@ export type WsbTicker = {
   sample_title: string;
   sample_url: string;
   scraped_at: string;
+  // FinnHub multi-source enrichment
+  analyst_score: number | null;
+  analyst_strong_buy: number | null;
+  analyst_buy: number | null;
+  analyst_hold: number | null;
+  analyst_sell: number | null;
+  analyst_strong_sell: number | null;
+  news_score: number | null;
+  news_reason: string | null;
+  price_current: number | null;
+  price_change_pct: number | null;
+  social_score: number | null;
+  final_score: number | null;
+  sentiment_label: string | null;
 };
 
 export type WsbHistory = {
