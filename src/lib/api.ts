@@ -139,6 +139,24 @@ export type RealBalances = {
   futures_error: string | null;
 };
 
+export type WsbTicker = {
+  ticker: string;
+  mentions: number;
+  bullish: number;
+  bearish: number;
+  neutral: number;
+  sentiment_score: number;
+  sample_title: string;
+  sample_url: string;
+  scraped_at: string;
+};
+
+export type WsbHistory = {
+  mentions: number;
+  sentiment_score: number;
+  scraped_at: string;
+};
+
 export const api = {
   portfolio: fetchPortfolio,
   positions: () => fetchJson<Position[]>("/api/positions"),
@@ -147,6 +165,9 @@ export const api = {
   errors: () => fetchJson<ErrorLog[]>("/api/errors"),
   errors_full: () => fetchJson<ErrorLog[]>("/api/errors"),
   real_balances: () => fetchJson<RealBalances>("/api/real_balances"),
+  wsb_radar: (limit = 20) => fetchJson<WsbTicker[]>(`/api/wsb/radar?limit=${limit}`),
+  wsb_ticker: (ticker: string, days = 7) =>
+    fetchJson<WsbHistory[]>(`/api/wsb/ticker/${encodeURIComponent(ticker)}?days=${days}`),
   health: () => fetchJson<{ status: string }>("/health"),
 };
 

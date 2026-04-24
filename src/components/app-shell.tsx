@@ -9,6 +9,7 @@ import {
   Bot,
   Wifi,
   WifiOff,
+  Radar,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,6 +37,7 @@ const nav = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/positions", label: "Açık Pozisyonlar", icon: TrendingUp },
   { href: "/history", label: "Geçmiş", icon: History },
+  { href: "/wsb", label: "WSB Radar", icon: Radar },
   { href: "/errors", label: "Hatalar", icon: AlertTriangle },
   { href: "/settings", label: "Ayarlar", icon: Settings },
 ];
