@@ -182,6 +182,31 @@ export type WsbSnapshotMeta = {
   total_mentions: number;
 };
 
+export type BistTicker = {
+  id: number;
+  ticker: string;
+  company_name: string | null;
+  price_current: number | null;
+  price_change_pct: number | null;
+  volume: number | null;
+  market_cap: number | null;
+  news_score: number | null;
+  news_reason: string | null;
+  kap_score: number | null;
+  kap_summary: string | null;
+  kap_count: number;
+  price_score: number | null;
+  final_score: number | null;
+  sentiment_label: string | null;
+  news_count: number;
+  scraped_at: string;
+};
+
+export type BistSnapshotMeta = {
+  scraped_at: string;
+  ticker_count: number;
+};
+
 export type StockSignal = {
   id: number;
   ticker: string;
@@ -246,6 +271,17 @@ export const api = {
         real_total: number | null;
       }[]
     >(`/api/equity_curve?days=${days}`),
+  bist_radar: (limit = 100) => fetchJson<BistTicker[]>(`/api/bist/radar?limit=${limit}`),
+  bist_snapshots: (limit = 30) =>
+    fetchJson<BistSnapshotMeta[]>(`/api/bist/snapshots?limit=${limit}`),
+  bist_snapshot_at: (scraped_at: string, limit = 100) =>
+    fetchJson<BistTicker[]>(
+      `/api/bist/snapshot/${encodeURIComponent(scraped_at)}?limit=${limit}`,
+    ),
+  bist_ticker: (ticker: string, days = 30) =>
+    fetchJson<{ scraped_at: string; price_current: number; price_change_pct: number; final_score: number; news_score: number | null; kap_score: number | null }[]>(
+      `/api/bist/ticker/${encodeURIComponent(ticker)}?days=${days}`,
+    ),
   wsb_radar: (limit = 20) => fetchJson<WsbTicker[]>(`/api/wsb/radar?limit=${limit}`),
   wsb_ticker: (ticker: string, days = 7) =>
     fetchJson<WsbHistory[]>(`/api/wsb/ticker/${encodeURIComponent(ticker)}?days=${days}`),
