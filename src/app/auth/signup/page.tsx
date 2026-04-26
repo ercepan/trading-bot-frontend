@@ -19,9 +19,15 @@ export default function SignupPage() {
   const [code, setCode] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedRisk, setAcceptedRisk] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedTerms || !acceptedRisk) {
+      setErr("Devam etmek için SPK uyarısını ve risk bildirimini onaylamalısın");
+      return;
+    }
     setErr(null);
     setLoading(true);
     try {
@@ -95,6 +101,40 @@ export default function SignupPage() {
               <p className="text-[11px] text-muted-foreground">Yöneticiden aldığın 16 karakterlik kod</p>
             </div>
 
+            <div className="space-y-2 pt-2 border-t border-border/50">
+              <label className="flex items-start gap-2 cursor-pointer text-xs">
+                <input
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                  className="mt-0.5 size-3.5"
+                  disabled={loading}
+                />
+                <span className="text-muted-foreground">
+                  <a href="/terms" target="_blank" className="underline hover:text-foreground">
+                    Kullanım şartlarını ve SPK bilgilendirmesini
+                  </a>{" "}
+                  okudum, anladım, kabul ediyorum.
+                </span>
+              </label>
+              <label className="flex items-start gap-2 cursor-pointer text-xs">
+                <input
+                  type="checkbox"
+                  checked={acceptedRisk}
+                  onChange={(e) => setAcceptedRisk(e.target.checked)}
+                  className="mt-0.5 size-3.5"
+                  disabled={loading}
+                />
+                <span className="text-muted-foreground">
+                  Bu platformun{" "}
+                  <strong className="text-foreground">yatırım tavsiyesi vermediğini</strong>,
+                  yatırım kararlarımın{" "}
+                  <strong className="text-foreground">tamamen kendi sorumluluğumda</strong>{" "}
+                  olduğunu ve yatırdığım sermayeyi kaybetme riskim olduğunu kabul ediyorum.
+                </span>
+              </label>
+            </div>
+
             {err && (
               <div className="rounded-md border border-red-500/30 bg-red-500/5 px-3 py-2 text-xs text-red-400">
                 {err}
@@ -103,7 +143,7 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={loading || !username || !password || !code}
+              disabled={loading || !username || !password || !code || !acceptedTerms || !acceptedRisk}
               className="w-full rounded-md bg-primary text-primary-foreground py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <Sparkles className="size-3.5" />

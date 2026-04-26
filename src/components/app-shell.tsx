@@ -37,6 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { useAuth } from "@/components/auth-context";
 import { LogOut, ShieldCheck, Users } from "lucide-react";
+import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
 
 const navAdmin = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -234,7 +235,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <main className="flex-1 p-4 md:p-6">{children}</main>
+        <SpkFooterNote />
       </SidebarInset>
+      <SpkDisclaimerModal visible={!!user} />
     </SidebarProvider>
   );
 }
