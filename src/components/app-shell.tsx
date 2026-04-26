@@ -35,8 +35,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
+import { useAuth } from "@/components/auth-context";
+import { LogOut, ShieldCheck, Users } from "lucide-react";
 
-const nav = [
+const navAdmin = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/positions", label: "Açık Pozisyonlar", icon: TrendingUp },
   { href: "/history", label: "Geçmiş", icon: History },
@@ -46,6 +48,17 @@ const nav = [
   { href: "/lab", label: "Strategy Lab", icon: FlaskConical },
   { href: "/errors", label: "Hatalar", icon: AlertTriangle },
   { href: "/settings", label: "Ayarlar", icon: Settings },
+];
+
+const navAdminPanel = [
+  { href: "/admin/users", label: "Kullanıcılar", icon: Users },
+  { href: "/admin/codes", label: "Davet Kodları", icon: ShieldCheck },
+];
+
+const navSubscriber = [
+  { href: "/bist", label: "BIST Radar", icon: Globe },
+  { href: "/signals", label: "Stock Signals", icon: Zap },
+  { href: "/wsb", label: "WSB Radar", icon: Radar },
 ];
 
 function HealthBadge() {
@@ -87,6 +100,31 @@ function HealthBadge() {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user, subscription, logout, loading } = useAuth();
+
+  // Auth sayfalarında sidebar yok — direkt content
+  const isAuthPage = pathname?.startsWith("/auth/");
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
+
+  // Yükleniyor veya henüz auth verisi yoksa boş ekran
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">
+        Yükleniyor…
+      </div>
+    );
+  }
+
+  const isAdmin = user.role === "admin";
+  const navItems = isAdmin ? navAdmin : navSubscriber;
+
+  // Subscription gün kalan
+  const daysLeft = subscription?.expires_at
+    ? Math.max(0, Math.ceil((new Date(subscription.expires_at).getTime() - Date.now()) / 86400000))
+    : null;
+
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon">
@@ -98,7 +136,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
               <span className="font-semibold text-sm">Trading Bot</span>
               <span className="text-[11px] text-muted-foreground">
-                BTC · ETH · SOL
+                {user.username} · {isAdmin ? "admin" : "subscriber"}
               </span>
             </div>
           </div>
@@ -109,7 +147,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <SidebarGroupLabel>Navigasyon</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {nav.map((item) => {
+                {navItems.map((item) => {
                   const Icon = item.icon;
                   const active =
                     item.href === "/"
@@ -131,12 +169,53 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          {isAdmin && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Admin</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {navAdminPanel.map((item) => {
+                    const Icon = item.icon;
+                    const active = !!pathname?.startsWith(item.href);
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                          render={<Link href={item.href} />}
+                          isActive={active}
+                          tooltip={item.label}
+                        >
+                          <Icon className="size-4" />
+                          <span>{item.label}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
         </SidebarContent>
         <SidebarFooter>
           <div className="flex items-center justify-between px-2 py-1 group-data-[collapsible=icon]:hidden">
             <span className="text-[11px] text-muted-foreground">v2.0</span>
             <HealthBadge />
           </div>
+          {!isAdmin && daysLeft !== null && (
+            <div className="px-2 pb-2 group-data-[collapsible=icon]:hidden">
+              <div className="text-[10px] text-muted-foreground rounded-md border border-border/50 px-2 py-1 text-center">
+                <span className={daysLeft < 5 ? "text-amber-400" : ""}>{daysLeft}</span> gün kaldı
+              </div>
+            </div>
+          )}
+          <button
+            onClick={logout}
+            className="mx-2 mb-2 flex items-center gap-2 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-accent px-2 py-1.5 group-data-[collapsible=icon]:justify-center"
+            title="Çıkış"
+          >
+            <LogOut className="size-3.5" />
+            <span className="group-data-[collapsible=icon]:hidden">Çıkış</span>
+          </button>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
@@ -144,7 +223,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <SidebarTrigger />
           <Separator orientation="vertical" className="h-5" />
           <div className="text-sm font-medium">
-            {nav.find(
+            {[...navItems, ...(isAdmin ? navAdminPanel : [])].find(
               (n) =>
                 n.href === pathname ||
                 (n.href !== "/" && pathname?.startsWith(n.href)),
