@@ -102,37 +102,51 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2 pt-2 border-t border-border/50">
-              <label className="flex items-start gap-2 cursor-pointer text-xs">
+              <div className="flex items-start gap-2 text-xs">
                 <input
+                  id="accept-terms"
                   type="checkbox"
                   checked={acceptedTerms}
                   onChange={(e) => setAcceptedTerms(e.target.checked)}
-                  className="mt-0.5 size-3.5"
+                  className="mt-0.5 size-3.5 cursor-pointer"
                   disabled={loading}
                 />
-                <span className="text-muted-foreground">
-                  <a href="/terms" target="_blank" className="underline hover:text-foreground">
+                <label
+                  htmlFor="accept-terms"
+                  className="text-muted-foreground cursor-pointer select-none"
+                >
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="underline hover:text-foreground"
+                  >
                     Kullanım şartlarını ve SPK bilgilendirmesini
                   </a>{" "}
                   okudum, anladım, kabul ediyorum.
-                </span>
-              </label>
-              <label className="flex items-start gap-2 cursor-pointer text-xs">
+                </label>
+              </div>
+              <div className="flex items-start gap-2 text-xs">
                 <input
+                  id="accept-risk"
                   type="checkbox"
                   checked={acceptedRisk}
                   onChange={(e) => setAcceptedRisk(e.target.checked)}
-                  className="mt-0.5 size-3.5"
+                  className="mt-0.5 size-3.5 cursor-pointer"
                   disabled={loading}
                 />
-                <span className="text-muted-foreground">
+                <label
+                  htmlFor="accept-risk"
+                  className="text-muted-foreground cursor-pointer select-none"
+                >
                   Bu platformun{" "}
                   <strong className="text-foreground">yatırım tavsiyesi vermediğini</strong>,
                   yatırım kararlarımın{" "}
                   <strong className="text-foreground">tamamen kendi sorumluluğumda</strong>{" "}
                   olduğunu ve yatırdığım sermayeyi kaybetme riskim olduğunu kabul ediyorum.
-                </span>
-              </label>
+                </label>
+              </div>
             </div>
 
             {err && (
