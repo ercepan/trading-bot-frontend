@@ -41,7 +41,7 @@ import { LogOut, ShieldCheck, Users, FileText } from "lucide-react";
 import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
 
 const navAdmin = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/positions", label: "Açık Pozisyonlar", icon: TrendingUp },
   { href: "/history", label: "Geçmiş", icon: History },
   { href: "/wsb", label: "ABD Radar", icon: Radar },
@@ -106,9 +106,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, subscription, logout, loading } = useAuth();
 
-  // Auth sayfalarında sidebar yok — direkt content
+  // Auth sayfalarında, landing'de ve legal sayfalarda sidebar yok — direkt content
   const isAuthPage = pathname?.startsWith("/auth/");
-  if (isAuthPage) {
+  const isPublicPage =
+    pathname === "/" ||
+    pathname === "/terms" ||
+    pathname === "/kvkk";
+  if (isAuthPage || isPublicPage) {
     return <>{children}</>;
   }
 
@@ -156,8 +160,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const active =
-                    item.href === "/"
-                      ? pathname === "/"
+                    item.href === "/dashboard"
+                      ? pathname === "/dashboard"
                       : !!pathname?.startsWith(item.href);
                   return (
                     <SidebarMenuItem key={item.href}>

@@ -22,9 +22,10 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 // Subscriber'a açık rotalar (bunlar dışı admin only)
-const SUBSCRIBER_ROUTES = ["/bist", "/signals", "/wsb", "/auth"];
-// Auth gerekmeyen rotalar
-const PUBLIC_ROUTES = ["/auth/login", "/auth/signup"];
+const SUBSCRIBER_ROUTES = ["/bist", "/signals", "/wsb", "/auth", "/dashboard"];
+// Auth gerekmeyen rotalar (landing + auth + legal)
+const PUBLIC_ROUTES = ["/auth", "/terms", "/kvkk"];
+// "/" tek başına public (root landing)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -65,7 +66,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Route guard
   useEffect(() => {
     if (loading) return;
-    const isPublic = PUBLIC_ROUTES.some((r) => pathname?.startsWith(r));
+    // Root path (/) ve public path'ler herkese açık (landing page için)
+    const isPublic =
+      pathname === "/" || PUBLIC_ROUTES.some((r) => pathname?.startsWith(r));
     if (isPublic) return;
 
     if (!user) {
@@ -99,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(result.token);
     setUser(result.user);
     setSubscription(result.user.subscription || null);
-    router.push(result.user.role === "admin" ? "/" : "/bist");
+    router.push(result.user.role === "admin" ? "/dashboard" : "/bist");
   };
 
   const signup = async (username: string, password: string, code: string) => {
@@ -121,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setUser(null);
     setSubscription(null);
-    router.push("/auth/login");
+    router.push("/");
   };
 
   return (
