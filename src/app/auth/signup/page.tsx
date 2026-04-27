@@ -52,7 +52,7 @@ export default function SignupPage() {
               <CardTitle className="text-xl font-bold tracking-tight">
                 BULLS <span className="text-emerald-400">OF</span> NASDAQ
               </CardTitle>
-              <CardDescription>Hesap oluştur · 1 aylık abonelik (davet kodu)</CardDescription>
+              <CardDescription>Aramıza katıl 🐂 — davet kodunla 30 gün</CardDescription>
             </div>
           </div>
         </CardHeader>

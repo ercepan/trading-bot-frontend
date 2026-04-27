@@ -45,7 +45,7 @@ export default function LoginPage() {
               <CardTitle className="text-xl font-bold tracking-tight">
                 BULLS <span className="text-emerald-400">OF</span> NASDAQ
               </CardTitle>
-              <CardDescription>Sentiment & Signal Lab — Giriş</CardDescription>
+              <CardDescription>Tekrar hoş geldin 👋</CardDescription>
             </div>
           </div>
         </CardHeader>
