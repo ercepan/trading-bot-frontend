@@ -10,7 +10,7 @@ type Source = {
   name: string;
   url?: string;
   purpose: string;
-  cost: "Ücretsiz" | "API key" | "Paid";
+  cost: string;
   rate_limit?: string;
 };
 
@@ -54,8 +54,8 @@ const SOURCES: Source[] = [
     name: "FinnHub",
     url: "https://finnhub.io",
     purpose: "Analyst rating, news sentiment, recommendation trend",
-    cost: "API key (ücretsiz tier)",
-    rate_limit: "60 req/dk",
+    cost: "API key",
+    rate_limit: "60 req/dk (ücretsiz tier)",
   },
   {
     category: "ABD Hisse",
