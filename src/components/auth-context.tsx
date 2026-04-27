@@ -22,7 +22,7 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 // Subscriber'a açık rotalar (bunlar dışı admin only)
-const SUBSCRIBER_ROUTES = ["/bist", "/signals", "/wsb", "/auth", "/dashboard"];
+const SUBSCRIBER_ROUTES = ["/bist", "/signals", "/wsb", "/auth", "/dashboard", "/yenile"];
 // Auth gerekmeyen rotalar (landing + auth + legal)
 const PUBLIC_ROUTES = ["/auth", "/terms", "/kvkk"];
 // "/" tek başına public (root landing)

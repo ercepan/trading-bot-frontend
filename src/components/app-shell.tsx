@@ -13,6 +13,8 @@ import {
   Zap,
   Globe,
   DollarSign,
+  Wallet,
+  Sparkles,
 } from "lucide-react";
 import { BullLogo, BullsOfNasdaqMark } from "@/components/bull-logo";
 import Link from "next/link";
@@ -54,6 +56,7 @@ const navAdmin = [
 
 const navAdminPanel = [
   { href: "/admin/revenue", label: "Revenue & MRR", icon: DollarSign },
+  { href: "/admin/payments", label: "Ödemeler", icon: Wallet },
   { href: "/admin/users", label: "Kullanıcılar", icon: Users },
   { href: "/admin/codes", label: "Davet Kodları", icon: ShieldCheck },
   { href: "/admin/sources", label: "Veri Kaynakları", icon: FileText },
@@ -63,6 +66,7 @@ const navSubscriber = [
   { href: "/bist", label: "BIST Radar", icon: Globe },
   { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
   { href: "/wsb", label: "ABD Radar", icon: Radar },
+  { href: "/yenile", label: "Yenile", icon: Sparkles },
 ];
 
 function HealthBadge() {
