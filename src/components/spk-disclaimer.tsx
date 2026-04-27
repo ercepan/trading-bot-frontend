@@ -38,8 +38,8 @@ export function SpkDisclaimerModal({ visible }: { visible: boolean }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-background border border-border rounded-lg max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-background border border-border rounded-lg max-w-2xl w-full p-6 space-y-4 shadow-2xl my-4 max-h-[92vh] overflow-y-auto">
         <div className="flex items-start gap-3">
           <div className="size-10 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
             <AlertTriangle className="size-5" />

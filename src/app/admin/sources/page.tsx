@@ -166,7 +166,8 @@ export default function AdminSourcesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[600px]">
               <thead>
                 <tr className="border-b border-border text-xs text-muted-foreground">
                   <th className="text-left py-2 w-1/4">Kaynak</th>
@@ -213,6 +214,7 @@ export default function AdminSourcesPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </CardContent>
         </Card>
       ))}

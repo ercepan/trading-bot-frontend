@@ -197,7 +197,8 @@ export default function AdminRevenuePage() {
           {data.expiring_soon.length === 0 ? (
             <div className="text-sm text-muted-foreground">Hepsi 7+ gün üstü, sıkıntı yok.</div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[400px]">
               <thead>
                 <tr className="border-b border-border text-xs text-muted-foreground">
                   <th className="text-left py-2">Kullanıcı</th>
@@ -230,6 +231,7 @@ export default function AdminRevenuePage() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </CardContent>
       </Card>
