@@ -184,11 +184,11 @@ export default function LabPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <FlaskConical className="size-5" /> Strategy Lab
+          <FlaskConical className="size-5" /> Strateji Laboratuvarı
         </h1>
         <p className="text-sm text-muted-foreground">
-          AI-driven strateji üretimi · Claude Haiku indicator'ları kombinleyip
-          backtest ediyor · beats baseline = canlıya aday
+          AI tabanlı strateji üretimi · gösterge kombinasyonlarıyla backtest ·
+          baseline'ı geçen = canlıya aday
         </p>
       </div>
 
@@ -280,8 +280,8 @@ export default function LabPage() {
       <Card className="border-dashed">
         <CardContent className="pt-6 text-xs text-muted-foreground space-y-1">
           <div>
-            <strong className="text-foreground">Nasıl çalışır:</strong> Claude Haiku'ya
-            18 indicator kütüphanesinden 2-4 rastgele seçim verip bunları kombinleyen bir
+            <strong className="text-foreground">Nasıl çalışır:</strong> AI'a
+            18 gösterge kütüphanesinden 2-4 rastgele seçim verip bunları kombinleyen bir
             Python stratejisi yazdırıyoruz.
           </div>
           <div>

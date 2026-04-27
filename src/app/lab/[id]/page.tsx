@@ -92,7 +92,7 @@ export default function LabRunDetailPage({
     return (
       <div className="space-y-4">
         <Link href="/lab" className="text-sm text-muted-foreground flex items-center gap-1">
-          <ArrowLeft className="size-4" /> Strategy Lab
+          <ArrowLeft className="size-4" /> Strateji Laboratuvarı
         </Link>
         <Card className="border-red-500/30 bg-red-500/5">
           <CardContent className="pt-6 text-sm text-red-400">
@@ -110,7 +110,7 @@ export default function LabRunDetailPage({
           href="/lab"
           className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2"
         >
-          <ArrowLeft className="size-4" /> Strategy Lab
+          <ArrowLeft className="size-4" /> Strateji Laboratuvarı
         </Link>
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-2xl font-semibold tracking-tight font-mono">
@@ -253,7 +253,7 @@ export default function LabRunDetailPage({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Code2 className="size-5" /> Claude'un yazdığı kod
+            <Code2 className="size-5" /> AI'ın yazdığı kod
           </CardTitle>
           <CardDescription>
             Model: {run.model} · Strategy: {run.strategy_name}

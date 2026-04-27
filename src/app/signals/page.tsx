@@ -256,7 +256,7 @@ export default function SignalsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <Zap className="size-5" /> Stock Signals
+          <Zap className="size-5" /> Hisse Sinyalleri
         </h1>
         <p className="text-sm text-muted-foreground">
           Topluluk + analist + teknik analiz birleşik sinyal · Semi-auto
