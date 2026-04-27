@@ -110,12 +110,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, subscription, logout, loading } = useAuth();
 
-  // Auth sayfalarında, landing'de ve legal sayfalarda sidebar yok — direkt content
+  // Auth sayfalarında, landing'de, legal sayfalarda ve /satin-al'da sidebar yok
   const isAuthPage = pathname?.startsWith("/auth/");
   const isPublicPage =
     pathname === "/" ||
     pathname === "/terms" ||
-    pathname === "/kvkk";
+    pathname === "/kvkk" ||
+    pathname === "/satin-al";
   if (isAuthPage || isPublicPage) {
     return <>{children}</>;
   }

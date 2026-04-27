@@ -219,6 +219,41 @@ export default function YenilePage() {
             </div>
           )}
 
+          <details className="rounded-md border border-blue-500/20 bg-blue-500/5 mb-4">
+            <summary className="cursor-pointer p-3 text-xs font-medium text-blue-300 flex items-center gap-2">
+              💡 TX hash nereden bulunur?
+            </summary>
+            <div className="px-3 pb-3 text-xs text-muted-foreground space-y-2 leading-relaxed">
+              <div>
+                <strong className="text-foreground">Binance:</strong> Cüzdan → Spot → İşlem
+                Geçmişi → "Para Çek" sekmesi → ilgili işlem → <strong>TxID</strong> kopyala
+                (0x... ile başlar)
+              </div>
+              <div>
+                <strong className="text-foreground">OKX / Bybit / KuCoin:</strong> Çekme
+                Geçmişi → işleme tıkla → <strong>"View on Blockchain"</strong> veya
+                <strong> "TX Hash"</strong> alanını kopyala
+              </div>
+              <div>
+                <strong className="text-foreground">MetaMask / Trust Wallet:</strong>{" "}
+                Activity → işleme bas → "View on BscScan" → adres çubuğundaki
+                <code className="bg-background/60 px-1 rounded mx-1">/tx/0x...</code> kısmı
+              </div>
+              <div>
+                <strong className="text-foreground">Bulamıyorsan:</strong>{" "}
+                <a
+                  href={`https://bscscan.com/address/${info?.address || ""}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-emerald-400 inline-flex items-center gap-1"
+                >
+                  bizim adresin BscScan sayfasına git <ExternalLink className="size-2.5" />
+                </a>{" "}
+                → "Token Transactions" → senin TX'i bul
+              </div>
+            </div>
+          </details>
+
           <form onSubmit={onVerify} className="space-y-3">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground">
@@ -233,7 +268,6 @@ export default function YenilePage() {
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
               />
               <p className="text-[11px] text-muted-foreground">
-                BscScan'de TX'i görmek için:{" "}
                 {txHash.startsWith("0x") && txHash.length === 66 ? (
                   <a
                     href={`https://bscscan.com/tx/${txHash}`}
@@ -241,10 +275,10 @@ export default function YenilePage() {
                     rel="noopener noreferrer"
                     className="underline text-emerald-400 inline-flex items-center gap-1"
                   >
-                    bscscan.com aç <ExternalLink className="size-2.5" />
+                    bscscan.com'da bu TX'i aç <ExternalLink className="size-2.5" />
                   </a>
                 ) : (
-                  <span>0x ile başlayan 66 karakter</span>
+                  <span>0x ile başlayan 66 karakter (32 byte hex)</span>
                 )}
               </p>
             </div>
@@ -273,11 +307,6 @@ export default function YenilePage() {
             </button>
           </form>
 
-          <div className="mt-4 text-[11px] text-muted-foreground space-y-1 border-t border-border/50 pt-3">
-            <div>💡 <strong>Sistem otomatik:</strong> Adres + tutar + token kontrolü, manuel onay yok.</div>
-            <div>🔐 <strong>Güvenli:</strong> Her TX sadece bir kez kullanılabilir.</div>
-            <div>⚡ <strong>Hızlı:</strong> Genelde 30 saniye içinde kod üretilir.</div>
-          </div>
         </CardContent>
       </Card>
 

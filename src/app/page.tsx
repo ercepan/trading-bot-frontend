@@ -89,10 +89,10 @@ export default function LandingPage() {
                   Giriş
                 </Link>
                 <Link
-                  href="/auth/signup"
+                  href="/satin-al"
                   className="inline-flex items-center gap-1.5 text-sm rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-medium px-4 py-2 transition-colors"
                 >
-                  Hesap aç <ArrowRight className="size-3.5" />
+                  Davet kodu al <ArrowRight className="size-3.5" />
                 </Link>
               </>
             )}
@@ -129,21 +129,21 @@ export default function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/auth/signup"
+              href="/satin-al"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/20"
             >
               <Sparkles className="size-4" />
-              Aramıza katıl
+              Davet kodu satın al · $25
             </Link>
             <Link
-              href="#nasil"
+              href="/auth/login"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent text-foreground px-6 py-3 text-base transition-colors"
             >
-              Nasıl çalışır?
+              Davet kodum var · Giriş yap
             </Link>
           </div>
           <p className="mt-6 text-xs text-muted-foreground">
-            Davet kodu gerekli · Tek cihaz · 1 aylık abonelik
+            USDT BEP-20 · Otomatik onay · 30 sn içinde kod ekranda · Tek cihaz, 30 gün
           </p>
         </div>
 
@@ -296,21 +296,21 @@ export default function LandingPage() {
             {[
               {
                 num: "01",
-                title: "Davet kodu al",
+                title: "USDT BEP-20 gönder",
                 desc:
-                  "Telegram'dan ulaş, ödeme bilgisini al ve kripto/USDT ile ödeme yap. Karşılığında 16 karakterlik davet kodun gelir.",
+                  "Davet kodu sayfasında cüzdan adresi gösterilir. Binance/OKX'ten BEP-20 ağı ile $25 USDT yolla. Telegram'a yazmana gerek yok.",
               },
               {
                 num: "02",
-                title: "Hesabını aç",
+                title: "TX hash'i yapıştır → kod anında gelsin",
                 desc:
-                  "Kullanıcı adı + parola + davet kodu. E-posta veya telefon istemiyoruz. Tek cihaza bağlı, 30 gün aktif.",
+                  "Transfer onaylandıktan sonra TX hash'i sayfaya yapıştır. Sistem BscScan üzerinden 30 sn içinde otomatik doğrular ve davet kodun ekranda çıkar.",
               },
               {
                 num: "03",
-                title: "Sinyalleri takip et",
+                title: "Hesabını aç & 30 gün takip",
                 desc:
-                  "BIST + ABD radarları, AI sinyaller ve Telegram bildirimleri otomatik gelir. Sen sadece kararı veriyorsun.",
+                  "Kullanıcı adı + parola + davet kodu. Tek cihaza bağlı, e-posta/telefon istemiyoruz. Sinyaller, sentiment, Telegram bildirimleri açılır.",
               },
             ].map((s) => (
               <div
@@ -375,23 +375,23 @@ export default function LandingPage() {
               ))}
             </ul>
 
-            <Link
-              href="/auth/signup"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
-            >
-              <Sparkles className="size-4" />
-              Davet kodum var, hesap açmak istiyorum
-            </Link>
-            <p className="text-center text-xs text-muted-foreground mt-3">
-              Davet kodun yoksa{" "}
-              <a
-                href="https://t.me/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-foreground inline-flex items-center gap-1"
+            <div className="space-y-2">
+              <Link
+                href="/satin-al"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
               >
-                <Send className="size-3" /> Telegram'dan ulaş
-              </a>
+                <Sparkles className="size-4" />
+                Davet kodu satın al
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent px-6 py-2.5 text-sm transition-colors"
+              >
+                Kodum var → Hesap aç
+              </Link>
+            </div>
+            <p className="text-center text-xs text-muted-foreground mt-3">
+              Otomatik onay · 30 sn içinde kod ekranda
             </p>
           </div>
         </div>
@@ -418,7 +418,7 @@ export default function LandingPage() {
               },
               {
                 q: "Davet kodunu nasıl alırım?",
-                a: "Telegram üzerinden iletişime geçin. Ödeme onaylandığında 16 karakterlik tek-kullanımlık davet kodu gönderilir.",
+                a: "/satin-al sayfasına git, $25 USDT'yi BEP-20 ağı üzerinden gönder, TX hash'i yapıştır. Sistem 30 sn içinde otomatik doğrular ve kodun ekranda çıkar. Telegram'a yazmana gerek yok.",
               },
               {
                 q: "Aboneliğimi nasıl yenilerim?",
@@ -460,16 +460,16 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/auth/signup"
+              href="/satin-al"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
             >
-              <Sparkles className="size-4" /> Hesap aç
+              <Sparkles className="size-4" /> Davet kodu al
             </Link>
             <Link
               href="/auth/login"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent text-foreground px-6 py-3 transition-colors"
             >
-              <Lock className="size-4" /> Giriş yap
+              <Lock className="size-4" /> Hesabım var
             </Link>
           </div>
         </div>

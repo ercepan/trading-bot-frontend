@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -14,10 +15,25 @@ import { Sparkles } from "lucide-react";
 import { BullLogo } from "@/components/bull-logo";
 
 export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">Yükleniyor…</div>}>
+      <SignupForm />
+    </Suspense>
+  );
+}
+
+function SignupForm() {
   const { signup } = useAuth();
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
+
+  // Eğer /satin-al sayfasından geliyorsa kodu URL'den al
+  useEffect(() => {
+    const c = searchParams?.get("code");
+    if (c) setCode(c.toUpperCase());
+  }, [searchParams]);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);

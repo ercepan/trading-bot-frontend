@@ -200,7 +200,48 @@ export const authApi = {
     return res.json() as Promise<{ ok: boolean; username?: string; deleted_subs?: number }>;
   },
 
-  // Payments — Otomatik USDT BEP-20
+  // Payments — Public (auth yok, /satin-al için)
+  paymentPublicInfo: async () => {
+    const res = await fetch(`${API_BASE}/api/payments/public-info`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    return res.json() as Promise<{
+      address: string;
+      network: string;
+      token: string;
+      amount_usd: number;
+      min_amount_usd: number;
+      min_confirmations: number;
+      configured: boolean;
+    }>;
+  },
+
+  buyCodeAnonymous: async (tx_hash: string, contact: string) => {
+    const res = await fetch(`${API_BASE}/api/payments/buy-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tx_hash, contact }),
+    });
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      let msg = `${res.status}`;
+      try {
+        const j = JSON.parse(txt);
+        msg = j.detail || j.error || msg;
+      } catch {}
+      throw new Error(msg);
+    }
+    return res.json() as Promise<{
+      ok: boolean;
+      code: string;
+      amount_usd: number;
+      tx_hash: string;
+      note?: string;
+    }>;
+  },
+
+  // Payments — Authenticated (subscriber yenile)
   paymentInfo: () =>
     getJson<{
       address: string;
