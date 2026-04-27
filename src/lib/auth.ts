@@ -165,6 +165,23 @@ export const authApi = {
       monthly_growth: { ym: string; n: number }[];
     }>("/api/admin/revenue"),
 
+  deleteUser: async (userId: number) => {
+    const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      let msg = `${res.status}`;
+      try {
+        const j = JSON.parse(txt);
+        msg = j.detail || j.error || msg;
+      } catch {}
+      throw new Error(msg);
+    }
+    return res.json() as Promise<{ ok: boolean; username?: string; deleted_subs?: number }>;
+  },
+
   triggerBackup: () =>
     postJson<{
       ok: boolean;

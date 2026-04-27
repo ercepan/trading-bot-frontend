@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authApi } from "@/lib/auth";
 import { fmtDate } from "@/lib/api";
-import { Users } from "lucide-react";
+import { Users, Trash2, Loader2 } from "lucide-react";
 
 type UserRow = {
   id: number;
@@ -44,26 +44,45 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserRow[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<number | null>(null);
+
+  const load = async () => {
+    try {
+      const list = await authApi.listUsers();
+      setUsers(list);
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : "yükleme hatası");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      try {
-        const list = await authApi.listUsers();
-        if (alive) setUsers(list);
-      } catch (e: unknown) {
-        if (alive) setErr(e instanceof Error ? e.message : "yükleme hatası");
-      } finally {
-        if (alive) setLoading(false);
-      }
-    };
     load();
     const t = setInterval(load, 60_000);
-    return () => {
-      alive = false;
-      clearInterval(t);
-    };
+    return () => clearInterval(t);
   }, []);
+
+  const handleDelete = async (u: UserRow) => {
+    const confirmed = window.confirm(
+      `"${u.username}" hesabı kalıcı olarak silinecek.\n\n` +
+        `• Aboneliği iptal edilir\n` +
+        `• Kullandığı davet kodu iptal olur\n` +
+        `• Bu işlem GERİ ALINAMAZ.\n\n` +
+        `Devam edilsin mi?`,
+    );
+    if (!confirmed) return;
+    setDeleting(u.id);
+    setErr(null);
+    try {
+      await authApi.deleteUser(u.id);
+      await load();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Silme başarısız");
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   const stats = {
     total: users?.length ?? 0,
@@ -153,6 +172,7 @@ export default function AdminUsersPage() {
                     <TableHead className="text-right">Kalan gün</TableHead>
                     <TableHead>Cihaz</TableHead>
                     <TableHead>Aktif kod</TableHead>
+                    <TableHead className="text-right">İşlem</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -220,6 +240,25 @@ export default function AdminUsersPage() {
                         </TableCell>
                         <TableCell className="text-xs font-mono text-muted-foreground">
                           {u.sub_code ?? "—"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {u.role === "admin" ? (
+                            <span className="text-xs text-muted-foreground">—</span>
+                          ) : (
+                            <button
+                              onClick={() => handleDelete(u)}
+                              disabled={deleting === u.id}
+                              className="inline-flex items-center gap-1 text-xs rounded-md border border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 px-2 py-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              title="Kullanıcıyı sil"
+                            >
+                              {deleting === u.id ? (
+                                <Loader2 className="size-3 animate-spin" />
+                              ) : (
+                                <Trash2 className="size-3" />
+                              )}
+                              {deleting === u.id ? "Siliniyor…" : "Sil"}
+                            </button>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
