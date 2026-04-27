@@ -13,6 +13,7 @@ import {
   FlaskConical,
   Zap,
   Globe,
+  DollarSign,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,7 +37,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api";
 import { useAuth } from "@/components/auth-context";
-import { LogOut, ShieldCheck, Users } from "lucide-react";
+import { LogOut, ShieldCheck, Users, FileText } from "lucide-react";
 import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
 
 const navAdmin = [
@@ -52,8 +53,10 @@ const navAdmin = [
 ];
 
 const navAdminPanel = [
+  { href: "/admin/revenue", label: "Revenue & MRR", icon: DollarSign },
   { href: "/admin/users", label: "Kullanıcılar", icon: Users },
   { href: "/admin/codes", label: "Davet Kodları", icon: ShieldCheck },
+  { href: "/admin/sources", label: "Veri Kaynakları", icon: FileText },
 ];
 
 const navSubscriber = [

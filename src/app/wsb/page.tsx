@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { api, fmtDate, WsbSnapshotMeta, WsbTicker } from "@/lib/api";
+import { AdminOnly } from "@/components/admin-only";
 import {
   TrendingUp,
   TrendingDown,
@@ -294,7 +295,7 @@ export default function WsbPage() {
             </span>
           </CardTitle>
           <CardDescription>
-            APE Wisdom aggregate · Claude Haiku sentiment · rank diff 24h
+            Topluluk mention agregasyonu · AI sentiment · 24h sıralama değişimi
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -396,25 +397,27 @@ export default function WsbPage() {
 
       <Card className="border-dashed">
         <CardContent className="pt-6 text-xs text-muted-foreground space-y-1">
-          <div>
-            <strong className="text-foreground">Veri kaynağı:</strong>{" "}
-            <a
-              href="https://apewisdom.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-foreground"
-            >
-              apewisdom.io
-            </a>{" "}
-            — r/wallstreetbets'i 7/24 scrape edip agregeli mention sayıları sunar.
-          </div>
+          <AdminOnly>
+            <div>
+              <strong className="text-foreground">Veri kaynağı (admin):</strong>{" "}
+              <a
+                href="https://apewisdom.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                apewisdom.io
+              </a>{" "}
+              — r/wallstreetbets'i 7/24 scrape edip agregeli mention sayıları sunar.
+            </div>
+          </AdminOnly>
           <div>
             <strong className="text-foreground">Rank Δ:</strong> son 24 saatte kaç
             basamak yükseldi/indi. ↑5 = rank 7'den 2'ye çıkmış (yükselen momentum).
           </div>
           <div>
-            <strong className="text-foreground">Sentiment:</strong> Claude Haiku, top
-            ticker'ların mention trendine bakıp bullish/bearish/neutral tahmini yapar.
+            <strong className="text-foreground">Sentiment:</strong> top ticker'ların
+            mention trendine bakıp bullish/bearish/neutral tahmini yapar.
           </div>
         </CardContent>
       </Card>

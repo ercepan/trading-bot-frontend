@@ -259,8 +259,8 @@ export default function SignalsPage() {
           <Zap className="size-5" /> Stock Signals
         </h1>
         <p className="text-sm text-muted-foreground">
-          WSB + FinnHub (analyst/news/price) + teknik analiz · Semi-auto
-          (sen Midas'ta manuel al/sat) · 6 saatte bir güncellenir
+          Topluluk + analist + teknik analiz birleşik sinyal · Semi-auto
+          (Midas'ta manuel al/sat) · 2 saatte bir güncellenir
         </p>
       </div>
 

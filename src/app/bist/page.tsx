@@ -20,6 +20,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, fmtDate, BistSnapshotMeta, BistTicker } from "@/lib/api";
+import { AdminOnly } from "@/components/admin-only";
 import {
   Globe,
   TrendingUp,
@@ -170,8 +171,7 @@ export default function BistPage() {
             <Globe className="size-5" /> BIST100 Radar
           </h1>
           <p className="text-sm text-muted-foreground">
-            Türk borsası — yfinance + KAP resmi açıklama + Türkçe haber + Claude
-            Haiku sentiment
+            Türk borsası · resmi açıklama + Türkçe haber + AI sentiment
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">
@@ -396,20 +396,22 @@ export default function BistPage() {
         </CardContent>
       </Card>
 
-      <Card className="border-dashed">
-        <CardContent className="pt-6 text-xs text-muted-foreground space-y-1.5">
-          <div>
-            <strong className="text-foreground">Veri kaynakları:</strong>
-          </div>
-          <div>📊 <strong>yfinance</strong>: BIST hisse fiyat + hacim (gerçek-zamanlı, ücretsiz)</div>
-          <div>📋 <strong>KAP</strong>: Kamuyu Aydınlatma Platformu — şirketlerin resmi açıklamaları (en güçlü sinyal)</div>
-          <div>📰 <strong>Bigpara</strong>: Türkçe finans haberleri (her hisse için son 5 başlık)</div>
-          <div>🤖 <strong>Claude Haiku</strong>: Türkçe haberleri ve KAP açıklamalarını okuyup bullish/bearish etiketler</div>
-          <div className="pt-2">
-            <strong className="text-foreground">Final formül:</strong> 0.45×News + 0.25×KAP + 0.30×Price
-          </div>
-        </CardContent>
-      </Card>
+      <AdminOnly>
+        <Card className="border-dashed">
+          <CardContent className="pt-6 text-xs text-muted-foreground space-y-1.5">
+            <div>
+              <strong className="text-foreground">Veri kaynakları (admin):</strong>
+            </div>
+            <div>📊 <strong>yfinance</strong>: BIST hisse fiyat + hacim (gerçek-zamanlı, ücretsiz)</div>
+            <div>📋 <strong>KAP</strong>: Kamuyu Aydınlatma Platformu — şirketlerin resmi açıklamaları (en güçlü sinyal)</div>
+            <div>📰 <strong>Bigpara</strong>: Türkçe finans haberleri (her hisse için son 5 başlık)</div>
+            <div>🤖 <strong>Claude Haiku</strong>: Türkçe haberleri ve KAP açıklamalarını okuyup bullish/bearish etiketler</div>
+            <div className="pt-2">
+              <strong className="text-foreground">Final formül:</strong> 0.45×News + 0.25×KAP + 0.30×Price
+            </div>
+          </CardContent>
+        </Card>
+      </AdminOnly>
     </div>
   );
 }

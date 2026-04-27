@@ -122,9 +122,19 @@ export default function SignupPage() {
                     onClick={(e) => e.stopPropagation()}
                     className="underline hover:text-foreground"
                   >
-                    Kullanım şartlarını ve SPK bilgilendirmesini
+                    Kullanım şartları + SPK bilgilendirmesi
                   </a>{" "}
-                  okudum, anladım, kabul ediyorum.
+                  ve{" "}
+                  <a
+                    href="/kvkk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="underline hover:text-foreground"
+                  >
+                    KVKK aydınlatma metni
+                  </a>
+                  ni okudum, anladım, kabul ediyorum.
                 </label>
               </div>
               <div className="flex items-start gap-2 text-xs">

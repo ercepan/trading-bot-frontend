@@ -148,4 +148,30 @@ export const authApi = {
         sub_device_id: string | null;
       }[]
     >("/api/admin/users"),
+
+  revenue: () =>
+    getJson<{
+      active_subscribers: number;
+      total_users: number;
+      total_codes_generated: number;
+      codes_used: number;
+      codes_revoked: number;
+      codes_unused: number;
+      code_conversion_pct: number;
+      mrr_usd: number;
+      last_30d_revenue_usd: number;
+      price_per_month_usd: number;
+      expiring_soon: { username: string; expires_at: string; days_left: number }[];
+      monthly_growth: { ym: string; n: number }[];
+    }>("/api/admin/revenue"),
+
+  triggerBackup: () =>
+    postJson<{
+      ok: boolean;
+      size_bytes?: number;
+      users?: number;
+      active_subs?: number;
+      sent_to_telegram?: boolean;
+      error?: string;
+    }>("/api/admin/backup", {}),
 };
