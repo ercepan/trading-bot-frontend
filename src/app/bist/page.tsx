@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, fmtDate, BistSnapshotMeta, BistTicker } from "@/lib/api";
 import { AdminOnly } from "@/components/admin-only";
+import { FreshnessBadge } from "@/components/freshness-badge";
 import {
   Globe,
   TrendingUp,
@@ -167,8 +168,9 @@ export default function BistPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">
             <Globe className="size-5" /> BIST100 Radar
+            <FreshnessBadge timestamp={scrapedAt} />
           </h1>
           <p className="text-sm text-muted-foreground">
             Türk borsası · resmi açıklama + Türkçe haber + AI sentiment

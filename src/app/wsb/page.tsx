@@ -21,6 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { api, fmtDate, WsbSnapshotMeta, WsbTicker } from "@/lib/api";
 import { AdminOnly } from "@/components/admin-only";
+import { FreshnessBadge } from "@/components/freshness-badge";
 import {
   TrendingUp,
   TrendingDown,
@@ -231,8 +232,9 @@ export default function WsbPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">
             <Radar className="size-5" /> ABD Sosyal Sentiment Radarı
+            <FreshnessBadge timestamp={scrapedAt} />
           </h1>
           <p className="text-sm text-muted-foreground">
             ABD topluluk forumlarında en çok konuşulan hisseler · 24 saat sıralama ve
