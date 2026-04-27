@@ -85,8 +85,8 @@ function SourceBreakdown({ r }: { r: BistTicker }) {
         <ScoreDot score={r.news_score} label="News" />
       </div>
       <div className="flex items-center gap-1">
-        <span className="text-[9px] text-muted-foreground w-8">KAP</span>
-        <ScoreDot score={r.kap_score} label="KAP" />
+        <span className="text-[9px] text-muted-foreground w-8">RA</span>
+        <ScoreDot score={r.kap_score} label="Resmi Açıklama" />
       </div>
       <div className="flex items-center gap-1">
         <span className="text-[9px] text-muted-foreground w-8">PR</span>
@@ -242,7 +242,7 @@ export default function BistPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-1">
-              <FileText className="size-3" /> KAP Açıklaması
+              <FileText className="size-3" /> Resmi Açıklama
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -263,7 +263,7 @@ export default function BistPage() {
                 : "border-border bg-background text-muted-foreground hover:bg-accent"
             }`}
           >
-            {f === "all" ? "Tümü" : f === "bullish" ? "🟢 Bullish" : f === "bearish" ? "🔴 Bearish" : "📋 KAP olan"}
+            {f === "all" ? "Tümü" : f === "bullish" ? "🟢 Yükseliş" : f === "bearish" ? "🔴 Düşüş" : "📋 Resmi açıklama"}
           </button>
         ))}
       </div>
@@ -277,7 +277,7 @@ export default function BistPage() {
             </span>
           </CardTitle>
           <CardDescription>
-            Final = 0.45×News + 0.25×KAP + 0.30×Price · Midas için manual al/sat
+            Çoklu sinyal birleşik skor · Midas için manuel al/sat
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -296,8 +296,8 @@ export default function BistPage() {
                     <TableHead>Ticker</TableHead>
                     <TableHead className="text-right">Fiyat</TableHead>
                     <TableHead className="text-right">Hacim</TableHead>
-                    <TableHead>Kaynaklar</TableHead>
-                    <TableHead>KAP</TableHead>
+                    <TableHead>Skorlar</TableHead>
+                    <TableHead>Açıklama</TableHead>
                     <TableHead>Sentiment</TableHead>
                     <TableHead>Neden</TableHead>
                     <TableHead>Link</TableHead>
@@ -376,9 +376,9 @@ export default function BistPage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-[10px] rounded border border-border px-1.5 py-0.5 hover:bg-accent"
-                              title="TradingView"
+                              title="Grafik"
                             >
-                              TV <ExternalLink className="size-2.5 inline" />
+                              Grafik <ExternalLink className="size-2.5 inline" />
                             </a>
                           </div>
                         </TableCell>

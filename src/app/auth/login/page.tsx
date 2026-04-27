@@ -10,7 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/components/auth-context";
-import { Bot, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
+import { BullLogo } from "@/components/bull-logo";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -37,12 +38,14 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="size-10 rounded-md bg-primary text-primary-foreground flex items-center justify-center">
-              <Bot className="size-5" />
+            <div className="size-11 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+              <BullLogo className="size-7" />
             </div>
             <div>
-              <CardTitle className="text-xl">Trading Bot</CardTitle>
-              <CardDescription>Giriş yap</CardDescription>
+              <CardTitle className="text-xl font-bold tracking-tight">
+                BULLS <span className="text-emerald-400">OF</span> NASDAQ
+              </CardTitle>
+              <CardDescription>Sentiment & Signal Lab — Giriş</CardDescription>
             </div>
           </div>
         </CardHeader>

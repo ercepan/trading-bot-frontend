@@ -232,10 +232,10 @@ export default function WsbPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-            <Radar className="size-5" /> WSB Radar
+            <Radar className="size-5" /> ABD Sosyal Sentiment Radarı
           </h1>
           <p className="text-sm text-muted-foreground">
-            r/wallstreetbets'te en çok konuşulan ABD hisseleri · 24 saat rank ve
+            ABD topluluk forumlarında en çok konuşulan hisseler · 24 saat sıralama ve
             mention momentum
           </p>
         </div>

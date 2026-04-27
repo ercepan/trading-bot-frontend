@@ -116,7 +116,7 @@ export default function BistTickerDetailPage({
           {current && <SentimentBadge score={current.final_score} label={current.sentiment_label} />}
           {current && current.kap_count > 0 && (
             <Badge variant="outline" className="border-amber-500/40 text-amber-400 gap-1">
-              <FileText className="size-3" /> {current.kap_count} KAP
+              <FileText className="size-3" /> {current.kap_count} Resmi Açıklama
             </Badge>
           )}
         </div>
@@ -270,7 +270,7 @@ export default function BistTickerDetailPage({
                 <div className="text-[11px] text-muted-foreground mt-1">{current.news_count} haber</div>
               </div>
               <div className="rounded-md border border-border/50 p-3">
-                <div className="text-xs text-muted-foreground">📋 KAP Score</div>
+                <div className="text-xs text-muted-foreground">📋 Resmi Açıklama</div>
                 <div
                   className={`font-mono text-lg ${
                     (current.kap_score ?? 0) > 0.2
@@ -305,14 +305,14 @@ export default function BistTickerDetailPage({
 
             {current.kap_summary && (
               <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3">
-                <div className="text-xs text-amber-400 mb-1 font-medium">📋 KAP açıklama özeti:</div>
+                <div className="text-xs text-amber-400 mb-1 font-medium">📋 Resmi açıklama özeti:</div>
                 <div className="text-sm">{current.kap_summary}</div>
               </div>
             )}
 
             {current.news_reason && (
               <div className="rounded-md border border-border/50 p-3">
-                <div className="text-xs text-muted-foreground mb-1">📰 Haber yorumu (Claude):</div>
+                <div className="text-xs text-muted-foreground mb-1">📰 Haber yorumu (AI):</div>
                 <div className="text-sm">{current.news_reason}</div>
               </div>
             )}
@@ -341,7 +341,7 @@ export default function BistTickerDetailPage({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-sm rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors"
             >
-              📊 TradingView <ExternalLink className="size-3" />
+              📊 Grafik <ExternalLink className="size-3" />
             </a>
             <a
               href={yahooUrl}
@@ -349,7 +349,7 @@ export default function BistTickerDetailPage({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-sm rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors"
             >
-              Yahoo Finance <ExternalLink className="size-3" />
+              Hisse Detay <ExternalLink className="size-3" />
             </a>
             <a
               href={isYatirim}

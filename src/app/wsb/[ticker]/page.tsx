@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, fmtDate, WsbHistory, WsbTicker } from "@/lib/api";
+import { useAuth } from "@/components/auth-context";
 import {
   ArrowLeft,
   TrendingUp,
@@ -59,6 +60,8 @@ export default function TickerDetailPage({
 }) {
   const { ticker } = use(params);
   const tk = ticker.toUpperCase();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
   const [history, setHistory] = useState<WsbHistory[] | null>(null);
   const [current, setCurrent] = useState<WsbTicker | null>(null);
   const [loading, setLoading] = useState(true);
@@ -107,7 +110,7 @@ export default function TickerDetailPage({
           href="/wsb"
           className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2"
         >
-          <ArrowLeft className="size-4" /> WSB Radar
+          <ArrowLeft className="size-4" /> ABD Radar
         </Link>
         <div className="flex items-center gap-3 flex-wrap">
           <h1 className="text-3xl font-semibold tracking-tight font-mono">
@@ -284,7 +287,7 @@ export default function TickerDetailPage({
                 <div className="text-sm">{current.sample_title}</div>
               </div>
             )}
-            {current.sample_url && (
+            {current.sample_url && isAdmin && (
               <div>
                 <a
                   href={current.sample_url}
@@ -292,7 +295,7 @@ export default function TickerDetailPage({
                   rel="noopener noreferrer"
                   className="text-xs inline-flex items-center gap-1 text-muted-foreground hover:text-foreground"
                 >
-                  Reddit'te ${tk} aramaları <ExternalLink className="size-3" />
+                  Topluluk araması <ExternalLink className="size-3" />
                 </a>
               </div>
             )}

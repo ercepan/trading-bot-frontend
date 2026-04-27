@@ -18,8 +18,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trading Bot — Dashboard",
-  description: "Multi-asset crypto trading bot (BTC, ETH, SOL)",
+  title: "Bulls of Nasdaq — Sentiment & Signal Lab",
+  description:
+    "BIST + ABD hisse sentiment radarı, AI destekli sinyal üretimi. Topluluk ve resmi açıklama bazlı analiz platformu.",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

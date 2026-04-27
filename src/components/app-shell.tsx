@@ -6,7 +6,6 @@ import {
   History,
   AlertTriangle,
   Settings,
-  Bot,
   Wifi,
   WifiOff,
   Radar,
@@ -15,6 +14,7 @@ import {
   Globe,
   DollarSign,
 } from "lucide-react";
+import { BullLogo, BullsOfNasdaqMark } from "@/components/bull-logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -44,10 +44,10 @@ const navAdmin = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/positions", label: "Açık Pozisyonlar", icon: TrendingUp },
   { href: "/history", label: "Geçmiş", icon: History },
-  { href: "/wsb", label: "WSB Radar", icon: Radar },
+  { href: "/wsb", label: "ABD Radar", icon: Radar },
   { href: "/bist", label: "BIST Radar", icon: Globe },
-  { href: "/signals", label: "Stock Signals", icon: Zap },
-  { href: "/lab", label: "Strategy Lab", icon: FlaskConical },
+  { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
+  { href: "/lab", label: "Strateji Laboratuvarı", icon: FlaskConical },
   { href: "/errors", label: "Hatalar", icon: AlertTriangle },
   { href: "/settings", label: "Ayarlar", icon: Settings },
 ];
@@ -61,8 +61,8 @@ const navAdminPanel = [
 
 const navSubscriber = [
   { href: "/bist", label: "BIST Radar", icon: Globe },
-  { href: "/signals", label: "Stock Signals", icon: Zap },
-  { href: "/wsb", label: "WSB Radar", icon: Radar },
+  { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
+  { href: "/wsb", label: "ABD Radar", icon: Radar },
 ];
 
 function HealthBadge() {
@@ -134,13 +134,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-1.5">
-            <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Bot className="size-4" />
+            <div className="flex size-8 items-center justify-center rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-data-[collapsible=icon]:size-9">
+              <BullLogo className="size-5" />
             </div>
             <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
-              <span className="font-semibold text-sm">Trading Bot</span>
+              <span className="font-bold text-sm tracking-tight">
+                BULLS <span className="text-emerald-400">OF</span> NASDAQ
+              </span>
               <span className="text-[11px] text-muted-foreground">
-                {user.username} · {isAdmin ? "admin" : "subscriber"}
+                {user.username} · {isAdmin ? "admin" : "abone"}
               </span>
             </div>
           </div>

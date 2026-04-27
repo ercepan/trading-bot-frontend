@@ -177,7 +177,7 @@ function SignalCard({ s }: { s: StockSignal }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs rounded-md border border-border px-2.5 py-1 hover:bg-accent transition-colors"
           >
-            <Search className="size-3" /> WSB DD <ExternalLink className="size-3" />
+            <Search className="size-3" /> Tartışma <ExternalLink className="size-3" />
           </a>
           <a
             href={tvUrl}
@@ -185,7 +185,7 @@ function SignalCard({ s }: { s: StockSignal }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs rounded-md border border-border px-2.5 py-1 hover:bg-accent transition-colors"
           >
-            <Activity className="size-3" /> Chart <ExternalLink className="size-3" />
+            <Activity className="size-3" /> Grafik <ExternalLink className="size-3" />
           </a>
           <a
             href={yahooUrl}
@@ -193,13 +193,13 @@ function SignalCard({ s }: { s: StockSignal }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs rounded-md border border-border px-2.5 py-1 hover:bg-accent transition-colors"
           >
-            Yahoo <ExternalLink className="size-3" />
+            Hisse Detay <ExternalLink className="size-3" />
           </a>
           <Link
             href={`/wsb/${s.ticker}`}
             className="inline-flex items-center gap-1 text-xs rounded-md border border-border px-2.5 py-1 hover:bg-accent transition-colors"
           >
-            WSB detay
+            Sentiment detay
           </Link>
           {isBuy && (
             <a
@@ -292,7 +292,7 @@ export default function SignalsPage() {
             <div className="text-2xl font-semibold tabular-nums text-red-400">
               {watches.length}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">short squeeze riski</p>
+            <p className="text-xs text-muted-foreground mt-1">izleme listesi</p>
           </CardContent>
         </Card>
         <Card>
@@ -346,7 +346,7 @@ export default function SignalsPage() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center text-sm text-muted-foreground">
-            Henüz signal yok. Bot 6 saatte bir üretir (WSB scrape'inden sonra).
+            Henüz sinyal yok. Sistem 2 saatte bir üretir.
           </CardContent>
         </Card>
       )}
@@ -357,10 +357,10 @@ export default function SignalsPage() {
             <strong className="text-foreground">Nasıl kullanılır:</strong>
           </div>
           <div>
-            <strong>1.</strong> BUY sinyali gördüğünde → <strong>WSB DD</strong> butonuna bas, post'ları oku (insanlar neden alıyor?)
+            <strong>1.</strong> BUY sinyali gördüğünde → <strong>Tartışma</strong> butonuna bas, topluluğun ne dediğine bak
           </div>
           <div>
-            <strong>2.</strong> <strong>Chart</strong> butonuyla TradingView'da teknik analiz yap (support/resistance, trend)
+            <strong>2.</strong> <strong>Grafik</strong> butonuyla teknik analiz yap (support/resistance, trend)
           </div>
           <div>
             <strong>3.</strong> Entry zone + Stop + Target seni yönlendirir
