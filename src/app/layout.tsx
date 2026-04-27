@@ -18,9 +18,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bulls of Nasdaq — Sentiment & Signal Lab",
+  title: "Nexora — BIST · NASDAQ · CRYPTO",
   description:
-    "BIST + ABD hisse sentiment radarı, AI destekli sinyal üretimi. Topluluk ve resmi açıklama bazlı analiz platformu.",
+    "BIST + ABD hisse + kripto sentiment radarı, AI destekli sinyal üretimi. Topluluk ve resmi açıklama bazlı analiz platformu.",
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",

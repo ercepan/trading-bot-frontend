@@ -1,14 +1,31 @@
-<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#3ecf8e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+    <linearGradient id="nx-light" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7fe5b3"/>
+      <stop offset="50%" stop-color="#5fdba0"/>
+      <stop offset="100%" stop-color="#3ecf8e"/>
+    </linearGradient>
+    <linearGradient id="nx-dark" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#3ecf8e"/>
-      <stop offset="100%" stop-color="#2dba72"/>
+      <stop offset="100%" stop-color="#1f7c4a"/>
+    </linearGradient>
+    <linearGradient id="nx-accent" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f0c270"/>
+      <stop offset="100%" stop-color="#3ecf8e"/>
     </linearGradient>
   </defs>
-  <rect width="32" height="32" rx="6" fill="#0a0a0a"/>
-  <path d="M5 8 C5 5, 7 4, 9 5 C10 6, 11 8, 11 11" stroke="url(#g)"/>
-  <path d="M27 8 C27 5, 25 4, 23 5 C22 6, 21 8, 21 11" stroke="url(#g)"/>
-  <path d="M11 11 L11 17 C11 21, 13 25, 16 27 C19 25, 21 21, 21 17 L21 11 Z" fill="url(#g)" stroke="url(#g)" opacity="0.9"/>
-  <circle cx="16" cy="22" r="1.6" fill="#0a0a0a" stroke="#0a0a0a"/>
-  <path d="M14 14 L16 12 L18 14 M16 12 L16 18" stroke="#0a0a0a" stroke-width="1.6"/>
+  <rect width="64" height="64" rx="12" fill="#0a0a0a"/>
+  <circle cx="32" cy="32" r="29" fill="none" stroke="#3ecf8e" stroke-opacity="0.4" stroke-width="1.4"/>
+  <polygon points="14,16 22,16 22,48 14,48" fill="url(#nx-light)"/>
+  <polygon points="42,16 50,16 50,48 42,48" fill="url(#nx-dark)"/>
+  <polygon points="22,16 30,16 50,42 50,48 42,48 22,22" fill="url(#nx-accent)"/>
+  <line x1="46" y1="6" x2="46" y2="9" stroke="#3ecf8e" stroke-width="1"/>
+  <rect x="44.5" y="9" width="3" height="5" fill="#3ecf8e"/>
+  <line x1="46" y1="14" x2="46" y2="16" stroke="#3ecf8e" stroke-width="1"/>
+  <line x1="51" y1="4" x2="51" y2="7" stroke="#f5556d" stroke-width="1"/>
+  <rect x="49.5" y="7" width="3" height="6" fill="#f5556d"/>
+  <line x1="51" y1="13" x2="51" y2="15" stroke="#f5556d" stroke-width="1"/>
+  <line x1="56" y1="2" x2="56" y2="6" stroke="#3ecf8e" stroke-width="1"/>
+  <rect x="54.5" y="6" width="3" height="8" fill="#3ecf8e"/>
+  <line x1="56" y1="14" x2="56" y2="16" stroke="#3ecf8e" stroke-width="1"/>
 </svg>

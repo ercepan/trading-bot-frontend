@@ -15,7 +15,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { authApi } from "@/lib/auth";
-import { BullLogo } from "@/components/bull-logo";
+import { NexoraLogo } from "@/components/nexora-logo";
 
 type PublicInfo = Awaited<ReturnType<typeof authApi.paymentPublicInfo>>;
 
@@ -66,12 +66,17 @@ export default function SatinAlPage() {
       <header className="border-b border-border/50 bg-background/85 backdrop-blur sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="size-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <BullLogo className="size-6" />
+            <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <NexoraLogo className="size-8" />
             </div>
-            <span className="font-bold tracking-tight">
-              BULLS <span className="text-emerald-400">OF</span> NASDAQ
-            </span>
+            <div className="leading-tight">
+              <div className="font-bold tracking-tight text-base">
+                <span className="text-emerald-400">N</span>EXORA
+              </div>
+              <div className="text-[8px] text-muted-foreground tracking-[0.25em] uppercase">
+                BIST · NASDAQ · CRYPTO
+              </div>
+            </div>
           </Link>
           <Link
             href="/"

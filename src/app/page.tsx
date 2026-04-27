@@ -15,7 +15,7 @@ import {
   Lock,
   Send,
 } from "lucide-react";
-import { BullLogo } from "@/components/bull-logo";
+import { NexoraLogo } from "@/components/nexora-logo";
 import { useAuth } from "@/components/auth-context";
 
 export default function LandingPage() {
@@ -47,12 +47,17 @@ export default function LandingPage() {
       >
         <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="size-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <BullLogo className="size-6" />
+            <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <NexoraLogo className="size-8" />
             </div>
-            <span className="font-bold tracking-tight text-base sm:text-lg">
-              BULLS <span className="text-emerald-400">OF</span> NASDAQ
-            </span>
+            <div className="leading-tight">
+              <div className="font-bold tracking-tight text-base sm:text-lg">
+                <span className="text-emerald-400">N</span>EXORA
+              </div>
+              <div className="text-[8px] sm:text-[9px] text-muted-foreground tracking-[0.25em] uppercase">
+                BIST · NASDAQ · CRYPTO
+              </div>
+            </div>
           </Link>
           <nav className="flex items-center gap-2 sm:gap-3">
             <Link
@@ -343,8 +348,8 @@ export default function LandingPage() {
 
           <div className="rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-500/5 to-transparent p-8 shadow-xl shadow-emerald-500/10">
             <div className="flex items-center gap-3 mb-2">
-              <div className="size-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-                <BullLogo className="size-6" />
+              <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                <NexoraLogo className="size-8" />
               </div>
               <div>
                 <div className="font-bold text-lg">Aylık Abonelik</div>
@@ -479,12 +484,17 @@ export default function LandingPage() {
       <footer className="border-t border-border/50 py-10 px-4 md:px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="size-7 rounded-md bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <BullLogo className="size-4" />
+            <div className="size-8 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <NexoraLogo className="size-6" withRing={false} />
             </div>
-            <span className="text-sm font-semibold tracking-tight">
-              BULLS <span className="text-emerald-400">OF</span> NASDAQ
-            </span>
+            <div className="leading-tight">
+              <div className="text-sm font-semibold tracking-tight">
+                <span className="text-emerald-400">N</span>EXORA
+              </div>
+              <div className="text-[8px] text-muted-foreground tracking-[0.2em] uppercase">
+                BIST · NASDAQ · CRYPTO
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-5 text-xs text-muted-foreground">
             <Link href="/terms" className="hover:text-foreground transition-colors">
@@ -505,7 +515,7 @@ export default function LandingPage() {
         </div>
         <div className="max-w-6xl mx-auto mt-6 text-center text-[11px] text-muted-foreground/70">
           ⚠️ Yatırım tavsiyesi değildir. SPK mevzuatı kapsamında yatırım
-          danışmanlığı hizmeti sunulmamaktadır. © 2026 Bulls of Nasdaq.
+          danışmanlığı hizmeti sunulmamaktadır. © 2026 Nexora.
         </div>
       </footer>
     </div>

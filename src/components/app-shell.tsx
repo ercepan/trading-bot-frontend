@@ -16,7 +16,7 @@ import {
   Wallet,
   Sparkles,
 } from "lucide-react";
-import { BullLogo, BullsOfNasdaqMark } from "@/components/bull-logo";
+import { NexoraLogo } from "@/components/nexora-logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -143,14 +143,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-1.5">
-            <div className="flex size-8 items-center justify-center rounded-md bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-data-[collapsible=icon]:size-9">
-              <BullLogo className="size-5" />
+            <div className="flex size-9 items-center justify-center rounded-md bg-emerald-500/10 border border-emerald-500/20 group-data-[collapsible=icon]:size-9">
+              <NexoraLogo className="size-7" />
             </div>
             <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
-              <span className="font-bold text-sm tracking-tight">
-                BULLS <span className="text-emerald-400">OF</span> NASDAQ
+              <span className="font-bold text-base tracking-tight">
+                <span className="text-emerald-400">N</span>EXORA
               </span>
-              <span className="text-[11px] text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground">
                 {user.username} · {isAdmin ? "admin" : "abone"}
               </span>
             </div>

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useAuth } from "@/components/auth-context";
 import { Sparkles } from "lucide-react";
-import { BullLogo } from "@/components/bull-logo";
+import { NexoraLogo } from "@/components/nexora-logo";
 
 export default function SignupPage() {
   return (
@@ -61,14 +61,17 @@ function SignupForm() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="size-11 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
-              <BullLogo className="size-7" />
+            <div className="size-12 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <NexoraLogo className="size-9" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold tracking-tight">
-                BULLS <span className="text-emerald-400">OF</span> NASDAQ
+              <CardTitle className="text-2xl font-bold tracking-tight">
+                <span className="text-emerald-400">N</span>EXORA
               </CardTitle>
-              <CardDescription>Aramıza katıl 🐂 — davet kodunla 30 gün</CardDescription>
+              <CardDescription className="text-[10px] tracking-[0.2em] uppercase">
+                BIST · NASDAQ · CRYPTO
+              </CardDescription>
+              <CardDescription className="mt-1">Aramıza katıl ✨ davet kodunla 30 gün</CardDescription>
             </div>
           </div>
         </CardHeader>
