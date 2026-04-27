@@ -15,6 +15,7 @@ export type PaymentRequest = {
   amount_usd: number;
   method: string;
   reference: string | null;
+  tx_hash?: string | null;
   status: "pending" | "approved" | "rejected";
   generated_code: string | null;
   admin_note: string | null;
@@ -25,11 +26,6 @@ export type PaymentRequest = {
 export type AdminPaymentRequest = PaymentRequest & {
   user_id: number;
   username: string;
-  notes: string | null;
-  file_telegram_msg_id: number | null;
-  file_name: string | null;
-  file_size: number | null;
-  processed_by: number | null;
 };
 
 export type Subscription = {
@@ -204,63 +200,37 @@ export const authApi = {
     return res.json() as Promise<{ ok: boolean; username?: string; deleted_subs?: number }>;
   },
 
-  // Payments — subscriber
+  // Payments — Otomatik USDT BEP-20
+  paymentInfo: () =>
+    getJson<{
+      address: string;
+      network: string;
+      token: string;
+      amount_usd: number;
+      min_amount_usd: number;
+      min_confirmations: number;
+      configured: boolean;
+    }>("/api/payments/info"),
+
+  verifyTx: (tx_hash: string) =>
+    postJson<{
+      ok: boolean;
+      code: string;
+      expires_at: string;
+      amount_usd: number;
+      tx_hash: string;
+    }>("/api/payments/verify-tx", { tx_hash }),
+
   myPayments: () =>
     getJson<{ requests: PaymentRequest[] }>("/api/payments/my"),
 
-  submitPayment: async (form: {
-    amount_usd: number;
-    method: "usdt" | "bank" | "papara" | "other";
-    reference: string;
-    notes: string;
-    file: File;
-  }) => {
-    const fd = new FormData();
-    fd.append("amount_usd", String(form.amount_usd));
-    fd.append("method", form.method);
-    fd.append("reference", form.reference);
-    fd.append("notes", form.notes);
-    fd.append("file", form.file);
-    const token = getToken();
-    const deviceId = getDeviceId();
-    const headers: Record<string, string> = {};
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-    if (deviceId) headers["X-Device-ID"] = deviceId;
-    const res = await fetch(`${API_BASE}/api/payments/request`, {
-      method: "POST",
-      headers,
-      body: fd,
-    });
-    if (!res.ok) {
-      const txt = await res.text().catch(() => "");
-      let msg = `${res.status}`;
-      try {
-        const j = JSON.parse(txt);
-        msg = j.detail || j.error || msg;
-      } catch {}
-      throw new Error(msg);
-    }
-    return res.json() as Promise<{ ok: boolean; id: number; telegram_sent: boolean }>;
-  },
-
-  // Payments — admin
+  // Admin (audit only — otomatik onaylı)
   adminPayments: (status?: "pending" | "approved" | "rejected") => {
     const q = status ? `?status=${status}` : "";
     return getJson<{ requests: AdminPaymentRequest[]; pending_count: number }>(
       `/api/admin/payments${q}`,
     );
   },
-
-  approvePayment: (id: number, duration_days = 30) =>
-    postJson<{ ok: boolean; code: string; new_expires_at: string; username: string }>(
-      `/api/admin/payments/${id}/approve`,
-      { duration_days },
-    ),
-
-  rejectPayment: (id: number, admin_note: string) =>
-    postJson<{ ok: boolean; username: string }>(`/api/admin/payments/${id}/reject`, {
-      admin_note,
-    }),
 
   triggerBackup: () =>
     postJson<{

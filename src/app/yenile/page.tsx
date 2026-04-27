@@ -13,74 +13,74 @@ import { authApi, PaymentRequest } from "@/lib/auth";
 import { useAuth } from "@/components/auth-context";
 import {
   Sparkles,
-  Upload,
   Loader2,
   CheckCircle2,
   XCircle,
   Clock,
   Copy,
   AlertTriangle,
-  Send,
+  ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 
-const PRICE_USD = 25;
-const PAYMENT_METHODS: { value: "usdt" | "bank" | "papara" | "other"; label: string; hint: string }[] = [
-  { value: "usdt", label: "USDT (TRC20/BEP20)", hint: "TX hash'ini referans alanına yapıştır" },
-  { value: "papara", label: "Papara", hint: "Açıklamaya kullanıcı adını yaz" },
-  { value: "bank", label: "Banka EFT/Havale", hint: "Açıklamaya kullanıcı adını yaz" },
-  { value: "other", label: "Diğer", hint: "Notlar alanında detayları belirt" },
-];
+type PaymentInfo = {
+  address: string;
+  network: string;
+  token: string;
+  amount_usd: number;
+  min_amount_usd: number;
+  min_confirmations: number;
+  configured: boolean;
+};
 
 export default function YenilePage() {
   const { user, refresh } = useAuth();
-  const [amount, setAmount] = useState(PRICE_USD);
-  const [method, setMethod] = useState<"usdt" | "bank" | "papara" | "other">("usdt");
-  const [reference, setReference] = useState("");
-  const [notes, setNotes] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [info, setInfo] = useState<PaymentInfo | null>(null);
+  const [txHash, setTxHash] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [success, setSuccess] = useState<{ code: string; expires_at: string; amount: number } | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [requests, setRequests] = useState<PaymentRequest[]>([]);
 
-  const loadMyRequests = async () => {
+  const loadAll = async () => {
     try {
-      const r = await authApi.myPayments();
-      setRequests(r.requests);
+      const [i, my] = await Promise.all([
+        authApi.paymentInfo(),
+        authApi.myPayments(),
+      ]);
+      setInfo(i);
+      setRequests(my.requests);
     } catch {
       // ignore
     }
   };
 
   useEffect(() => {
-    loadMyRequests();
+    loadAll();
   }, []);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) {
-      setErr("Dekont dosyası eklemen lazım");
+    if (!txHash.trim()) {
+      setErr("TX hash gerekli");
       return;
     }
     setErr(null);
-    setSubmitting(true);
+    setSuccess(null);
+    setVerifying(true);
     try {
-      await authApi.submitPayment({ amount_usd: amount, method, reference, notes, file });
-      setSuccess(true);
-      setReference("");
-      setNotes("");
-      setFile(null);
-      await loadMyRequests();
+      const r = await authApi.verifyTx(txHash.trim());
+      setSuccess({ code: r.code, expires_at: r.expires_at, amount: r.amount_usd });
+      setTxHash("");
+      await loadAll();
       await refresh();
-      setTimeout(() => setSuccess(false), 5000);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Talep oluşturulamadı");
+      setErr(e instanceof Error ? e.message : "Doğrulama başarısız");
     } finally {
-      setSubmitting(false);
+      setVerifying(false);
     }
   };
 
-  const selectedMethod = PAYMENT_METHODS.find((m) => m.value === method)!;
   const daysLeft = user?.subscription?.expires_at
     ? Math.max(
         0,
@@ -95,8 +95,8 @@ export default function YenilePage() {
           <Sparkles className="size-6 text-emerald-400" /> Aboneliği Yenile
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Ödemeyi yap → dekontunu yükle → admin onayladığında yeni davet kodun otomatik
-          aktif olur ve abonelik süren <strong>30 gün</strong> uzar.
+          Sadece <strong className="text-foreground">USDT (BEP-20 / BNB Smart Chain)</strong> kabul ediyoruz.
+          Aşağıdaki adrese gönder → TX hash'i yapıştır → sistem otomatik doğrular ve kodun anında üretilir.
         </p>
       </div>
 
@@ -127,248 +127,227 @@ export default function YenilePage() {
             </div>
             {daysLeft <= 5 && (
               <Badge variant="outline" className="border-amber-500/40 text-amber-400 gap-1">
-                <AlertTriangle className="size-3" /> Yenilemeyi öneriyoruz
+                <AlertTriangle className="size-3" /> Yenileme zamanı
               </Badge>
             )}
           </CardContent>
         </Card>
       )}
 
-      {/* Ödeme bilgileri */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">1. Önce ödemeyi yap</CardTitle>
-          <CardDescription>
-            Aşağıdaki yöntemlerden birini seç. Sonra dekontunu hazırla.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 text-sm">
-          <PaymentInfo
-            label="USDT (TRC20)"
-            value="TXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            note="Telegram'dan aktif cüzdan adresini al — ağ: TRON (TRC20). Düşük komisyon."
-          />
-          <PaymentInfo
-            label="Papara"
-            value="@bullsofnasdaq"
-            note="Açıklamaya 'BoN-' + kullanıcı adın yaz. Örn: BoN-mehmet42"
-          />
-          <PaymentInfo
-            label="Banka (TR)"
-            value="TR00 0000 0000 0000 0000 0000 00"
-            note="EFT/Havale. IBAN'ı Telegram'dan iste, açıklamaya kullanıcı adını yaz."
-          />
-          <div className="pt-2 text-xs text-muted-foreground">
-            💡 Cüzdan adresleri zamanla değişebilir.{" "}
-            <a
-              href="https://t.me/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-foreground inline-flex items-center gap-1"
-            >
-              <Send className="size-3" /> Telegram'dan güncel bilgiyi al
-            </a>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Sistem yapılandırma uyarısı */}
+      {info && !info.configured && (
+        <Card className="border-red-500/30 bg-red-500/5">
+          <CardContent className="pt-5 text-sm text-red-400">
+            <strong>⚠️ Ödeme sistemi henüz yapılandırılmadı.</strong> Admin'e Telegram'dan ulaş.
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Dekont formu */}
+      {/* 1. Ödeme adresi */}
+      {info?.configured && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <span className="text-2xl">①</span> USDT (BEP-20) gönder
+            </CardTitle>
+            <CardDescription>
+              Ağ: <strong>BNB Smart Chain (BEP-20)</strong> · Token: <strong>USDT</strong> ·
+              Tutar: <strong className="text-emerald-400">${info.amount_usd}</strong>
+              <span className="text-xs ml-1">(min ${info.min_amount_usd})</span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <AddressBox address={info.address} />
+
+            <div className="rounded-md border border-amber-500/20 bg-amber-500/5 p-3 text-xs space-y-1">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="size-3.5 text-amber-400 mt-0.5 shrink-0" />
+                <div className="space-y-1 text-foreground/80">
+                  <div>
+                    <strong className="text-amber-400">Mutlaka BEP-20 (BSC)</strong> ağı seç.
+                    TRC20 / ERC20 yanlış ağdır → para kaybolur.
+                  </div>
+                  <div>
+                    Borsadan çıkış: Binance / OKX / Bybit → "Para Çek" → USDT → BEP20 ağı.
+                  </div>
+                  <div>
+                    En az ${info.min_amount_usd.toFixed(2)} USDT gönder. Komisyon hariç.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 2. TX hash doğrulama */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">2. Dekont yükle</CardTitle>
+          <CardTitle className="text-base flex items-center gap-2">
+            <span className="text-2xl">②</span> TX hash'i ile doğrula
+          </CardTitle>
           <CardDescription>
-            Talep oluşunca admin'e Telegram'dan dekont düşer. Genelde 1-3 saat içinde
-            onay verilir.
+            Borsa transferi onaylanınca BscScan'de görünen hash'i buraya yapıştır.{" "}
+            {info && `${info.min_confirmations} blok onayı sonrası doğrulanır (~${info.min_confirmations * 3} sn).`}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {success && (
-            <div className="mb-4 rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm flex items-start gap-2">
-              <CheckCircle2 className="size-4 text-emerald-400 mt-0.5 shrink-0" />
-              <div>
-                <strong className="text-emerald-400">Talep alındı.</strong> Admin
-                onayladığında bu sayfada davet kodun otomatik görünecek + Telegram'a düşer.
+            <div className="mb-4 rounded-md border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-3">
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
+                <div className="text-sm">
+                  <strong className="text-emerald-400">Ödeme onaylandı!</strong>{" "}
+                  {success.amount.toFixed(2)} USDT alındı. Aboneliğin uzatıldı.
+                </div>
+              </div>
+              <div className="rounded border border-emerald-500/30 bg-background p-3 flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-xs text-muted-foreground">🎫 Davet kodun</div>
+                  <code className="font-mono text-emerald-400 font-bold text-base">{success.code}</code>
+                </div>
+                <button
+                  onClick={() => navigator.clipboard.writeText(success.code).catch(() => {})}
+                  className="text-xs px-3 py-1.5 rounded border border-border hover:bg-accent inline-flex items-center gap-1"
+                >
+                  <Copy className="size-3" /> Kopyala
+                </button>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Yeni bitiş: <strong className="text-foreground">{success.expires_at.slice(0, 10)}</strong>
               </div>
             </div>
           )}
 
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Tutar (USD)</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={1000}
-                  step={1}
-                  value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                  required
-                  disabled={submitting}
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Ödeme yöntemi</label>
-                <select
-                  value={method}
-                  onChange={(e) => setMethod(e.target.value as typeof method)}
-                  required
-                  disabled={submitting}
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                >
-                  {PAYMENT_METHODS.map((m) => (
-                    <option key={m.value} value={m.value}>
-                      {m.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
+          <form onSubmit={onVerify} className="space-y-3">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground">
-                Referans / TX Hash
+                Transaction Hash
               </label>
               <input
                 type="text"
-                value={reference}
-                onChange={(e) => setReference(e.target.value)}
-                placeholder={
-                  method === "usdt" ? "0xabcdef... (TX hash)" : "Açıklama / referans no"
-                }
-                disabled={submitting}
-                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30"
+                value={txHash}
+                onChange={(e) => setTxHash(e.target.value)}
+                placeholder="0xabcdef0123456789..."
+                disabled={verifying}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
               />
-              <p className="text-[11px] text-muted-foreground">{selectedMethod.hint}</p>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
-                Notlar (opsiyonel)
-              </label>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={2}
-                placeholder="Eklemek istediğin bir şey?"
-                disabled={submitting}
-                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
-                Dekont (PNG/JPG/PDF · max 5 MB)
-              </label>
-              <label
-                className={`flex items-center justify-center gap-2 rounded-md border-2 border-dashed px-4 py-6 cursor-pointer transition-colors ${
-                  file
-                    ? "border-emerald-500/40 bg-emerald-500/5"
-                    : "border-border hover:border-emerald-500/30"
-                }`}
-              >
-                <Upload className="size-4 text-muted-foreground" />
-                <span className="text-sm">
-                  {file ? (
-                    <>
-                      <strong className="text-emerald-400">{file.name}</strong>{" "}
-                      <span className="text-muted-foreground">
-                        ({(file.size / 1024).toFixed(1)} KB)
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-muted-foreground">Dekont seç veya sürükle</span>
-                  )}
-                </span>
-                <input
-                  type="file"
-                  accept=".png,.jpg,.jpeg,.pdf,.webp,.heic,image/*,application/pdf"
-                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                  disabled={submitting}
-                  className="hidden"
-                />
-              </label>
+              <p className="text-[11px] text-muted-foreground">
+                BscScan'de TX'i görmek için:{" "}
+                {txHash.startsWith("0x") && txHash.length === 66 ? (
+                  <a
+                    href={`https://bscscan.com/tx/${txHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline text-emerald-400 inline-flex items-center gap-1"
+                  >
+                    bscscan.com aç <ExternalLink className="size-2.5" />
+                  </a>
+                ) : (
+                  <span>0x ile başlayan 66 karakter</span>
+                )}
+              </p>
             </div>
 
             {err && (
-              <div className="rounded-md border border-red-500/30 bg-red-500/5 px-3 py-2 text-xs text-red-400">
-                {err}
+              <div className="rounded-md border border-red-500/30 bg-red-500/5 px-3 py-2 text-xs text-red-400 flex items-start gap-2">
+                <XCircle className="size-3.5 mt-0.5 shrink-0" />
+                <span>{err}</span>
               </div>
             )}
 
             <button
               type="submit"
-              disabled={submitting || !file || amount < 1}
+              disabled={verifying || !txHash.trim()}
               className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-4 py-2.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {submitting ? (
+              {verifying ? (
                 <>
-                  <Loader2 className="size-4 animate-spin" /> Yükleniyor…
+                  <Loader2 className="size-4 animate-spin" /> BscScan kontrol ediliyor…
                 </>
               ) : (
                 <>
-                  <Send className="size-4" /> Talebi gönder
+                  <ShieldCheck className="size-4" /> Doğrula ve kodu üret
                 </>
               )}
             </button>
           </form>
+
+          <div className="mt-4 text-[11px] text-muted-foreground space-y-1 border-t border-border/50 pt-3">
+            <div>💡 <strong>Sistem otomatik:</strong> Adres + tutar + token kontrolü, manuel onay yok.</div>
+            <div>🔐 <strong>Güvenli:</strong> Her TX sadece bir kez kullanılabilir.</div>
+            <div>⚡ <strong>Hızlı:</strong> Genelde 30 saniye içinde kod üretilir.</div>
+          </div>
         </CardContent>
       </Card>
 
       {/* Geçmiş */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">3. Talep geçmişin</CardTitle>
-          <CardDescription>
-            Onaylanmış talepler için davet kodunu buradan görebilirsin.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {requests.length === 0 ? (
-            <div className="text-sm text-muted-foreground py-4 text-center">
-              Henüz talep yok.
-            </div>
-          ) : (
+      {requests.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Geçmiş işlemler</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-2">
               {requests.map((r) => (
                 <RequestRow key={r.id} r={r} />
               ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
 
-function PaymentInfo({ label, value, note }: { label: string; value: string; note: string }) {
+function AddressBox({ address }: { address: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(value);
+      await navigator.clipboard.writeText(address);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 2500);
     } catch {}
   };
   return (
-    <div className="rounded-md border border-border bg-card/30 p-3">
+    <div className="rounded-lg border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent p-4">
+      <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1.5">
+        BEP-20 Cüzdan Adresi
+      </div>
       <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="text-xs text-muted-foreground">{label}</div>
-          <div className="font-mono text-sm truncate" title={value}>
-            {value}
-          </div>
-        </div>
+        <code className="font-mono text-sm break-all flex-1 select-all">
+          {address || "—"}
+        </code>
         <button
           onClick={copy}
-          className="text-xs inline-flex items-center gap-1 rounded border border-border px-2 py-1 hover:bg-accent shrink-0"
+          disabled={!address}
+          className={`shrink-0 inline-flex items-center gap-1 text-xs rounded-md px-3 py-2 transition-colors ${
+            copied
+              ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300"
+              : "bg-emerald-500 hover:bg-emerald-600 text-black font-medium"
+          }`}
         >
-          {copied ? <CheckCircle2 className="size-3 text-emerald-400" /> : <Copy className="size-3" />}
-          {copied ? "Kopyalandı" : "Kopyala"}
+          {copied ? (
+            <>
+              <CheckCircle2 className="size-3" /> Kopyalandı
+            </>
+          ) : (
+            <>
+              <Copy className="size-3" /> Kopyala
+            </>
+          )}
         </button>
       </div>
-      <div className="text-[11px] text-muted-foreground mt-1.5">{note}</div>
+      {address && (
+        <a
+          href={`https://bscscan.com/address/${address}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[11px] text-muted-foreground hover:text-foreground underline inline-flex items-center gap-1 mt-2"
+        >
+          BscScan'de gör <ExternalLink className="size-2.5" />
+        </a>
+      )}
     </div>
   );
 }
@@ -399,20 +378,30 @@ function RequestRow({ r }: { r: PaymentRequest }) {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <span className="font-mono">${r.amount_usd.toFixed(2)}</span>
-          <span className="text-xs text-muted-foreground ml-2">{r.method.toUpperCase()}</span>
+          <span className="text-xs text-muted-foreground ml-2">USDT</span>
           <span className="text-xs text-muted-foreground ml-2">· {dt}</span>
         </div>
         <StatusBadge />
       </div>
+      {r.tx_hash && (
+        <a
+          href={`https://bscscan.com/tx/${r.tx_hash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[11px] text-muted-foreground hover:text-foreground underline inline-flex items-center gap-1 mt-1.5 break-all"
+        >
+          {r.tx_hash.slice(0, 16)}…{r.tx_hash.slice(-8)} <ExternalLink className="size-2.5" />
+        </a>
+      )}
       {r.generated_code && (
         <div className="mt-2 rounded border border-emerald-500/30 bg-emerald-500/5 p-2 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">🎫 Davet kodun:</span>
+          <span className="text-xs text-muted-foreground">🎫 Kod:</span>
           <code className="font-mono text-emerald-400 font-semibold">{r.generated_code}</code>
         </div>
       )}
       {r.admin_note && r.status === "rejected" && (
         <div className="mt-2 text-xs text-red-400 bg-red-500/5 border border-red-500/20 rounded p-2">
-          <strong>Red sebebi:</strong> {r.admin_note}
+          {r.admin_note}
         </div>
       )}
     </div>
