@@ -10,6 +10,21 @@ export type User = {
   subscription?: Subscription | null;
 };
 
+export type NewsItem = {
+  id: number;
+  source: string;
+  category: string;
+  title: string;
+  link: string;
+  summary: string | null;
+  pubdate: string | null;
+  image_url: string | null;
+  ticker_mentions: string[];
+  sentiment_score: number | null;
+  sentiment_label: string | null;
+  fetched_at: string;
+};
+
 export type PaymentRequest = {
   id: number;
   amount_usd: number;
@@ -198,6 +213,19 @@ export const authApi = {
       throw new Error(msg);
     }
     return res.json() as Promise<{ ok: boolean; username?: string; deleted_subs?: number }>;
+  },
+
+  // News (Investing.com TR)
+  news: (params?: { category?: string; ticker?: string; limit?: number }) => {
+    const q = new URLSearchParams();
+    if (params?.category) q.set("category", params.category);
+    if (params?.ticker) q.set("ticker", params.ticker);
+    if (params?.limit) q.set("limit", String(params.limit));
+    const qs = q.toString();
+    return getJson<{
+      items: NewsItem[];
+      categories: { category: string; n: number; latest_pubdate: string }[];
+    }>(`/api/news${qs ? "?" + qs : ""}`);
   },
 
   // Payments — Public (auth yok, /satin-al için)

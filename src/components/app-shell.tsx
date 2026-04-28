@@ -15,6 +15,7 @@ import {
   DollarSign,
   Wallet,
   Sparkles,
+  Newspaper,
 } from "lucide-react";
 import { NexoraLogo } from "@/components/nexora-logo";
 import Link from "next/link";
@@ -46,6 +47,7 @@ const navAdmin = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/positions", label: "Açık Pozisyonlar", icon: TrendingUp },
   { href: "/history", label: "Geçmiş", icon: History },
+  { href: "/haberler", label: "Haberler", icon: Newspaper },
   { href: "/wsb", label: "ABD Radar", icon: Radar },
   { href: "/bist", label: "BIST Radar", icon: Globe },
   { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
@@ -63,6 +65,7 @@ const navAdminPanel = [
 ];
 
 const navSubscriber = [
+  { href: "/haberler", label: "Haberler", icon: Newspaper },
   { href: "/bist", label: "BIST Radar", icon: Globe },
   { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
   { href: "/wsb", label: "ABD Radar", icon: Radar },
