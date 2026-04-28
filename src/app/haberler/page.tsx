@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authApi, NewsItem } from "@/lib/auth";
-import { Newspaper, ExternalLink, RefreshCw, Tag } from "lucide-react";
+import { Newspaper, RefreshCw, Tag } from "lucide-react";
 import { FreshnessBadge } from "@/components/freshness-badge";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -175,12 +175,11 @@ function parseNewsDate(s: string | null | undefined): Date | null {
 
 function NewsRow({ n }: { n: NewsItem }) {
   const dt = parseNewsDate(n.pubdate);
+  const [expanded, setExpanded] = useState(false);
   return (
-    <a
-      href={n.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block rounded-lg border border-border bg-card/30 p-4 hover:border-emerald-500/30 hover:bg-card/60 transition-all group"
+    <div
+      onClick={() => setExpanded((e) => !e)}
+      className="rounded-lg border border-border bg-card/30 p-4 hover:border-emerald-500/30 hover:bg-card/60 transition-all cursor-pointer"
     >
       <div className="flex gap-3">
         {n.image_url && (
@@ -219,15 +218,28 @@ function NewsRow({ n }: { n: NewsItem }) {
               </span>
             )}
           </div>
-          <h3 className="font-medium text-sm leading-snug group-hover:text-emerald-300 transition-colors flex items-start gap-1">
+          <h3 className="font-medium text-sm leading-snug">
             {n.title}
-            <ExternalLink className="size-3 shrink-0 mt-0.5 opacity-50 group-hover:opacity-100" />
           </h3>
           {n.summary && (
-            <p className="text-xs text-muted-foreground line-clamp-2">{n.summary}</p>
+            <p
+              className={`text-xs text-muted-foreground leading-relaxed ${
+                expanded ? "" : "line-clamp-2"
+              }`}
+            >
+              {n.summary}
+            </p>
+          )}
+          {n.summary && n.summary.length > 200 && (
+            <button
+              type="button"
+              className="text-[11px] text-emerald-400 hover:text-emerald-300"
+            >
+              {expanded ? "▲ kapat" : "▼ devamı"}
+            </button>
           )}
         </div>
       </div>
-    </a>
+    </div>
   );
 }
