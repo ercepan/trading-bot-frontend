@@ -162,8 +162,19 @@ export default function HaberlerPage() {
   );
 }
 
+function parseNewsDate(s: string | null | undefined): Date | null {
+  if (!s) return null;
+  // ISO 8601 (yeni format: 2026-04-28T14:41:48Z)
+  let d = new Date(s);
+  if (!isNaN(d.getTime())) return d;
+  // Eski format fallback: "2026-04-28 14:41:48"
+  d = new Date(s.replace(" ", "T") + "Z");
+  if (!isNaN(d.getTime())) return d;
+  return null;
+}
+
 function NewsRow({ n }: { n: NewsItem }) {
-  const dt = n.pubdate ? new Date(n.pubdate.replace(" ", "T") + "Z") : null;
+  const dt = parseNewsDate(n.pubdate);
   return (
     <a
       href={n.link}
