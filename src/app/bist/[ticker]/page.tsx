@@ -326,44 +326,18 @@ export default function BistTickerDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Hızlı eylemler</CardTitle>
-          <CardDescription>Midas'ta al-sat veya teknik analiz</CardDescription>
+          <CardTitle>Hızlı eylem</CardTitle>
+          <CardDescription>Bu hisseyi Midas'tan al-sat</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-2">
-            <a
-              href={midasUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-3 py-2 hover:bg-emerald-500/30 transition-colors"
-            >
-              💰 Midas'ta aç <ExternalLink className="size-3" />
-            </a>
-            <a
-              href={tvUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors"
-            >
-              📊 Grafik <ExternalLink className="size-3" />
-            </a>
-            <a
-              href={yahooUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors"
-            >
-              Hisse Detay <ExternalLink className="size-3" />
-            </a>
-            <a
-              href={isYatirim}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm rounded-md border border-border px-3 py-2 hover:bg-accent transition-colors"
-            >
-              İş Yatırım <ExternalLink className="size-3" />
-            </a>
-          </div>
+          <a
+            href={midasUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-4 py-2 hover:bg-emerald-500/30 transition-colors"
+          >
+            💰 Midas'ta aç <ExternalLink className="size-3" />
+          </a>
         </CardContent>
       </Card>
     </div>

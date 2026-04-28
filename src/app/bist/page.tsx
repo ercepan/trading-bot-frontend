@@ -373,15 +373,6 @@ export default function BistPage() {
                             >
                               Midas
                             </a>
-                            <a
-                              href={tvUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[10px] rounded border border-border px-1.5 py-0.5 hover:bg-accent"
-                              title="Grafik"
-                            >
-                              Grafik <ExternalLink className="size-2.5 inline" />
-                            </a>
                           </div>
                         </TableCell>
                       </TableRow>
