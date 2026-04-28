@@ -286,6 +286,35 @@ export const authApi = {
   bistFundamentals: (ticker: string) =>
     getJson<BistFundamentals>(`/api/bist/fundamentals/${encodeURIComponent(ticker)}`),
 
+  // Marketing (Telegram kanal otomasyonu)
+  marketingStatus: () =>
+    getJson<{
+      configured: boolean;
+      channel: string | null;
+      bot_token_set: boolean;
+      recent_posts: {
+        id: number;
+        kind: string;
+        title: string;
+        ok: 0 | 1;
+        error: string | null;
+        tg_message_id: number | null;
+        created_at: string;
+      }[];
+    }>("/api/admin/marketing/status"),
+
+  marketingPost: (kind: "morning_bist" | "afternoon_us" | "fomo_sim" | "evening_news") =>
+    postJson<{ ok: boolean; message_id?: number; error?: string }>(
+      `/api/admin/marketing/post/${kind}`,
+      {},
+    ),
+
+  marketingAnnounce: (title: string, body: string, link?: string) =>
+    postJson<{ ok: boolean; message_id?: number; error?: string }>(
+      "/api/admin/marketing/announce",
+      { title, body, link: link || null },
+    ),
+
   // News (Investing.com TR)
   news: (params?: { category?: string; ticker?: string; limit?: number }) => {
     const q = new URLSearchParams();
