@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, fmtDate, BistTicker } from "@/lib/api";
+import { BistFundamentalsWidget } from "@/components/bist-fundamentals";
 import {
   ArrowLeft,
   TrendingUp,
@@ -319,6 +320,9 @@ export default function BistTickerDetailPage({
           </CardContent>
         </Card>
       )}
+
+      {/* yfinance fundamentals — mali tablo + oran + analist */}
+      <BistFundamentalsWidget ticker={tk} />
 
       <Card>
         <CardHeader>

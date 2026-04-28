@@ -10,6 +10,73 @@ export type User = {
   subscription?: Subscription | null;
 };
 
+export type BistFundamentals = {
+  ticker: string;
+  name: string | null;
+  sector: string | null;
+  industry: string | null;
+  currency: string;
+  market_cap: number | null;
+  price: number | null;
+  day_high: number | null;
+  day_low: number | null;
+  fifty_two_week_high: number | null;
+  fifty_two_week_low: number | null;
+  fifty_day_avg: number | null;
+  volume: number | null;
+  avg_volume: number | null;
+  ratios: {
+    trailing_pe: number | null;
+    forward_pe: number | null;
+    price_to_book: number | null;
+    price_to_sales: number | null;
+    roe: number | null;
+    roa: number | null;
+    profit_margin: number | null;
+    operating_margin: number | null;
+    debt_to_equity: number | null;
+    current_ratio: number | null;
+    quick_ratio: number | null;
+  };
+  financials_summary: {
+    total_revenue: number | null;
+    gross_profits: number | null;
+    ebitda: number | null;
+    net_income: number | null;
+    total_cash: number | null;
+    total_debt: number | null;
+    free_cashflow: number | null;
+  };
+  growth: {
+    earnings_growth: number | null;
+    revenue_growth: number | null;
+  };
+  dividend: {
+    yield: number | null;
+    annual_yield: number | null;
+  };
+  analyst: {
+    recommendation_mean: number | null;
+    recommendation_key: string | null;
+    num_analysts: number | null;
+    target_mean: number | null;
+    target_high: number | null;
+    target_low: number | null;
+    trend?: {
+      period: string;
+      strong_buy: number;
+      buy: number;
+      hold: number;
+      sell: number;
+      strong_sell: number;
+    }[];
+  };
+  annual_financials: Array<{ period: string; [key: string]: number | string }>;
+  annual_balance_sheet: Array<{ period: string; [key: string]: number | string }>;
+  annual_cashflow: Array<{ period: string; [key: string]: number | string }>;
+  fetched_at: string;
+};
+
 export type NewsItem = {
   id: number;
   source: string;
@@ -214,6 +281,10 @@ export const authApi = {
     }
     return res.json() as Promise<{ ok: boolean; username?: string; deleted_subs?: number }>;
   },
+
+  // BIST fundamentals (yfinance via backend)
+  bistFundamentals: (ticker: string) =>
+    getJson<BistFundamentals>(`/api/bist/fundamentals/${encodeURIComponent(ticker)}`),
 
   // News (Investing.com TR)
   news: (params?: { category?: string; ticker?: string; limit?: number }) => {
