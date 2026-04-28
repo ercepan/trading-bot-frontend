@@ -18,11 +18,13 @@ const CATEGORY_LABELS: Record<string, string> = {
   borsa: "🏦 Borsa",
   ekonomi: "📊 Ekonomi",
   kripto: "₿ Kripto",
+  "kripto-en": "₿ Kripto (EN)",
   forex: "💱 Forex",
   indikator: "📈 İndikatör",
   analiz: "🔍 Analiz",
   popular: "🔥 Popüler",
   insider: "👤 Insider",
+  genel: "📡 Genel",
 };
 
 export default function HaberlerPage() {
