@@ -109,10 +109,75 @@ export default function KvkkPage() {
               paylaşılmaz.
             </p>
             <p>
-              Sadece teknik altyapı sağlayıcıları (Railway — sunucu hosting, Vercel —
-              frontend hosting, Cloudflare — DNS) ile sınırlı, hizmetin sunulması
-              için gerekli teknik aktarımlar olabilir. Bu sağlayıcıların kendi gizlilik
-              politikaları geçerlidir.
+              Hizmetin sunulabilmesi için aşağıdaki teknik altyapı sağlayıcıları
+              tarafından sınırlı kapsamlı veri işleme yapılır. Bu sağlayıcıların kendi
+              gizlilik politikaları geçerlidir:
+            </p>
+            <ul className="list-disc list-inside space-y-1.5 pl-2">
+              <li>
+                <strong className="text-foreground">Railway</strong> (ABD) — Backend
+                sunucu hosting, veritabanı (SQLite). Kullanıcı kaydı + işlemleri saklar.
+                <a
+                  href="https://railway.app/legal/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-1 underline hover:text-foreground inline-flex items-center gap-0.5"
+                >
+                  privacy policy ↗
+                </a>
+              </li>
+              <li>
+                <strong className="text-foreground">Vercel</strong> (ABD) — Frontend
+                hosting + edge cache. Sayfa çağrı log'ları (IP, user-agent) 30 gün
+                tutulur.
+                <a
+                  href="https://vercel.com/legal/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-1 underline hover:text-foreground inline-flex items-center gap-0.5"
+                >
+                  privacy policy ↗
+                </a>
+              </li>
+              <li>
+                <strong className="text-foreground">Cloudflare</strong> (ABD) — DNS,
+                CDN, DDoS koruması, bot filtreleme. IP bazlı log'lar 7-30 gün tutulur.
+                <a
+                  href="https://www.cloudflare.com/privacypolicy/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-1 underline hover:text-foreground inline-flex items-center gap-0.5"
+                >
+                  privacy policy ↗
+                </a>
+              </li>
+              <li>
+                <strong className="text-foreground">Telegram</strong> — Yalnızca admin
+                bildirimleri ve abonelik bitiş uyarıları. Kullanıcı verisi paylaşılmaz.
+                <a
+                  href="https://telegram.org/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-1 underline hover:text-foreground inline-flex items-center gap-0.5"
+                >
+                  privacy policy ↗
+                </a>
+              </li>
+              <li>
+                <strong className="text-foreground">BscScan</strong> (Etherscan, ABD) —
+                USDT BEP-20 ödeme doğrulaması için public blockchain TX kontrolü.
+                Yalnızca TX hash gönderilir (kişisel veri yok).
+              </li>
+              <li>
+                <strong className="text-foreground">MEXC / Binance</strong> — Kripto
+                alım-satım API'leri. Sadece admin hesap işlemleri için kullanılır;
+                abonelerin verisi gönderilmez.
+              </li>
+            </ul>
+            <p className="pt-1">
+              Bu sağlayıcıların hiçbiri yatırım danışmanlığı yapmaz, tavsiye vermez. KVKK
+              kapsamında veri yurt dışına aktarımı için Kişisel Verileri Koruma Kurumu
+              tarafından öngörülen tedbirler (sözleşmesel güvenceler) uygulanır.
             </p>
             <p>
               Yasal yükümlülük gereği (mahkeme kararı, SPK/MASAK talebi) yetkili
