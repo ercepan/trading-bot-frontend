@@ -17,6 +17,7 @@ import {
   Sparkles,
   Newspaper,
   Megaphone,
+  Send as TwitterIcon,
 } from "lucide-react";
 import { NexoraLogo } from "@/components/nexora-logo";
 import Link from "next/link";
@@ -62,7 +63,8 @@ const navAdminPanel = [
   { href: "/admin/payments", label: "Ödemeler", icon: Wallet },
   { href: "/admin/users", label: "Kullanıcılar", icon: Users },
   { href: "/admin/codes", label: "Davet Kodları", icon: ShieldCheck },
-  { href: "/admin/marketing", label: "Pazarlama", icon: Megaphone },
+  { href: "/admin/marketing", label: "Telegram", icon: Megaphone },
+  { href: "/admin/twitter", label: "Twitter (X)", icon: TwitterIcon },
   { href: "/admin/sources", label: "Veri Kaynakları", icon: FileText },
 ];
 

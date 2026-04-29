@@ -287,6 +287,36 @@ export const authApi = {
     getJson<BistFundamentals>(`/api/bist/fundamentals/${encodeURIComponent(ticker)}`),
 
   // Marketing (Telegram kanal otomasyonu)
+  // Twitter (Free tier — manuel post)
+  twitterStatus: () =>
+    getJson<{
+      configured: boolean;
+      today_count: number;
+      daily_limit: number;
+      drafts: Record<string, { kind: string; text: string | null; error?: string }>;
+      recent_posts: {
+        id: number;
+        kind: string;
+        text: string;
+        tweet_id: string | null;
+        ok: 0 | 1;
+        error: string | null;
+        created_at: string;
+      }[];
+    }>("/api/admin/twitter/status"),
+
+  twitterPost: (text: string, kind = "manual") =>
+    postJson<{ ok: boolean; tweet_id?: string; url?: string; error?: string }>(
+      "/api/admin/twitter/post",
+      { text, kind },
+    ),
+
+  twitterPostDraft: (kind: string) =>
+    postJson<{ ok: boolean; tweet_id?: string; url?: string; text?: string; error?: string }>(
+      `/api/admin/twitter/post-draft/${kind}`,
+      {},
+    ),
+
   marketingStatus: () =>
     getJson<{
       configured: boolean;
