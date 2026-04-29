@@ -254,8 +254,15 @@ export type LabRun = {
 
 export const api = {
   portfolio: fetchPortfolio,
-  positions: () => fetchJson<Position[]>("/api/positions"),
-  history: () => fetchJson<Trade[]>("/api/history"),
+  positions: async () => {
+    const r = await fetchJson<{ open: Position[] } | Position[]>("/api/positions");
+    // Backend {open: [...]} döner, eski clientlar için array fallback
+    return Array.isArray(r) ? r : r.open || [];
+  },
+  history: async () => {
+    const r = await fetchJson<{ closed: Trade[] } | Trade[]>("/api/history");
+    return Array.isArray(r) ? r : r.closed || [];
+  },
   stats: () => fetchJson<TradeStats>("/api/stats"),
   errors: () => fetchJson<ErrorLog[]>("/api/errors"),
   errors_full: () => fetchJson<ErrorLog[]>("/api/errors"),
