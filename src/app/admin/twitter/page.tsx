@@ -20,6 +20,7 @@ import {
   ExternalLink,
   AlertCircle,
   Sparkles,
+  Copy,
 } from "lucide-react";
 
 type Status = Awaited<ReturnType<typeof authApi.twitterStatus>>;
@@ -41,6 +42,22 @@ export default function AdminTwitterPage() {
   // Custom tweet
   const [customText, setCustomText] = useState("");
   const [customBusy, setCustomBusy] = useState(false);
+
+  // Kopyalama state
+  const [copiedKind, setCopiedKind] = useState<string | null>(null);
+
+  const copyAndOpen = async (text: string, kind: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKind(kind);
+      setTimeout(() => setCopiedKind((k) => (k === kind ? null : k)), 3000);
+      // X compose pencerede aç
+      const url = "https://x.com/compose/tweet?text=" + encodeURIComponent(text);
+      window.open(url, "_blank", "noopener");
+    } catch (e) {
+      setMsg({ kind: "err", text: "Kopyalama başarısız" });
+    }
+  };
 
   const load = async () => {
     try {
@@ -278,25 +295,50 @@ export default function AdminTwitterPage() {
                       </span>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleDraftPost(kind)}
-                    disabled={!ready || !hasContent || !!busy}
-                    className="w-full inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-semibold px-3 py-2 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="size-3 animate-spin" /> Atılıyor…
-                      </>
-                    ) : (
-                      <>
-                        <Send className="size-3" /> Tweet at
-                      </>
-                    )}
-                  </button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => hasContent && copyAndOpen(draft!.text!, kind)}
+                      disabled={!hasContent}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-semibold px-2 py-2 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {copiedKind === kind ? (
+                        <>
+                          <CheckCircle2 className="size-3" /> Kopyalandı
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="size-3" /> Kopyala + X'te Aç
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => handleDraftPost(kind)}
+                      disabled={!ready || !hasContent || !!busy}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border hover:bg-accent text-foreground px-2 py-2 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="API ile direkt at (Basic plan gerekli — $100/ay)"
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="size-3 animate-spin" /> …
+                        </>
+                      ) : (
+                        <>
+                          <Send className="size-3" /> API ile at
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </CardContent>
               </Card>
             );
           })}
+        </div>
+        <div className="mt-3 text-xs text-muted-foreground bg-amber-500/5 border border-amber-500/20 rounded-md p-3">
+          💡 <strong>Free tier durumu:</strong> Twitter API Free şu an post için
+          ücret istiyor (402 Payment Required). <strong>"Kopyala + X'te Aç"</strong>{" "}
+          butonu → metin clipboard'a kopyalanır + X compose ekranı yeni sekmede
+          açılır → sen onayla, gönder. <em>5+ abone gelince Basic plan ($100/ay) ile
+          API ile otomatik atarız.</em>
         </div>
       </div>
 
@@ -334,21 +376,38 @@ export default function AdminTwitterPage() {
                 {customText.length} / 280
               </div>
             </div>
-            <button
-              type="submit"
-              disabled={customBusy || !ready || !customText.trim()}
-              className="inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 text-sm transition-colors disabled:opacity-50"
-            >
-              {customBusy ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" /> Atılıyor…
-                </>
-              ) : (
-                <>
-                  <Send className="size-4" /> Tweet at
-                </>
-              )}
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => customText.trim() && copyAndOpen(customText.trim(), "custom")}
+                disabled={!customText.trim()}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 text-sm transition-colors disabled:opacity-50"
+              >
+                {copiedKind === "custom" ? (
+                  <>
+                    <CheckCircle2 className="size-4" /> Kopyalandı
+                  </>
+                ) : (
+                  <>
+                    <Copy className="size-4" /> Kopyala + X'te Aç
+                  </>
+                )}
+              </button>
+              <button
+                type="submit"
+                disabled={customBusy || !ready || !customText.trim()}
+                className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border hover:bg-accent text-foreground px-4 py-2 text-sm transition-colors disabled:opacity-50"
+                title="Twitter API Basic plan ($100/ay) gerekli"
+              >
+                {customBusy ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <>
+                    <Send className="size-4" /> API
+                  </>
+                )}
+              </button>
+            </div>
           </form>
         </CardContent>
       </Card>
