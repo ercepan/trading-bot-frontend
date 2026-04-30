@@ -4,36 +4,16 @@ import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authApi, NewsItem } from "@/lib/auth";
-import { Newspaper, RefreshCw, Tag } from "lucide-react";
+import { Search, RefreshCw, Tag } from "lucide-react";
 import { FreshnessBadge } from "@/components/freshness-badge";
 
-const CATEGORY_LABELS: Record<string, string> = {
-  borsa: "🏦 Borsa",
-  ekonomi: "📊 Ekonomi",
-  kripto: "₿ Kripto",
-  "kripto-en": "₿ Kripto (EN)",
-  forex: "💱 Forex",
-  indikator: "📈 İndikatör",
-  analiz: "🔍 Analiz",
-  popular: "🔥 Popüler",
-  insider: "👤 Insider",
-  genel: "📡 Genel",
-};
-
-export default function HaberlerPage() {
+export default function AnalizlerPage() {
   const [items, setItems] = useState<NewsItem[]>([]);
-  const [categories, setCategories] = useState<
-    { category: string; n: number; latest_pubdate: string }[]
-  >([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<string | null>(null);
   const [tickerFilter, setTickerFilter] = useState<string>("");
   const [err, setErr] = useState<string | null>(null);
 
@@ -42,14 +22,11 @@ export default function HaberlerPage() {
     setErr(null);
     try {
       const r = await authApi.news({
-        category: filter ?? undefined,
+        category: "analiz",
         ticker: tickerFilter.trim() || undefined,
-        // /haberler sayfasında "analiz" görünmesin — onlar /analizler sayfasında
-        exclude: filter ? undefined : ["analiz"],
         limit: 80,
       });
       setItems(r.items);
-      setCategories(r.categories);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "yükleme hatası");
     } finally {
@@ -59,11 +36,10 @@ export default function HaberlerPage() {
 
   useEffect(() => {
     load();
-    const t = setInterval(load, 5 * 60 * 1000); // 5 dk
+    const t = setInterval(load, 5 * 60 * 1000);
     return () => clearInterval(t);
-  }, [filter, tickerFilter]);
+  }, [tickerFilter]);
 
-  // Son güncelleme: tüm haberlerin fetched_at MAX'ı (sıralı geldiğinden ilki en yenidir)
   const latestTs = items.reduce<string | undefined>((acc, it) => {
     if (!it.fetched_at) return acc;
     if (!acc) return it.fetched_at;
@@ -75,12 +51,12 @@ export default function HaberlerPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">
-            <Newspaper className="size-5" /> Haberler
+            <Search className="size-5" /> Analizler
             <FreshnessBadge timestamp={latestTs} />
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            BIST + Forex + Kripto + Ekonomi · 8 kategoriden derlenmiş haberler ·
-            BIST hisseleri otomatik etiketlenir.
+            Investing.com TR analiz yazıları · Uzman yorumları, teknik
+            değerlendirmeler · Hisse bazlı filtreleme.
           </p>
         </div>
         <button
@@ -91,37 +67,9 @@ export default function HaberlerPage() {
         </button>
       </div>
 
-      {/* Filtreler */}
+      {/* Ticker filter */}
       <Card>
-        <CardContent className="pt-5 space-y-3">
-          <div className="flex flex-wrap gap-1.5">
-            <button
-              onClick={() => setFilter(null)}
-              className={`text-xs rounded-md border px-2.5 py-1 transition-colors ${
-                filter === null
-                  ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-300"
-                  : "border-border bg-background text-muted-foreground hover:bg-accent"
-              }`}
-            >
-              Tümü
-            </button>
-            {categories
-              .filter((c) => c.category !== "analiz")
-              .map((c) => (
-                <button
-                  key={c.category}
-                  onClick={() => setFilter(c.category)}
-                  className={`text-xs rounded-md border px-2.5 py-1 transition-colors ${
-                    filter === c.category
-                      ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-300"
-                      : "border-border bg-background text-muted-foreground hover:bg-accent"
-                  }`}
-                >
-                  {CATEGORY_LABELS[c.category] ?? c.category}{" "}
-                  <span className="opacity-60">({c.n})</span>
-                </button>
-              ))}
-          </div>
+        <CardContent className="pt-5">
           <div className="flex items-center gap-2">
             <Tag className="size-3.5 text-muted-foreground" />
             <input
@@ -159,13 +107,13 @@ export default function HaberlerPage() {
       ) : items.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-sm text-muted-foreground">
-            Bu filtrede haber yok.
+            Bu filtrede analiz yok.
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-2">
           {items.map((n) => (
-            <NewsRow key={n.id} n={n} />
+            <AnalysisRow key={n.id} n={n} />
           ))}
         </div>
       )}
@@ -173,19 +121,17 @@ export default function HaberlerPage() {
   );
 }
 
-function parseNewsDate(s: string | null | undefined): Date | null {
+function parseDate(s: string | null | undefined): Date | null {
   if (!s) return null;
-  // ISO 8601 (yeni format: 2026-04-28T14:41:48Z)
   let d = new Date(s);
   if (!isNaN(d.getTime())) return d;
-  // Eski format fallback: "2026-04-28 14:41:48"
   d = new Date(s.replace(" ", "T") + "Z");
   if (!isNaN(d.getTime())) return d;
   return null;
 }
 
-function NewsRow({ n }: { n: NewsItem }) {
-  const dt = parseNewsDate(n.pubdate);
+function AnalysisRow({ n }: { n: NewsItem }) {
+  const dt = parseDate(n.pubdate);
   const [expanded, setExpanded] = useState(false);
   return (
     <div
@@ -206,8 +152,11 @@ function NewsRow({ n }: { n: NewsItem }) {
         )}
         <div className="flex-1 min-w-0 space-y-1.5">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className="text-[10px]">
-              {CATEGORY_LABELS[n.category] ?? n.category}
+            <Badge
+              variant="outline"
+              className="text-[10px] border-violet-500/40 text-violet-400"
+            >
+              🔍 Analiz
             </Badge>
             {n.ticker_mentions.map((t) => (
               <Badge
@@ -229,9 +178,7 @@ function NewsRow({ n }: { n: NewsItem }) {
               </span>
             )}
           </div>
-          <h3 className="font-medium text-sm leading-snug">
-            {n.title}
-          </h3>
+          <h3 className="font-medium text-sm leading-snug">{n.title}</h3>
           {n.summary && (
             <p
               className={`text-xs text-muted-foreground leading-relaxed ${

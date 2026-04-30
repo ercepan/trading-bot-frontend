@@ -346,10 +346,17 @@ export const authApi = {
     ),
 
   // News (Investing.com TR)
-  news: (params?: { category?: string; ticker?: string; limit?: number }) => {
+  news: (params?: {
+    category?: string;
+    ticker?: string;
+    exclude?: string[];
+    limit?: number;
+  }) => {
     const q = new URLSearchParams();
     if (params?.category) q.set("category", params.category);
     if (params?.ticker) q.set("ticker", params.ticker);
+    if (params?.exclude && params.exclude.length > 0)
+      q.set("exclude", params.exclude.join(","));
     if (params?.limit) q.set("limit", String(params.limit));
     const qs = q.toString();
     return getJson<{
