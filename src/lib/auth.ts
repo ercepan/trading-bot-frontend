@@ -118,6 +118,28 @@ export type Subscription = {
   duration_days?: number;
   device_id?: string | null;
   status?: string;
+  is_premium?: boolean | number;
+};
+
+export type PaymentPlan = {
+  id: "signal" | "education" | string;
+  name: string;
+  price_usd: number;
+  min_usd: number;
+  duration_days: number;
+  is_premium: boolean;
+  description: string;
+};
+
+export type PaymentInfo = {
+  address: string;
+  network: string;
+  token: string;
+  amount_usd: number;
+  min_amount_usd: number;
+  min_confirmations: number;
+  configured: boolean;
+  plans?: PaymentPlan[];
 };
 
 const TOKEN_KEY = "tb_token";
@@ -366,20 +388,12 @@ export const authApi = {
   },
 
   // Payments — Public (auth yok, /satin-al için)
-  paymentPublicInfo: async () => {
+  paymentPublicInfo: async (): Promise<PaymentInfo> => {
     const res = await fetch(`${API_BASE}/api/payments/public-info`, {
       cache: "no-store",
     });
     if (!res.ok) throw new Error(`${res.status}`);
-    return res.json() as Promise<{
-      address: string;
-      network: string;
-      token: string;
-      amount_usd: number;
-      min_amount_usd: number;
-      min_confirmations: number;
-      configured: boolean;
-    }>;
+    return res.json();
   },
 
   buyCodeAnonymous: async (tx_hash: string, contact: string) => {
@@ -403,12 +417,15 @@ export const authApi = {
       amount_usd: number;
       tx_hash: string;
       note?: string;
+      plan_id?: string;
+      plan_name?: string;
+      is_premium?: boolean;
     }>;
   },
 
   // Payments — Authenticated (subscriber yenile)
   paymentInfo: () =>
-    getJson<{
+    getJson<PaymentInfo & {
       address: string;
       network: string;
       token: string;

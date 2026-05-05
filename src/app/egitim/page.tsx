@@ -1,10 +1,22 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { GraduationCap, Clock, BarChart3, ChevronDown, Filter, Star } from "lucide-react";
+import Link from "next/link";
+import {
+  GraduationCap,
+  Clock,
+  BarChart3,
+  ChevronDown,
+  Filter,
+  Star,
+  Lock,
+  Sparkles,
+  Check,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/components/auth-context";
 import {
   LESSONS,
   LESSON_CATEGORIES,
@@ -12,6 +24,7 @@ import {
   type LessonCategory,
   type Lesson,
 } from "@/lib/egitim-content";
+import { LESSON_DIAGRAMS } from "@/components/egitim-diagrams";
 
 const PRICE_USD = 40;
 
@@ -80,6 +93,11 @@ function LessonCard({
 
       {open && (
         <div className="border-t border-border/40 px-4 md:px-5 py-5 bg-muted/10">
+          {/* Görseller (varsa) — body'den önce göster, dikkat çekmesin */}
+          {(LESSON_DIAGRAMS[lesson.id] || []).map((Diagram, i) => (
+            <Diagram key={i} />
+          ))}
+
           <div className="space-y-6 prose prose-invert max-w-none">
             {lesson.sections.map((s, i) => (
               <section key={i}>
@@ -116,9 +134,91 @@ function LessonCard({
   );
 }
 
+function PremiumPaywall() {
+  return (
+    <div className="space-y-6 max-w-3xl mx-auto">
+      <div className="rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-8 md:p-10 text-center relative overflow-hidden">
+        <div className="absolute -top-20 -right-20 size-72 rounded-full bg-emerald-500/15 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 size-72 rounded-full bg-emerald-500/10 blur-3xl" />
+        <div className="relative">
+          <div className="size-20 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center mb-4">
+            <Lock className="size-10 text-emerald-400" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">
+            Eğitim Seti — Premium Plan'a özel
+          </h1>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            12 kapsamlı ders, görsel anlatımlarla — sadece{" "}
+            <span className="text-emerald-400 font-semibold">$40 / ay</span> Premium plan
+            aboneleri için açık.
+          </p>
+
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto text-left">
+            {[
+              { num: "12", label: "Ders" },
+              { num: "5", label: "Kategori" },
+              { num: "~2sa", label: "Okuma" },
+              { num: "9+", label: "Görsel" },
+            ].map((s) => (
+              <div
+                key={s.label}
+                className="rounded-lg border border-border/60 bg-background/40 p-3 text-center"
+              >
+                <div className="text-2xl font-bold text-emerald-400">{s.num}</div>
+                <div className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+            <Link
+              href="/satin-al?plan=education"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-5 py-3 transition-colors"
+            >
+              <Sparkles className="size-4" />
+              Premium'a yükselt — $40
+            </Link>
+            <Link
+              href="/yenile"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent px-5 py-3 text-sm transition-colors"
+            >
+              Yenile
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-border/60 bg-muted/20 p-5">
+        <h3 className="font-semibold text-foreground mb-3">
+          Eğitim Seti'nde neler var?
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+          {LESSONS.map((l) => (
+            <div key={l.id} className="flex items-start gap-2 text-muted-foreground">
+              <Check className="size-4 text-emerald-400/60 mt-0.5 shrink-0" />
+              <div>
+                <div className="text-foreground/80 font-medium">{l.title.split("—")[0].trim()}</div>
+                <div className="text-[11px]">{l.duration} · {l.level}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function EgitimPage() {
+  const { user, subscription } = useAuth();
   const [activeCat, setActiveCat] = useState<LessonCategory | "ALL">("ALL");
   const [openId, setOpenId] = useState<string | null>(null);
+
+  // Premium check: admin her zaman görür, subscriber is_premium=1 ise görür
+  const hasAccess =
+    user?.role === "admin" ||
+    Boolean(subscription?.is_premium);
 
   const filtered = useMemo(() => {
     if (activeCat === "ALL") return LESSONS;
@@ -132,6 +232,11 @@ export default function EgitimPage() {
     });
     return byCat;
   }, []);
+
+  // Premium değilse paywall göster
+  if (!hasAccess) {
+    return <PremiumPaywall />;
+  }
 
   return (
     <div className="space-y-6 max-w-5xl">

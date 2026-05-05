@@ -138,7 +138,7 @@ export default function LandingPage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/20"
             >
               <Sparkles className="size-4" />
-              Davet kodu satın al · $25
+              Paketleri incele · $25 / $40
             </Link>
             <Link
               href="/auth/login"
@@ -337,66 +337,128 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Fiyat */}
+      {/* Fiyat — 2 plan kartı */}
       <section id="fiyat" className="py-20 px-4 md:px-6 border-t border-border/50">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-              Sade fiyat. Saklı maliyet yok.
+              İhtiyacına göre seç
             </h2>
+            <p className="text-muted-foreground mt-2">
+              Sinyal tek başına ya da Eğitim Seti ile birlikte
+            </p>
           </div>
 
-          <div className="rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-500/5 to-transparent p-8 shadow-xl shadow-emerald-500/10">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <NexoraLogo className="size-8" />
-              </div>
-              <div>
-                <div className="font-bold text-lg">Aylık Abonelik</div>
-                <div className="text-xs text-muted-foreground">
-                  Tek cihaz · 30 gün aktif · iade yok
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Sinyal Paketi $25 */}
+            <div className="relative rounded-2xl border-2 border-border/60 bg-gradient-to-br from-muted/20 to-transparent p-7 hover:border-emerald-500/30 transition-colors">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                  <NexoraLogo className="size-8" />
+                </div>
+                <div>
+                  <div className="font-bold text-lg">Sinyal Paketi</div>
+                  <div className="text-xs text-muted-foreground">
+                    Tek cihaz · 30 gün
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="my-6 flex items-baseline gap-2">
-              <span className="text-5xl font-bold">$25</span>
-              <span className="text-muted-foreground">/ ay</span>
-            </div>
+              <div className="my-5 flex items-baseline gap-2">
+                <span className="text-5xl font-bold">$25</span>
+                <span className="text-muted-foreground">/ ay</span>
+              </div>
 
-            <ul className="space-y-2.5 text-sm mb-6">
-              {[
-                "BIST100 + ABD radarları",
-                "AI hisse sinyalleri (BUY / SELL / HOLD)",
-                "Resmi açıklama özetleri",
-                "Telegram anlık bildirim + günlük özet",
-                "2 saatte bir güncel veri",
-                "30 gün, kesintisiz",
-              ].map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <Check className="size-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
+              <ul className="space-y-2.5 text-sm mb-6">
+                {[
+                  "BIST100 + ABD radarları",
+                  "AI hisse sinyalleri (BUY/SELL/HOLD)",
+                  "Resmi açıklama özetleri",
+                  "Telegram anlık bildirim",
+                  "2 saatte bir güncel veri",
+                  "30 gün kesintisiz",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="size-4 text-emerald-400 mt-0.5 shrink-0" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
 
-            <div className="space-y-2">
               <Link
-                href="/satin-al"
+                href="/satin-al?plan=signal"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-emerald-500/40 hover:bg-emerald-500/10 text-emerald-400 font-semibold px-6 py-3 transition-colors"
+              >
+                Sinyal — $25 al
+              </Link>
+            </div>
+
+            {/* Sinyal + Eğitim Paketi $40 (POPULAR) */}
+            <div className="relative rounded-2xl border-2 border-emerald-500/60 bg-gradient-to-br from-emerald-500/15 via-emerald-500/5 to-transparent p-7 shadow-xl shadow-emerald-500/15">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-emerald-500 text-black text-[11px] font-bold tracking-wide">
+                EN POPÜLER · TASARRUFLU
+              </div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="size-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-2xl">
+                  🎓
+                </div>
+                <div>
+                  <div className="font-bold text-lg">
+                    Sinyal <span className="text-emerald-400">+</span> Eğitim Seti
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Tek cihaz · 30 gün · 12 ders dahil
+                  </div>
+                </div>
+              </div>
+
+              <div className="my-5 flex items-baseline gap-2">
+                <span className="text-5xl font-bold text-emerald-400">$40</span>
+                <span className="text-muted-foreground">/ ay</span>
+                <span className="ml-auto text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded px-2 py-1">
+                  $10 tasarruf
+                </span>
+              </div>
+
+              <ul className="space-y-2.5 text-sm mb-6">
+                <li className="flex items-start gap-2 text-emerald-300">
+                  <Check className="size-4 text-emerald-400 mt-0.5 shrink-0" />
+                  <span className="font-medium">Sinyal Paketi içeriğinin tamamı</span>
+                </li>
+                {[
+                  "12 kapsamlı ders (TA + bilanço + risk)",
+                  "Mum okuma, EMA, RSI, MACD, sentiment",
+                  "BIST temelleri + bilanço okuma rehberi",
+                  "Hisse seçim stratejileri (değer/büyüme)",
+                  "Kripto döngüleri + on-chain temelleri",
+                  "Risk yönetimi + trade psikolojisi",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="size-4 text-emerald-400 mt-0.5 shrink-0" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/satin-al?plan=education"
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
               >
                 <Sparkles className="size-4" />
-                Davet kodu satın al
-              </Link>
-              <Link
-                href="/auth/signup"
-                className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent px-6 py-2.5 text-sm transition-colors"
-              >
-                Kodum var → Hesap aç
+                Eğitim + Sinyal — $40 al
               </Link>
             </div>
-            <p className="text-center text-xs text-muted-foreground mt-3">
-              Otomatik onay · 30 sn içinde kod ekranda
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link
+              href="/auth/signup"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Davet kodum var → hesap aç
+            </Link>
+            <p className="text-xs text-muted-foreground mt-2">
+              Otomatik onay · 30 sn içinde kod ekranda · İade yok
             </p>
           </div>
         </div>
