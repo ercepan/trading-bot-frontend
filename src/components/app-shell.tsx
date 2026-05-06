@@ -45,6 +45,7 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/components/auth-context";
 import { LogOut, ShieldCheck, Users, FileText } from "lucide-react";
 import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
+import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 
 const navAdmin = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -226,6 +227,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="text-[11px] text-muted-foreground">v2.0</span>
             <HealthBadge />
           </div>
+
+          {/* Telegram kanal CTA — sticky sidebar footer */}
+          <a
+            href={TELEGRAM_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mx-2 mb-2 flex items-center gap-2 rounded-md text-xs text-[#3da5e0] hover:text-[#5cb8e8] border border-[#0088cc]/30 hover:border-[#0088cc]/50 bg-[#0088cc]/5 hover:bg-[#0088cc]/10 px-2 py-1.5 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-1.5"
+            title="Telegram kanalına katıl"
+          >
+            <TwitterIcon className="size-3.5" />
+            <span className="group-data-[collapsible=icon]:hidden">Telegram Kanal</span>
+          </a>
+
           {!isAdmin && daysLeft !== null && (
             <div className="px-2 pb-2 group-data-[collapsible=icon]:hidden">
               <div className="text-[10px] text-muted-foreground rounded-md border border-border/50 px-2 py-1 text-center">

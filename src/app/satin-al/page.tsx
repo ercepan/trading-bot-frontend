@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { authApi, type PaymentInfo, type PaymentPlan } from "@/lib/auth";
 import { NexoraLogo } from "@/components/nexora-logo";
+import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHANNEL_DISPLAY } from "@/lib/config";
 
 function SatinAlInner() {
   const searchParams = useSearchParams();
@@ -501,10 +502,33 @@ function SatinAlInner() {
           </section>
         )}
 
+        {/* Telegram free channel CTA */}
+        <a
+          href={TELEGRAM_CHANNEL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block rounded-xl border border-[#0088cc]/30 bg-[#0088cc]/5 hover:bg-[#0088cc]/10 p-4 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="size-10 rounded-lg bg-[#0088cc]/15 border border-[#0088cc]/40 flex items-center justify-center text-[#3da5e0]">
+              <ExternalLink className="size-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-semibold text-sm text-foreground">
+                Ücretsiz Telegram Kanalı
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Hesap açmadan günlük sinyal özetlerini gör → {TELEGRAM_CHANNEL_DISPLAY}
+              </div>
+            </div>
+            <span className="text-xs text-[#3da5e0]">Katıl →</span>
+          </div>
+        </a>
+
         <div className="text-center text-xs text-muted-foreground py-4">
           Sorunla karşılaşırsan{" "}
           <a
-            href="https://t.me/"
+            href={TELEGRAM_CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-foreground"
