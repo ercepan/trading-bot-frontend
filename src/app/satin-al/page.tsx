@@ -26,6 +26,13 @@ import {
   TWITTER_USERNAME,
 } from "@/lib/config";
 import { XIcon } from "@/components/x-icon";
+import {
+  getStoredReferralCode,
+  checkReferralCode,
+  clearReferralCode,
+  type ReferralCheck,
+} from "@/lib/referral";
+import { API_BASE } from "@/lib/api";
 
 function SatinAlInner() {
   const searchParams = useSearchParams();
@@ -41,12 +48,32 @@ function SatinAlInner() {
     amount: number;
     plan_name?: string;
     is_premium?: boolean;
+    ref_applied?: boolean;
+    ref_username?: string | null;
   } | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState<"address" | "code" | null>(null);
 
+  // Referral durumu
+  const [refCode, setRefCode] = useState<string | null>(null);
+  const [refCheck, setRefCheck] = useState<ReferralCheck | null>(null);
+
   useEffect(() => {
     authApi.paymentPublicInfo().then(setInfo).catch(() => {});
+
+    // Cookie'deki referral kodu yakla → backend'de doğrula
+    const stored = getStoredReferralCode();
+    if (stored) {
+      setRefCode(stored);
+      checkReferralCode(stored).then((res) => {
+        setRefCheck(res);
+        if (!res.valid) {
+          // Geçersiz kod → cookie temizle
+          clearReferralCode();
+          setRefCode(null);
+        }
+      });
+    }
   }, []);
 
   // Plans listesi (backend'den geliyorsa onu, yoksa default static)
@@ -76,6 +103,16 @@ function SatinAlInner() {
 
   const selectedPlanData = plans.find((p) => p.id === selectedPlan) || plans[0];
 
+  // Referral indirim hesabı
+  const hasValidRef = !!(refCode && refCheck?.valid);
+  const discountPct = hasValidRef ? (refCheck?.discount_pct ?? 20) : 0;
+  const discountedPrice = hasValidRef
+    ? Math.round(selectedPlanData.price_usd * (1 - discountPct / 100) * 100) / 100
+    : selectedPlanData.price_usd;
+  const discountedMin = hasValidRef
+    ? Math.round((selectedPlanData.price_usd * (1 - discountPct / 100) - 0.5) * 100) / 100
+    : selectedPlanData.min_usd;
+
   const copy = async (text: string, kind: "address" | "code") => {
     try {
       await navigator.clipboard.writeText(text);
@@ -93,15 +130,38 @@ function SatinAlInner() {
     setErr(null);
     setVerifying(true);
     try {
-      const r = await authApi.buyCodeAnonymous(txHash.trim(), contact.trim());
+      // ref_code'ı backend'e yolla — direct fetch (lib/auth.ts'in eski signature ile uyumlu kalmak için)
+      const res = await fetch(`${API_BASE}/api/payments/buy-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tx_hash: txHash.trim(),
+          contact: contact.trim(),
+          ref_code: hasValidRef ? refCode : "",
+        }),
+      });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        let msg = `${res.status}`;
+        try {
+          const j = JSON.parse(txt);
+          msg = j.detail || j.error || msg;
+        } catch {}
+        throw new Error(msg);
+      }
+      const r = await res.json();
       setSuccess({
         code: r.code,
         amount: r.amount_usd,
         plan_name: r.plan_name,
         is_premium: r.is_premium,
+        ref_applied: r.ref_applied,
+        ref_username: r.ref_username,
       });
       setTxHash("");
       setContact("");
+      // Başarılı satın alma sonrası ref cookie'sini temizle (kullanılmış)
+      if (hasValidRef) clearReferralCode();
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Doğrulama başarısız");
     } finally {
@@ -147,6 +207,36 @@ function SatinAlInner() {
           </p>
         </div>
 
+        {/* Referral indirim banner */}
+        {hasValidRef && refCheck?.referrer_username && !success && (
+          <div className="rounded-xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 p-4 flex items-start gap-3">
+            <div className="size-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl shrink-0">
+              🎁
+            </div>
+            <div className="flex-1">
+              <div className="font-bold text-emerald-400 text-sm">
+                Referans indirimi aktif — %{discountPct}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                <span className="font-mono text-emerald-300">{refCode}</span> ·{" "}
+                <span className="text-foreground">{refCheck.referrer_username}</span> sayesinde
+                indirimli ödeme yapabilirsin.
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                clearReferralCode();
+                setRefCode(null);
+                setRefCheck(null);
+              }}
+              className="text-[10px] text-muted-foreground hover:text-foreground"
+              title="İndirim kaldır"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* Step 0: Plan Seçimi */}
         {!success && (
           <section className="rounded-xl border border-border bg-card/30 p-5 space-y-4">
@@ -190,14 +280,29 @@ function SatinAlInner() {
                         </span>
                       )}
                     </div>
-                    <div className="mt-2 flex items-baseline gap-1">
-                      <span
-                        className={`text-3xl font-bold ${
-                          active ? "text-emerald-400" : ""
-                        }`}
-                      >
-                        ${plan.price_usd}
-                      </span>
+                    <div className="mt-2 flex items-baseline gap-1 flex-wrap">
+                      {hasValidRef ? (
+                        <>
+                          <span className="text-xl font-bold text-muted-foreground line-through">
+                            ${plan.price_usd}
+                          </span>
+                          <span
+                            className={`text-3xl font-bold ${
+                              active ? "text-emerald-400" : "text-emerald-300"
+                            }`}
+                          >
+                            ${Math.round(plan.price_usd * (1 - discountPct / 100) * 100) / 100}
+                          </span>
+                        </>
+                      ) : (
+                        <span
+                          className={`text-3xl font-bold ${
+                            active ? "text-emerald-400" : ""
+                          }`}
+                        >
+                          ${plan.price_usd}
+                        </span>
+                      )}
                       <span className="text-xs text-muted-foreground">/ay</span>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-1.5">
@@ -316,7 +421,19 @@ function SatinAlInner() {
                 <p className="text-xs text-muted-foreground">
                   Ağ <strong className="text-foreground">BNB Smart Chain (BEP-20)</strong>{" "}
                   · Token <strong className="text-foreground">USDT</strong> · Tutar{" "}
-                  <strong className="text-emerald-400">${selectedPlanData.price_usd}</strong>{" "}
+                  {hasValidRef ? (
+                    <>
+                      <strong className="text-muted-foreground line-through">
+                        ${selectedPlanData.price_usd}
+                      </strong>{" "}
+                      <strong className="text-emerald-400">${discountedPrice}</strong>{" "}
+                      <span className="text-emerald-400">(referans %{discountPct} indirimli)</span>
+                    </>
+                  ) : (
+                    <strong className="text-emerald-400">
+                      ${selectedPlanData.price_usd}
+                    </strong>
+                  )}{" "}
                   ({selectedPlanData.name})
                 </p>
               </div>
@@ -371,9 +488,15 @@ function SatinAlInner() {
                     Borsadan: Binance / OKX / Bybit / KuCoin → Para Çek → USDT → BEP20.
                   </div>
                   <div>
-                    En az ${selectedPlanData.min_usd.toFixed(2)} USDT gönder (komisyon hariç
-                    net miktar). <span className="text-amber-300">$40 üstü = Eğitim
-                    Seti otomatik dahil.</span>
+                    En az ${discountedMin.toFixed(2)} USDT gönder (komisyon hariç
+                    net miktar).{" "}
+                    {hasValidRef ? (
+                      <span className="text-emerald-300">
+                        ✓ Referans indirimi uygulandı, eski $25 yerine ${discountedPrice} yetiyor.
+                      </span>
+                    ) : (
+                      <span className="text-amber-300">$40 üstü = Eğitim Seti otomatik dahil.</span>
+                    )}
                   </div>
                 </div>
               </div>

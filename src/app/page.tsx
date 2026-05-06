@@ -24,15 +24,33 @@ import {
   TWITTER_USERNAME,
 } from "@/lib/config";
 import { XIcon } from "@/components/x-icon";
+import { captureReferralFromUrl, checkReferralCode } from "@/lib/referral";
 
 export default function LandingPage() {
   const { user, loading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
+  const [refBanner, setRefBanner] = useState<{ code: string; from: string; pct: number } | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Referral capture — ?ref=KOD geldiyse cookie'ye kaydet, banner göster
+  useEffect(() => {
+    captureReferralFromUrl().then((code) => {
+      if (!code) return;
+      checkReferralCode(code).then((res) => {
+        if (res.valid && res.referrer_username) {
+          setRefBanner({
+            code,
+            from: res.referrer_username,
+            pct: res.discount_pct ?? 20,
+          });
+        }
+      });
+    });
   }, []);
 
   // Login olmuş kullanıcı için CTA → dashboard'a (admin) veya bist'e (subscriber)
@@ -112,8 +130,17 @@ export default function LandingPage() {
         </div>
       </header>
 
+      {/* Referral indirim banner — sadece ?ref= ile gelmiş ziyaretçilere */}
+      {refBanner && (
+        <div className="fixed top-16 left-0 right-0 z-40 bg-emerald-500/95 text-black text-center py-2.5 px-4 text-sm font-medium shadow-lg backdrop-blur">
+          🎁 <span className="font-bold">{refBanner.from}</span>{" "}
+          sayesinde <span className="font-bold">%{refBanner.pct} indirim</span> aktif —
+          satın al sayfasında otomatik uygulanır
+        </div>
+      )}
+
       {/* Hero */}
-      <section className="relative pt-32 pb-20 px-4 md:px-6 overflow-hidden">
+      <section className={`relative pb-20 px-4 md:px-6 overflow-hidden ${refBanner ? "pt-44" : "pt-32"}`}>
         {/* Background glow */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-emerald-500/10 blur-[120px]" />
