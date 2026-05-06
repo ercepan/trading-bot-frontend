@@ -28,6 +28,7 @@ import {
 import { XIcon } from "@/components/x-icon";
 import {
   getStoredReferralCode,
+  storeReferralCode,
   checkReferralCode,
   clearReferralCode,
   type ReferralCheck,
@@ -61,20 +62,30 @@ function SatinAlInner() {
   useEffect(() => {
     authApi.paymentPublicInfo().then(setInfo).catch(() => {});
 
-    // Cookie'deki referral kodu yakla → backend'de doğrula
-    const stored = getStoredReferralCode();
-    if (stored) {
-      setRefCode(stored);
-      checkReferralCode(stored).then((res) => {
+    // 1. URL'den ?ref=KOD doğrudan oku (kullanıcı /satin-al?ref=XXX'e direkt gelmiş olabilir)
+    const urlRef = searchParams.get("ref");
+    let codeToCheck: string | null = null;
+
+    if (urlRef) {
+      // URL'deki kodu cookie'ye kaydet + state'e koy
+      storeReferralCode(urlRef);
+      codeToCheck = urlRef.toUpperCase();
+    } else {
+      // 2. Cookie'den oku (önceden başka sayfadan gelmiş olabilir)
+      codeToCheck = getStoredReferralCode();
+    }
+
+    if (codeToCheck) {
+      setRefCode(codeToCheck);
+      checkReferralCode(codeToCheck).then((res) => {
         setRefCheck(res);
         if (!res.valid) {
-          // Geçersiz kod → cookie temizle
           clearReferralCode();
           setRefCode(null);
         }
       });
     }
-  }, []);
+  }, [searchParams]);
 
   // Plans listesi (backend'den geliyorsa onu, yoksa default static)
   const plans: PaymentPlan[] = useMemo(() => {

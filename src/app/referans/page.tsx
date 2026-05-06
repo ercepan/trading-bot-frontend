@@ -23,6 +23,7 @@ export default function ReferansPage() {
   const { user } = useAuth();
   const [stats, setStats] = useState<ReferralStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<"link" | "code" | null>(null);
   const [payouts, setPayouts] = useState<Awaited<ReturnType<typeof referralApi.payouts>>["payouts"]>([]);
   const [payoutAmount, setPayoutAmount] = useState("");
@@ -35,8 +36,11 @@ export default function ReferansPage() {
       .then(([s, p]) => {
         setStats(s);
         setPayouts(p.payouts);
+        setError(null);
       })
-      .catch(() => {})
+      .catch((e) => {
+        setError(e instanceof Error ? e.message : String(e));
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -85,8 +89,31 @@ export default function ReferansPage() {
 
   if (!stats) {
     return (
-      <div className="text-center py-20 text-muted-foreground">
-        Referral bilgisi alınamadı.
+      <div className="space-y-4 max-w-2xl mx-auto">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/5 p-5">
+          <div className="font-semibold text-red-400 mb-2">
+            Referans bilgisi alınamadı
+          </div>
+          {error && (
+            <div className="text-xs font-mono text-muted-foreground bg-background/40 rounded p-2 mb-3 break-all">
+              {error}
+            </div>
+          )}
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p>Olası sebepler:</p>
+            <ul className="list-disc list-inside text-xs space-y-0.5 mt-1">
+              <li>Tarayıcı önbelleği eski (sayfayı <strong>Cmd+Shift+R</strong> ile yenile)</li>
+              <li>Backend henüz deploy bitmemiş (1-2 dakika bekle)</li>
+              <li>Aboneliğin aktif değil — yeniden giriş yap</li>
+            </ul>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-3 inline-flex items-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black text-sm font-semibold px-4 py-2"
+          >
+            Tekrar dene
+          </button>
+        </div>
       </div>
     );
   }
