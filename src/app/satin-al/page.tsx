@@ -19,7 +19,13 @@ import {
 } from "lucide-react";
 import { authApi, type PaymentInfo, type PaymentPlan } from "@/lib/auth";
 import { NexoraLogo } from "@/components/nexora-logo";
-import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHANNEL_DISPLAY } from "@/lib/config";
+import {
+  TELEGRAM_CHANNEL_URL,
+  TELEGRAM_CHANNEL_DISPLAY,
+  TWITTER_URL,
+  TWITTER_USERNAME,
+} from "@/lib/config";
+import { XIcon } from "@/components/x-icon";
 
 function SatinAlInner() {
   const searchParams = useSearchParams();
@@ -502,28 +508,52 @@ function SatinAlInner() {
           </section>
         )}
 
-        {/* Telegram free channel CTA */}
-        <a
-          href={TELEGRAM_CHANNEL_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block rounded-xl border border-[#0088cc]/30 bg-[#0088cc]/5 hover:bg-[#0088cc]/10 p-4 transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <div className="size-10 rounded-lg bg-[#0088cc]/15 border border-[#0088cc]/40 flex items-center justify-center text-[#3da5e0]">
-              <ExternalLink className="size-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-semibold text-sm text-foreground">
-                Ücretsiz Telegram Kanalı
+        {/* Sosyal medya CTA'ları — Telegram + X */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <a
+            href={TELEGRAM_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block rounded-xl border border-[#0088cc]/30 bg-[#0088cc]/5 hover:bg-[#0088cc]/10 p-4 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-lg bg-[#0088cc]/15 border border-[#0088cc]/40 flex items-center justify-center text-[#3da5e0]">
+                <ExternalLink className="size-5" />
               </div>
-              <div className="text-xs text-muted-foreground">
-                Hesap açmadan günlük sinyal özetlerini gör → {TELEGRAM_CHANNEL_DISPLAY}
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm text-foreground">
+                  Telegram Kanalı
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Günlük sinyal özetleri · {TELEGRAM_CHANNEL_DISPLAY}
+                </div>
               </div>
+              <span className="text-xs text-[#3da5e0]">Katıl →</span>
             </div>
-            <span className="text-xs text-[#3da5e0]">Katıl →</span>
-          </div>
-        </a>
+          </a>
+
+          <a
+            href={TWITTER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block rounded-xl border border-white/15 bg-white/[0.03] hover:bg-white/10 p-4 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-white">
+                <XIcon className="size-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm text-foreground">
+                  X (Twitter)
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Anlık piyasa yorumları · @{TWITTER_USERNAME}
+                </div>
+              </div>
+              <span className="text-xs text-white/70">Takip →</span>
+            </div>
+          </a>
+        </div>
 
         <div className="text-center text-xs text-muted-foreground py-4">
           Sorunla karşılaşırsan{" "}

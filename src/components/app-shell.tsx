@@ -45,7 +45,8 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/components/auth-context";
 import { LogOut, ShieldCheck, Users, FileText } from "lucide-react";
 import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
+import { TELEGRAM_CHANNEL_URL, TWITTER_URL } from "@/lib/config";
+import { XIcon } from "@/components/x-icon";
 
 const navAdmin = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -228,17 +229,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <HealthBadge />
           </div>
 
-          {/* Telegram kanal CTA — sticky sidebar footer */}
-          <a
-            href={TELEGRAM_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 mb-2 flex items-center gap-2 rounded-md text-xs text-[#3da5e0] hover:text-[#5cb8e8] border border-[#0088cc]/30 hover:border-[#0088cc]/50 bg-[#0088cc]/5 hover:bg-[#0088cc]/10 px-2 py-1.5 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-1.5"
-            title="Telegram kanalına katıl"
-          >
-            <TwitterIcon className="size-3.5" />
-            <span className="group-data-[collapsible=icon]:hidden">Telegram Kanal</span>
-          </a>
+          {/* Sosyal CTA — Telegram + X yan yana */}
+          <div className="mx-2 mb-2 grid grid-cols-2 gap-1.5 group-data-[collapsible=icon]:grid-cols-1">
+            <a
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 rounded-md text-[11px] text-[#3da5e0] hover:text-[#5cb8e8] border border-[#0088cc]/30 hover:border-[#0088cc]/50 bg-[#0088cc]/5 hover:bg-[#0088cc]/10 px-2 py-1.5 transition-colors"
+              title="Telegram kanalına katıl"
+            >
+              <TwitterIcon className="size-3" />
+              <span className="group-data-[collapsible=icon]:hidden">Telegram</span>
+            </a>
+            <a
+              href={TWITTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 rounded-md text-[11px] text-foreground hover:text-foreground border border-white/15 hover:border-white/25 bg-white/[0.03] hover:bg-white/10 px-2 py-1.5 transition-colors"
+              title="X (Twitter) takip et"
+            >
+              <XIcon className="size-3" />
+              <span className="group-data-[collapsible=icon]:hidden">X (Twitter)</span>
+            </a>
+          </div>
 
           {!isAdmin && daysLeft !== null && (
             <div className="px-2 pb-2 group-data-[collapsible=icon]:hidden">

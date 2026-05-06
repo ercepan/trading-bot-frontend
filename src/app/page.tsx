@@ -17,7 +17,13 @@ import {
 } from "lucide-react";
 import { NexoraLogo } from "@/components/nexora-logo";
 import { useAuth } from "@/components/auth-context";
-import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHANNEL_DISPLAY } from "@/lib/config";
+import {
+  TELEGRAM_CHANNEL_URL,
+  TELEGRAM_CHANNEL_DISPLAY,
+  TWITTER_URL,
+  TWITTER_USERNAME,
+} from "@/lib/config";
+import { XIcon } from "@/components/x-icon";
 
 export default function LandingPage() {
   const { user, loading } = useAuth();
@@ -148,17 +154,29 @@ export default function LandingPage() {
               Davet kodum var · Giriş yap
             </Link>
           </div>
-          {/* Telegram quick-join CTA — ücretsiz public kanal */}
-          <a
-            href={TELEGRAM_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#0088cc]/40 bg-[#0088cc]/10 hover:bg-[#0088cc]/20 text-[#3da5e0] px-5 py-2 text-sm transition-colors"
-          >
-            <Send className="size-3.5" />
-            <span>Ücretsiz Telegram kanalına katıl →</span>
-            <span className="text-[#3da5e0]/70 font-mono text-[12px]">{TELEGRAM_CHANNEL_DISPLAY}</span>
-          </a>
+          {/* Sosyal kanal CTA'lar — Telegram (sinyal) + X (sosyal) */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <a
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-[#0088cc]/40 bg-[#0088cc]/10 hover:bg-[#0088cc]/20 text-[#3da5e0] px-4 py-2 text-sm transition-colors"
+            >
+              <Send className="size-3.5" />
+              <span>Telegram</span>
+              <span className="text-[#3da5e0]/70 font-mono text-[12px]">{TELEGRAM_CHANNEL_DISPLAY}</span>
+            </a>
+            <a
+              href={TWITTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 text-white px-4 py-2 text-sm transition-colors"
+            >
+              <XIcon className="size-3.5" />
+              <span>X (Twitter)</span>
+              <span className="text-white/60 font-mono text-[12px]">@{TWITTER_USERNAME}</span>
+            </a>
+          </div>
           <p className="mt-4 text-xs text-muted-foreground">
             USDT BEP-20 · Otomatik onay · 30 sn içinde kod ekranda · Tek cihaz, 30 gün
           </p>
@@ -584,6 +602,14 @@ export default function LandingPage() {
               className="hover:text-foreground transition-colors inline-flex items-center gap-1"
             >
               <Send className="size-3" /> {TELEGRAM_CHANNEL_DISPLAY}
+            </a>
+            <a
+              href={TWITTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground transition-colors inline-flex items-center gap-1"
+            >
+              <XIcon className="size-3" /> @{TWITTER_USERNAME}
             </a>
           </div>
         </div>
