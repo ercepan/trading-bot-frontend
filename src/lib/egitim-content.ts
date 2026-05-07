@@ -645,6 +645,234 @@ export const LESSONS: Lesson[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════════════
+  //  X1. BOLLINGER BANTLARI
+  // ═══════════════════════════════════════════════════════════════════════
+  {
+    id: "bollinger-bands",
+    category: "TA",
+    title: "Bollinger Bantları — Volatilite Lensi",
+    subtitle: "Fiyatın 'ne kadar uzağa gittiğini' ölçen en kullanışlı indikatör.",
+    duration: "7 dk okuma",
+    level: "Orta",
+    sections: [
+      {
+        heading: "Bollinger nedir?",
+        body:
+          "3 çizgi: Orta (genelde EMA20), üst bant (orta + 2 standart sapma), alt bant (orta − 2 standart sapma).\n\n" +
+          "Yani fiyatın son 20 mumdaki 'oynaklığa' göre dinamik bir koridor çiziyor.\n\n" +
+          "Mantık: fiyat kabaca %95 ihtimalle bu koridor içinde kalır. Üst banda yapışırsa 'aşırı yukarı', alt banda yapışırsa 'aşırı aşağı' demek.",
+      },
+      {
+        heading: "3 yorum kuralı",
+        body:
+          "1. SIKIŞMA (squeeze): bantlar daralır → volatilite düşük → patlama yakın. Yön belli değil ama hareket gelecek.\n\n" +
+          "2. GENİŞLEME: bantlar açılır → volatilite yüksek → trend güçlü.\n\n" +
+          "3. BANT YÜRÜYÜŞÜ: fiyat ÜST banda yapışıp ilerliyorsa güçlü yükseliş trendi (sat değil!). Alt banda yapışıp ilerliyorsa güçlü düşüş.",
+        tip:
+          "Yeni başlayanın hatası: fiyat üst bantta diye SAT, alt bantta diye AL. Trend'le birlikte düşün — uptrend'de fiyat üst banda 'yapışır' bu normaldir.",
+      },
+      {
+        heading: "En iyi sinyal: Squeeze + breakout",
+        body:
+          "Bantlar 20 günün en darı haline gelir → 'sıkışma' modu.\n\n" +
+          "Ardından fiyat banttan dışarı çıkar (yukarı veya aşağı) → büyük hareket gelir.\n\n" +
+          "Bu pattern özellikle %5-15 günlük hareket için altın.",
+        example:
+          "$ASELS 90 TL'de 3 hafta sıkışık → bantlar daraldı → bir gün üstten kırıldı + volume 3x artış → sonraki 2 hafta 105 TL'ye gitti (+%17).",
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  X2. FIBONACCI RETRACEMENT
+  // ═══════════════════════════════════════════════════════════════════════
+  {
+    id: "fibonacci",
+    category: "TA",
+    title: "Fibonacci Retracement — Geri Çekilme Seviyeleri",
+    subtitle: "Bir trend ne kadar geri çekilir? Matematik söyler. %38, %50, %61.8 sihirli sayılar.",
+    duration: "8 dk okuma",
+    level: "Orta",
+    sections: [
+      {
+        heading: "Fibonacci nedir, niye işe yarar?",
+        body:
+          "Fibonacci dizisi: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55... (her sayı önceki ikinin toplamı). Bu sayılar arasındaki oran 0.618'e yaklaşır (altın oran).\n\n" +
+          "Borsada 'geri çekilme' seviyeleri:\n" +
+          "• %23.6 — sığ geri çekilme\n" +
+          "• %38.2 — yaygın destek\n" +
+          "• %50 — psikolojik orta\n" +
+          "• %61.8 — derin geri çekilme (altın oran)\n" +
+          "• %78.6 — çok derin (trend tehlikede)\n\n" +
+          "Garip ama gerçek: piyasalar bu seviyeleri sürekli respekt eder.",
+      },
+      {
+        heading: "Nasıl çizilir",
+        body:
+          "TradingView'da Fibonacci aracını seç:\n\n" +
+          "Yükseliş trendinde: en son DİP'ten en son TEPE'ye sürükle.\n" +
+          "Düşüş trendinde: en son TEPE'den en son DİP'e sürükle.\n\n" +
+          "Otomatik 5 yatay çizgi çıkar (%23.6, %38.2, %50, %61.8, %78.6).\n\n" +
+          "Trend devam ederken fiyat genelde %38.2 veya %61.8 seviyesinde durup yeni bacağı başlatır.",
+        example:
+          "$BTC 30K'dan 70K'ya çıktı, sonra geri çekildi.\n" +
+          "%38.2 = 54.7K, %50 = 50K, %61.8 = 45.3K\n" +
+          "Genelde dipler bu seviyelerde olur. 50K civarında durduysa 'sağlıklı geri çekilme', 45K altına inerse trend bozuldu.",
+      },
+      {
+        heading: "Confluence (üst üste binme)",
+        body:
+          "Fibonacci'nin gerçek gücü tek başına değil. Başka indikatörle birleşince:\n\n" +
+          "✓ Fib %61.8 + EMA 200 + önceki destek aynı seviyede → ÇOK güçlü destek\n" +
+          "✓ Fib %38.2 + RSI oversold → büyük ihtimalle bounce alır\n\n" +
+          "İki-üç indikatör aynı seviyede 'evet' diyorsa, o seviye 'savaş alanı' — alıcı/satıcı orada karşılaşır.",
+        tip:
+          "Trade etmeye karar vermeden önce en az 2 farklı sebep bul. Tek başına Fibonacci ile değil — RSI, hacim, EMA gibi başka teyitle.",
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  X3. PATTERN TANIMA
+  // ═══════════════════════════════════════════════════════════════════════
+  {
+    id: "pattern-tanima",
+    category: "TA",
+    title: "Pattern Tanıma — Grafiğin 5 Klasik Şekli",
+    subtitle: "Bir pattern 100 yıldır işliyor — çünkü insan psikolojisi değişmedi.",
+    duration: "10 dk okuma",
+    level: "Orta",
+    sections: [
+      {
+        heading: "1. Omuz-Baş-Omuz (Head & Shoulders)",
+        body:
+          "Trend dönüş patterni. Yükseliş trendinin sonunda gözükür → DÜŞÜŞ sinyali.\n\n" +
+          "3 tepe: ortadaki (baş) en yüksek, yan ikisi (omuzlar) daha düşük + simetrik.\n\n" +
+          "Boyun çizgisi (omuzların altları) kırıldığında pattern teyit olur. Hedef: baştan boyna olan mesafe kadar aşağı.\n\n" +
+          "Tersini (Inverse H&S) düşüş trendinde gör → YÜKSELİŞ sinyali.",
+        example:
+          "BIST 100 grafiği 2018 ortası: omuz 100, baş 110, omuz 102 (sağ). Boyun 95.\n" +
+          "Boyun kırıldı → 6 ay sonra 75'e indi (mesafe ~15 puan, hedef tutmuş).",
+        tip:
+          "%75 başarı oranı var ama YALNIZ omuzlardaki volume azalmalı. Eşit volume ise pattern güvenilmez.",
+      },
+      {
+        heading: "2. Çift Tepe / Çift Dip (Double Top / Bottom)",
+        body:
+          "Çift Tepe: aynı seviyede 2 tepe + arada bir vadi. Trend dönüşü, DÜŞÜŞ.\n" +
+          "Çift Dip: aynı seviyede 2 dip + arada tepe. Trend dönüşü, YÜKSELİŞ.\n\n" +
+          "Pattern teyidi: vadiyi/tepeyi geçince. Hedef: tepeden vadiye olan mesafe kadar.\n\n" +
+          "Bu en sık görülen pattern — neredeyse her gün bir hisse benzer pattern üretir.",
+      },
+      {
+        heading: "3. Üçgenler (Triangle)",
+        body:
+          "ÇIKAN üçgen (ascending): yatay direnç + yükselen destek → YÜKSELİŞ kırılımı bekle.\n" +
+          "İNEN üçgen (descending): yatay destek + alçalan direnç → DÜŞÜŞ kırılımı.\n" +
+          "SİMETRİK üçgen: hem alçalan direnç hem yükselen destek → yön belirsiz, kırıldığı yöne git.\n\n" +
+          "Üçgen oluştuğunda volatilite düşer. Kırılım anında volume patlar — bu sinyal.",
+        tip:
+          "Üçgen tepe noktasının %75'inde kırılım gelir. Daha geç kırılımlar zayıftır.",
+      },
+      {
+        heading: "4. Bayrak / Flama (Flag / Pennant)",
+        body:
+          "Önce keskin hareket (bayrak direği), sonra dar bir geri çekilme (bayrak gövdesi).\n\n" +
+          "Bayrak: paralel kanal, dik açılı.\n" +
+          "Flama: küçük üçgen.\n\n" +
+          "İki pattern de DEVAM patterni — orijinal hareketin yönünde devam beklenir.\n" +
+          "Hedef: bayrak direği uzunluğu kadar.",
+        example:
+          "$NVDA Q3 2023: 200'den 280'e fırladı (bayrak direği), sonra 270-275 arasında 1 hafta dar zigzag (bayrak), kırılım sonrası 350'ye gitti (~80 puan, direkdeki kadar).",
+      },
+      {
+        heading: "5. Kupa & Kulp (Cup & Handle)",
+        body:
+          "Bill O'Neil'in en sevdiği pattern, %70+ başarı oranlı.\n\n" +
+          "Kupa: yumuşak U şekli, 1-12 ay sürer.\n" +
+          "Kulp: kupanın sağ tarafında küçük bir geri çekilme (kulp), genelde Fib %38.2 derinliğinde.\n\n" +
+          "Kulp direnç kırılınca → güçlü YÜKSELİŞ. Hedef: kupanın derinliği kadar yukarı.\n\n" +
+          "Tüm büyük teknoloji hisseleri bu pattern ile yıllar süren rallye'lere başlamıştır.",
+        tip:
+          "Kupa düzgün U olmalı, V şeklindeyse zayıf pattern. Yumuşak ve süreli kupa = sağlıklı bottoming.",
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
+  //  X4. FAİZ VE BORSA
+  // ═══════════════════════════════════════════════════════════════════════
+  {
+    id: "faiz-borsa",
+    category: "BIST",
+    title: "Faiz ve Borsa — Türkiye İçin Kritik İlişki",
+    subtitle: "Merkez Bankası faiz kararı verdiğinde piyasa neden ya patlar ya da çöker?",
+    duration: "10 dk okuma",
+    level: "Orta",
+    sections: [
+      {
+        heading: "Faiz nedir, neden önemli?",
+        body:
+          "TCMB politika faizi → bankalararası faiz → mevduat faizi → kredi faizi → şirket borçlanma maliyeti.\n\n" +
+          "Yüksek faiz:\n" +
+          "• Şirketler kredi alamaz / aldıkları pahalı\n" +
+          "• Borçlu şirketler zorlanır → kar düşer → hisse fiyatı düşer\n" +
+          "• Yatırımcı parayı mevduata koymayı tercih eder (risksiz %50 vs riskli %30)\n\n" +
+          "Düşük faiz:\n" +
+          "• Şirket borçlanması ucuz → büyüme mümkün\n" +
+          "• Mevduat çekici değil → para borsaya akar\n" +
+          "• Hisseler primlenir",
+        tip:
+          "Genel kural: Faiz ↑ borsa ↓, Faiz ↓ borsa ↑.\n" +
+          "Ama Türkiye'de bu kural birkaç ay gecikme ile çalışıyor — beklentilerin değişimi anlık.",
+      },
+      {
+        heading: "Sektör bazlı faiz hassasiyeti",
+        body:
+          "Yüksek faizden EN ÇOK ETKİLENEN sektörler:\n" +
+          "1. EMLAK + İnşaat (mortgage faizi) — örn. EMNIS, SODSN\n" +
+          "2. Otomotiv (taksit kredisi) — TOASO, FROTO\n" +
+          "3. Bankacılık (kompleks — net faiz marjı) — GARAN, AKBNK\n" +
+          "4. Borçlu sanayi — kalanlar\n\n" +
+          "Yüksek faizden FAYDA SAĞLAYAN sektörler:\n" +
+          "1. Bankacılık (mevduat-kredi makası açılır) — kısa vadede\n" +
+          "2. Sigorta (yatırım gelirleri ↑)\n" +
+          "3. Borçsuz değer hisseleri (cash-rich şirketler)\n" +
+          "4. Holding'ler (likit varlıkları)",
+      },
+      {
+        heading: "Türkiye özelinde — faiz + USD/TL döngüsü",
+        body:
+          "TCMB faiz arttırırsa:\n" +
+          "Adım 1: TL güçlenir (kısa vadede USD/TL düşer)\n" +
+          "Adım 2: İhracatçı şirketler düşüş yaşar (THYAO, ASELS, otomotiv ihraç)\n" +
+          "Adım 3: İç tüketim sektörleri zorlanır (perakende, otomotiv)\n" +
+          "Adım 4: Borsa genelde aşağı (-%5 ila -%15)\n\n" +
+          "TCMB faiz düşürürse:\n" +
+          "Adım 1: TL zayıflar (USD/TL yükselir)\n" +
+          "Adım 2: İhracatçılar iyi gelir (THYAO, ASELS uçar)\n" +
+          "Adım 3: Bankacılık net faiz marjı baskı\n" +
+          "Adım 4: Borsa genelde yukarı (+%5 ila +%20)",
+        example:
+          "Mayıs 2024: TCMB faizi %50'den artırma sinyali → BIST -%12 (1 ay)\n" +
+          "Aralık 2024: TCMB faiz indirim başladı → BIST +%18 (2 ay)\n\n" +
+          "Faiz toplantısı tarihlerine dikkat et (TCMB websitesinde takvim var).",
+      },
+      {
+        heading: "Beklenti yönetimi — gerçek hareket nereden gelir",
+        body:
+          "Önemli kural: piyasa BEKLENEN faiz kararına göre fiyatlanır, KARAR günü değil.\n\n" +
+          "Eğer 'TCMB %2 artıracak' diye bekleniyor ve %2 arttırıyorsa → fiyat fazla hareket etmez.\n" +
+          "Eğer %2 bekleniyor ama %5 arttırırsa → şok, sert hareket.\n" +
+          "Eğer %2 bekleniyor ama %0 arttırırsa → şok, ters yön.\n\n" +
+          "Bu yüzden 'beklentileri okumak' lazım — anketler, ekonomist tahminleri, futures piyasası.",
+        tip:
+          "TCMB toplantısından 2-3 gün önce pozisyon almayı düşün. Toplantı saatinde ANI hareket yapma — volatilite çok yüksek, stop-loss tetiklenir.",
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════
   //  12. TRADE PSİKOLOJİSİ
   // ═══════════════════════════════════════════════════════════════════════
   {

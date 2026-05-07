@@ -495,6 +495,281 @@ export function PositionSizingDiagram() {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
+// 10. BOLLINGER BANTLARI
+// ────────────────────────────────────────────────────────────────────────────
+export function BollingerDiagram() {
+  return (
+    <Box label="Bollinger Bantları: orta (EMA20) + üst/alt 2σ. Sıkışma → patlama yakın">
+      <svg viewBox="0 0 600 280" width="100%" style={{ maxWidth: 580 }}>
+        {/* Background grid */}
+        <g stroke="#27272a" strokeWidth="0.5">
+          {[60, 120, 180, 240].map((y) => (
+            <line key={y} x1="0" y1={y} x2="600" y2={y} />
+          ))}
+        </g>
+        {/* Üst bant */}
+        <path
+          d="M 30 80 Q 100 70, 180 75 Q 260 85, 320 60 Q 400 35, 480 30 Q 540 28, 580 35"
+          fill="none"
+          stroke={Y}
+          strokeWidth="2"
+          strokeDasharray="4,3"
+        />
+        {/* Orta (EMA20) */}
+        <path
+          d="M 30 130 Q 100 125, 180 125 Q 260 130, 320 115 Q 400 95, 480 90 Q 540 88, 580 92"
+          fill="none"
+          stroke={W}
+          strokeWidth="2"
+        />
+        {/* Alt bant */}
+        <path
+          d="M 30 180 Q 100 180, 180 175 Q 260 175, 320 170 Q 400 155, 480 150 Q 540 148, 580 149"
+          fill="none"
+          stroke={Y}
+          strokeWidth="2"
+          strokeDasharray="4,3"
+        />
+        {/* Fiyat çizgisi (zigzag) */}
+        <polyline
+          points="30,140 80,120 130,160 180,135 230,170 280,145 330,90 380,75 430,55 480,40 530,55 580,45"
+          fill="none"
+          stroke={G}
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        {/* Squeeze zone marker */}
+        <rect x="180" y="125" width="100" height="50" fill={Y} fillOpacity="0.15" stroke={Y} strokeWidth="1" strokeDasharray="3,3" />
+        <text x="230" y="115" fill={Y} fontSize="11" fontWeight="bold" textAnchor="middle">
+          SIKIŞMA
+        </text>
+        <text x="230" y="195" fill={Y} fontSize="9" textAnchor="middle">
+          (volatilite ↓)
+        </text>
+        {/* Breakout marker */}
+        <circle cx="380" cy="75" r="10" fill="none" stroke={G} strokeWidth="3" />
+        <text x="380" y="60" fill={G} fontSize="11" fontWeight="bold" textAnchor="middle">
+          PATLAMA
+        </text>
+        <text x="380" y="50" fill={G} fontSize="9" textAnchor="middle">
+          (yukarı kırılım)
+        </text>
+
+        {/* Legend */}
+        <g transform="translate(20, 20)">
+          <text x="0" y="0" fill={W} fontSize="13" fontWeight="bold">
+            BOLLINGER BANDS
+          </text>
+          <line x1="0" y1="14" x2="20" y2="14" stroke={Y} strokeWidth="2" strokeDasharray="4,3" />
+          <text x="25" y="18" fill={Y} fontSize="10">Üst/Alt 2σ</text>
+          <line x1="120" y1="14" x2="140" y2="14" stroke={W} strokeWidth="2" />
+          <text x="145" y="18" fill={W} fontSize="10">EMA 20</text>
+          <line x1="220" y1="14" x2="240" y2="14" stroke={G} strokeWidth="3" />
+          <text x="245" y="18" fill={G} fontSize="10">Fiyat</text>
+        </g>
+      </svg>
+    </Box>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 11. PATTERN — OMUZ-BAŞ-OMUZ
+// ────────────────────────────────────────────────────────────────────────────
+export function HeadShouldersDiagram() {
+  return (
+    <Box label="Omuz-Baş-Omuz patterni: yükseliş trendinin sonu, düşüş başlıyor (boyun çizgisi kırılınca teyit)">
+      <svg viewBox="0 0 600 280" width="100%" style={{ maxWidth: 580 }}>
+        <g stroke="#27272a" strokeWidth="0.5">
+          {[100, 170].map((y) => (
+            <line key={y} x1="0" y1={y} x2="600" y2={y} />
+          ))}
+        </g>
+        {/* Trend ve pattern */}
+        <polyline
+          points="30,200 100,140 170,170 230,80 300,170 360,130 420,170 470,210 540,250"
+          fill="none"
+          stroke={W}
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        {/* Boyun çizgisi */}
+        <line
+          x1="170"
+          y1="170"
+          x2="420"
+          y2="170"
+          stroke={R}
+          strokeWidth="2.5"
+          strokeDasharray="6,4"
+        />
+        {/* Annotations */}
+        <text x="100" y="125" fill={G} fontSize="13" fontWeight="bold" textAnchor="middle">
+          SOL OMUZ
+        </text>
+        <text x="230" y="65" fill={Y} fontSize="14" fontWeight="bold" textAnchor="middle">
+          BAŞ
+        </text>
+        <text x="360" y="115" fill={G} fontSize="13" fontWeight="bold" textAnchor="middle">
+          SAĞ OMUZ
+        </text>
+        <text x="430" y="160" fill={R} fontSize="11" fontWeight="bold">
+          BOYUN
+        </text>
+
+        {/* Hedef oku */}
+        <line
+          x1="470"
+          y1="170"
+          x2="470"
+          y2="240"
+          stroke={R}
+          strokeWidth="2"
+          markerEnd="url(#arrR)"
+        />
+        <defs>
+          <marker id="arrR" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+            <polygon points="0 0, 10 5, 0 10" fill={R} />
+          </marker>
+        </defs>
+        <text x="490" y="210" fill={R} fontSize="11" fontWeight="bold">
+          🎯 HEDEF
+        </text>
+        <text x="490" y="225" fill={M} fontSize="9">
+          (baş→boyun mesafe)
+        </text>
+
+        <text x="20" y="22" fill={W} fontSize="13" fontWeight="bold">
+          📉 OMUZ-BAŞ-OMUZ — DÜŞÜŞ DÖNÜŞ PATTERN
+        </text>
+        <text x="20" y="38" fill={M} fontSize="10">
+          Boyun kırılımı → güçlü düşüş sinyali (%75 başarı)
+        </text>
+      </svg>
+    </Box>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 12. FIBONACCI RETRACEMENT
+// ────────────────────────────────────────────────────────────────────────────
+export function FibonacciDiagram() {
+  return (
+    <Box label="Fibonacci geri çekilme seviyeleri — fiyat trend içinde %38, %50, %61.8'de duraklamak ister">
+      <svg viewBox="0 0 600 280" width="100%" style={{ maxWidth: 580 }}>
+        {/* Fib lines */}
+        {[
+          { y: 40, label: "0%", color: M, sub: "tepe" },
+          { y: 80, label: "23.6%", color: G, sub: "" },
+          { y: 110, label: "38.2%", color: G, sub: "yaygın destek" },
+          { y: 140, label: "50%", color: Y, sub: "psikolojik" },
+          { y: 170, label: "61.8%", color: Y, sub: "altın oran" },
+          { y: 195, label: "78.6%", color: R, sub: "trend tehlikede" },
+          { y: 230, label: "100%", color: M, sub: "dip" },
+        ].map((lev) => (
+          <g key={lev.y}>
+            <line
+              x1="60"
+              y1={lev.y}
+              x2="540"
+              y2={lev.y}
+              stroke={lev.color}
+              strokeWidth={lev.label === "50%" || lev.label === "61.8%" ? 2 : 1}
+              strokeDasharray={lev.label === "0%" || lev.label === "100%" ? "" : "4,3"}
+            />
+            <text x="50" y={lev.y + 4} fill={lev.color} fontSize="11" textAnchor="end" fontWeight="bold">
+              {lev.label}
+            </text>
+            {lev.sub && (
+              <text x="550" y={lev.y + 4} fill={M} fontSize="10">
+                {lev.sub}
+              </text>
+            )}
+          </g>
+        ))}
+        {/* Price action */}
+        <polyline
+          points="80,230 130,180 180,140 230,100 280,60 330,40 380,90 430,135 460,170"
+          fill="none"
+          stroke={W}
+          strokeWidth="2.5"
+          strokeLinejoin="round"
+        />
+        <circle cx="430" cy="135" r="8" fill={Y} stroke={W} strokeWidth="2" />
+        <text x="445" y="138" fill={Y} fontSize="11" fontWeight="bold">
+          → bounce zone
+        </text>
+
+        <text x="20" y="22" fill={W} fontSize="13" fontWeight="bold">
+          📐 FIBONACCI RETRACEMENT
+        </text>
+      </svg>
+    </Box>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// 13. FAİZ & BORSA İLİŞKİSİ
+// ────────────────────────────────────────────────────────────────────────────
+export function InterestRateDiagram() {
+  return (
+    <Box label="Faiz ve borsa ters orantılı: Faiz ↑ → Borsa ↓ (genel kural, Türkiye'de gecikmeli)">
+      <svg viewBox="0 0 600 280" width="100%" style={{ maxWidth: 580 }}>
+        <g stroke="#27272a" strokeWidth="0.5">
+          {[80, 140, 200].map((y) => (
+            <line key={y} x1="0" y1={y} x2="600" y2={y} />
+          ))}
+        </g>
+
+        {/* Faiz çizgisi (kırmızı) - yukarı çıkan */}
+        <polyline
+          points="40,200 100,180 160,150 220,110 280,80 340,60 400,80 460,110 520,140 560,170"
+          fill="none"
+          stroke={R}
+          strokeWidth="3"
+        />
+        {/* Borsa çizgisi (yeşil) - faizle ters */}
+        <polyline
+          points="40,90 100,100 160,130 220,160 280,200 340,230 400,200 460,160 520,130 560,100"
+          fill="none"
+          stroke={G}
+          strokeWidth="3"
+        />
+
+        {/* Faiz tepe noktası */}
+        <circle cx="340" cy="60" r="10" fill={R} stroke={W} strokeWidth="2" />
+        <text x="340" y="40" fill={R} fontSize="12" fontWeight="bold" textAnchor="middle">
+          FAİZ TEPE
+        </text>
+
+        {/* Borsa dip noktası */}
+        <circle cx="340" cy="230" r="10" fill={G} stroke={W} strokeWidth="2" />
+        <text x="340" y="260" fill={G} fontSize="12" fontWeight="bold" textAnchor="middle">
+          BORSA DİP
+        </text>
+
+        {/* Legend */}
+        <g transform="translate(20, 20)">
+          <line x1="0" y1="0" x2="20" y2="0" stroke={R} strokeWidth="3" />
+          <text x="25" y="4" fill={R} fontSize="11" fontWeight="bold">
+            TCMB Faiz
+          </text>
+          <line x1="100" y1="0" x2="120" y2="0" stroke={G} strokeWidth="3" />
+          <text x="125" y="4" fill={G} fontSize="11" fontWeight="bold">
+            BIST 100
+          </text>
+        </g>
+
+        {/* Time axis */}
+        <text x="40" y="270" fill={M} fontSize="9">
+          ←──────────────── ZAMAN ────────────────→
+        </text>
+      </svg>
+    </Box>
+  );
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────
 // REGISTRY — lesson.id → diagram component
 // ────────────────────────────────────────────────────────────────────────────
 export const LESSON_DIAGRAMS: Record<string, React.ComponentType[]> = {
@@ -502,11 +777,15 @@ export const LESSON_DIAGRAMS: Record<string, React.ComponentType[]> = {
   "trend-destek-direnc": [TrendDiagram],
   "hareketli-ortalama":  [EmaCrossDiagram],
   "rsi":                 [RsiDiagram],
-  "macd":                [], // (MACD opsiyonel — yer kalırsa eklenir)
+  "macd":                [],
+  "bollinger-bands":     [BollingerDiagram],
+  "fibonacci":           [FibonacciDiagram],
+  "pattern-tanima":      [HeadShouldersDiagram],
   "risk-yonetimi":       [RiskRewardDiagram, PositionSizingDiagram],
   "bist-temelleri":      [],
   "bilanco-okuma":       [FinancialsRadar],
   "hisse-secimi":        [],
+  "faiz-borsa":          [InterestRateDiagram],
   "kripto-temelleri":    [CryptoCycleDiagram],
   "sentiment-analizi":   [SentimentScaleDiagram],
   "trade-psikolojisi":   [],
