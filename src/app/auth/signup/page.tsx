@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -25,6 +25,7 @@ export default function SignupPage() {
 function SignupForm() {
   const { signup } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
@@ -54,7 +55,9 @@ function SignupForm() {
     setErr(null);
     setLoading(true);
     try {
-      await signup(username, password, code, emailClean);
+      const result = await signup(username, password, code, emailClean);
+      // Verify-pending sayfasına yönlendir
+      router.push(`/auth/verify-pending?email=${encodeURIComponent(result.email)}`);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : "Kayıt başarısız");
     } finally {

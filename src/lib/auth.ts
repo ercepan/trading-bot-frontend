@@ -230,14 +230,26 @@ async function patchJson<T>(path: string, body: unknown): Promise<T> {
 }
 
 export const authApi = {
-  signup: (username: string, password: string, code: string, email?: string) =>
-    postJson<{ token: string; user: User }>("/api/auth/signup", {
-      username,
-      password,
-      code,
-      email: email || undefined,
-      device_id: getDeviceId(),
-    }),
+  signup: (username: string, password: string, code: string, email: string) =>
+    postJson<{ ok: boolean; email: string; username: string; message: string }>(
+      "/api/auth/signup",
+      {
+        username,
+        password,
+        code,
+        email,
+        device_id: getDeviceId(),
+      },
+    ),
+
+  verifyEmail: (token: string) =>
+    postJson<{ ok: boolean; email: string; username: string; just_verified: boolean }>(
+      "/api/auth/verify-email",
+      { token },
+    ),
+
+  resendVerification: (email: string) =>
+    postJson<{ ok: boolean; message: string }>("/api/auth/resend-verification", { email }),
 
   login: (username: string, password: string) =>
     postJson<{ token: string; user: User }>("/api/auth/login", { username, password }),
@@ -245,7 +257,10 @@ export const authApi = {
   me: () => getJson<{ user: User; subscription: Subscription | null }>("/api/auth/me"),
 
   updateEmail: (email: string) =>
-    patchJson<{ ok: boolean; email: string }>("/api/auth/email", { email }),
+    patchJson<{ ok: boolean; email: string; pending?: boolean; message?: string }>(
+      "/api/auth/email",
+      { email },
+    ),
 
   updatePassword: (current: string, newPwd: string) =>
     patchJson<{ ok: boolean }>("/api/auth/password", { current, new: newPwd }),

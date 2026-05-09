@@ -13,7 +13,12 @@ type AuthState = {
 
 type AuthContextValue = AuthState & {
   login: (username: string, password: string) => Promise<void>;
-  signup: (username: string, password: string, code: string, email?: string) => Promise<void>;
+  signup: (
+    username: string,
+    password: string,
+    code: string,
+    email: string,
+  ) => Promise<{ email: string; username: string }>;
   renew: (code: string) => Promise<void>;
   logout: () => void;
   refresh: () => Promise<void>;
@@ -111,13 +116,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push(result.user.role === "admin" ? "/dashboard" : "/bist");
   };
 
-  const signup = async (username: string, password: string, code: string, email?: string) => {
+  const signup = async (
+    username: string,
+    password: string,
+    code: string,
+    email: string,
+  ) => {
     setError(null);
     const result = await authApi.signup(username, password, code, email);
-    setToken(result.token);
-    setUser(result.user);
-    setSubscription(result.user.subscription || null);
-    router.push("/bist");
+    // Token DÖNMÜYOR — kullanıcı email verify etmeden login olamıyor
+    return { email: result.email, username: result.username };
   };
 
   const renew = async (code: string) => {

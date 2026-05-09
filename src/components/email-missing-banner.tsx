@@ -62,7 +62,7 @@ export function EmailMissingBanner() {
     try {
       await authApi.updateEmail(clean);
       setSuccess(true);
-      // 1.5 sn sonra kapat + auth context refresh
+      // Refresh auth context — sunucuda email kayıtlı ama verified=false olabilir
       setTimeout(async () => {
         await refresh();
       }, 1500);
@@ -140,7 +140,7 @@ export function EmailMissingBanner() {
         {success && (
           <span className="flex-1 text-emerald-300 inline-flex items-center gap-1.5">
             <CheckCircle2 className="size-4" />
-            E-postan kaydedildi 🎉
+            Onay maili gönderildi — kutuna bak, linke tıkla 📬
           </span>
         )}
       </div>

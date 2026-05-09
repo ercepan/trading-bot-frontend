@@ -41,8 +41,13 @@ export default function ProfilPage() {
     setEmailSubmit(true);
     setEmailMsg(null);
     try {
-      await authApi.updateEmail(clean);
-      setEmailMsg({ type: "ok", text: "E-posta güncellendi ✓" });
+      const res = await authApi.updateEmail(clean);
+      setEmailMsg({
+        type: "ok",
+        text: res.pending
+          ? `Onay maili ${clean} adresine gönderildi. Linke tıklayınca güncellenecek (mevcut adresin aktif kalır).`
+          : `Onay maili ${clean} adresine gönderildi. Linke tıklayınca aktif olacak.`,
+      });
       await refresh();
     } catch (err) {
       setEmailMsg({
