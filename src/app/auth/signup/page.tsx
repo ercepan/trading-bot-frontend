@@ -28,6 +28,7 @@ function SignupForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
 
   // Eğer /satin-al sayfasından geliyorsa kodu URL'den al
   useEffect(() => {
@@ -48,7 +49,7 @@ function SignupForm() {
     setErr(null);
     setLoading(true);
     try {
-      await signup(username, password, code);
+      await signup(username, password, code, email.trim() || undefined);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : "Kayıt başarısız");
     } finally {
@@ -121,6 +122,22 @@ function SignupForm() {
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
               <p className="text-[11px] text-muted-foreground">Yöneticiden aldığın 16 karakterlik kod</p>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">
+                E-posta <span className="text-muted-foreground/60">(opsiyonel)</span>
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="email@domain.com"
+                disabled={loading}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              />
+              <p className="text-[11px] text-muted-foreground">
+                Hoş geldin maili + abonelik bitiş uyarısı için. Spam yok.
+              </p>
             </div>
 
             <div className="space-y-2 pt-2 border-t border-border/50">

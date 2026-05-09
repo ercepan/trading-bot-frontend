@@ -211,11 +211,12 @@ async function getJson<T>(path: string): Promise<T> {
 }
 
 export const authApi = {
-  signup: (username: string, password: string, code: string) =>
+  signup: (username: string, password: string, code: string, email?: string) =>
     postJson<{ token: string; user: User }>("/api/auth/signup", {
       username,
       password,
       code,
+      email: email || undefined,
       device_id: getDeviceId(),
     }),
 

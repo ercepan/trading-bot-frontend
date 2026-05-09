@@ -13,7 +13,7 @@ type AuthState = {
 
 type AuthContextValue = AuthState & {
   login: (username: string, password: string) => Promise<void>;
-  signup: (username: string, password: string, code: string) => Promise<void>;
+  signup: (username: string, password: string, code: string, email?: string) => Promise<void>;
   renew: (code: string) => Promise<void>;
   logout: () => void;
   refresh: () => Promise<void>;
@@ -111,9 +111,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push(result.user.role === "admin" ? "/dashboard" : "/bist");
   };
 
-  const signup = async (username: string, password: string, code: string) => {
+  const signup = async (username: string, password: string, code: string, email?: string) => {
     setError(null);
-    const result = await authApi.signup(username, password, code);
+    const result = await authApi.signup(username, password, code, email);
     setToken(result.token);
     setUser(result.user);
     setSubscription(result.user.subscription || null);

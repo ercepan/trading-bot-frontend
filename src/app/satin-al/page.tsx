@@ -581,19 +581,19 @@ function SatinAlInner() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
-                  İletişim (opsiyonel)
+                  E-posta (önerilir)
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                  placeholder="Telegram: @kullaniciadin · veya email · veya boş bırak"
+                  placeholder="email@domain.com"
                   disabled={verifying}
                   className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 />
                 <p className="text-[11px] text-muted-foreground">
-                  Sadece sorun olursa sana ulaşmamız için. Zorunlu değil — kod ekranda
-                  çıkar.
+                  Davet kodun + abonelik özeti otomatik mailine gelir. Telegram kullanıcı
+                  adı da yazabilirsin (mail gönderilmez).
                 </p>
               </div>
 
