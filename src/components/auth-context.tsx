@@ -26,8 +26,11 @@ const SUBSCRIBER_ROUTES = [
   "/bist", "/signals", "/wsb", "/auth", "/dashboard", "/yenile",
   "/haberler", "/egitim", "/referans",
 ];
-// Auth gerekmeyen rotalar (landing + auth + legal + satin-al)
-const PUBLIC_ROUTES = ["/auth", "/terms", "/kvkk", "/satin-al"];
+// Auth gerekmeyen rotalar (landing + auth + legal + satin-al + iletisim + performans)
+const PUBLIC_ROUTES = [
+  "/auth", "/terms", "/kvkk", "/satin-al",
+  "/iletisim", "/performans",
+];
 // "/" tek başına public (root landing)
 
 export function AuthProvider({ children }: { children: ReactNode }) {

@@ -21,8 +21,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
@@ -30,6 +30,31 @@ import {
   CartesianGrid,
   ReferenceLine,
 } from "recharts";
+
+// Modern tooltip
+function ChartTooltip(props: { active?: boolean; payload?: Array<{ payload: { label: string; mentions: number; sentiment: number } }> }) {
+  const { active, payload } = props;
+  if (!active || !payload || !payload.length) return null;
+  const d = payload[0].payload;
+  const sentColor =
+    d.sentiment > 0.2 ? "text-emerald-400" : d.sentiment < -0.2 ? "text-red-400" : "text-muted-foreground";
+  return (
+    <div className="rounded-md border border-border/80 bg-background/95 backdrop-blur px-3 py-2 shadow-xl text-xs">
+      <div className="font-semibold text-foreground">{d.label}</div>
+      <div className="flex items-center justify-between gap-4 mt-1">
+        <span className="text-muted-foreground">Mention</span>
+        <span className="font-mono font-bold text-emerald-400">{d.mentions}</span>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-muted-foreground">Sentiment</span>
+        <span className={`font-mono font-bold ${sentColor}`}>
+          {d.sentiment >= 0 ? "+" : ""}
+          {d.sentiment.toFixed(2)}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 function SentimentBadge({ score }: { score: number }) {
   if (score > 0.2) {
@@ -102,6 +127,12 @@ export default function TickerDetailPage({
     latest && earliest && earliest.mentions > 0
       ? ((latest.mentions - earliest.mentions) / earliest.mentions) * 100
       : null;
+
+  // Chart istatistikleri
+  const peakMention = chartData.length ? Math.max(...chartData.map((d) => d.mentions)) : 0;
+  const avgMention = chartData.length
+    ? Math.round(chartData.reduce((a, b) => a + b.mentions, 0) / chartData.length)
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -201,49 +232,90 @@ export default function TickerDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Mention Tarihçesi</CardTitle>
-          <CardDescription>
-            Son 30 gün — bot 6 saatte bir snapshot alır
-          </CardDescription>
+          <div className="flex items-start justify-between flex-wrap gap-2">
+            <div>
+              <CardTitle>Mention Tarihçesi</CardTitle>
+              <CardDescription>
+                Son 30 gün · 6 saatte bir snapshot
+              </CardDescription>
+            </div>
+            {chartData.length > 1 && (
+              <div className="flex items-center gap-2 text-xs">
+                <div className="rounded-md border border-border/60 bg-muted/30 px-2.5 py-1">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Tepe</div>
+                  <div className="font-bold text-emerald-400 tabular-nums">{peakMention}</div>
+                </div>
+                <div className="rounded-md border border-border/60 bg-muted/30 px-2.5 py-1">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Ortalama</div>
+                  <div className="font-bold text-foreground tabular-nums">{avgMention}</div>
+                </div>
+                <div className="rounded-md border border-border/60 bg-muted/30 px-2.5 py-1">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Veri</div>
+                  <div className="font-bold text-foreground tabular-nums">{chartData.length}</div>
+                </div>
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <Skeleton className="h-[260px] w-full" />
+            <Skeleton className="h-[300px] w-full" />
           ) : chartData.length > 1 ? (
-            <div className="h-[260px] w-full">
+            <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="mentionGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgb(16 185 129)" stopOpacity={0.45} />
+                      <stop offset="100%" stopColor="rgb(16 185 129)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(var(--border))"
+                    opacity={0.15}
+                    vertical={false}
+                  />
                   <XAxis
                     dataKey="label"
                     tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                     tickLine={false}
                     axisLine={false}
+                    minTickGap={30}
                   />
                   <YAxis
                     tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
                     tickLine={false}
                     axisLine={false}
+                    width={40}
                   />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--background))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "6px",
-                      fontSize: "12px",
+                  <Tooltip content={<ChartTooltip />} cursor={{ stroke: "rgb(16 185 129)", strokeWidth: 1, strokeDasharray: "3 3" }} />
+                  <ReferenceLine
+                    y={avgMention}
+                    stroke="rgb(245 158 11)"
+                    strokeDasharray="4 4"
+                    strokeOpacity={0.5}
+                    label={{
+                      value: `Ort: ${avgMention}`,
+                      position: "right",
+                      fontSize: 9,
+                      fill: "rgb(245 158 11)",
                     }}
                   />
-                  <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
-                  <Line
+                  <Area
                     type="monotone"
                     dataKey="mentions"
-                    stroke="rgb(52 211 153)"
-                    strokeWidth={2}
-                    dot={{ r: 3, fill: "rgb(52 211 153)" }}
-                    activeDot={{ r: 5 }}
-                    name="Mention"
+                    stroke="rgb(16 185 129)"
+                    strokeWidth={2.5}
+                    fill="url(#mentionGradient)"
+                    activeDot={{
+                      r: 5,
+                      stroke: "rgb(16 185 129)",
+                      strokeWidth: 2,
+                      fill: "hsl(var(--background))",
+                    }}
                   />
-                </LineChart>
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           ) : (
