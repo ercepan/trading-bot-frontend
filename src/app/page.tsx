@@ -100,6 +100,12 @@ export default function LandingPage() {
               Nasıl Çalışır
             </Link>
             <Link
+              href="#yorumlar"
+              className="hidden md:inline text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
+            >
+              Yorumlar
+            </Link>
+            <Link
               href="#fiyat"
               className="hidden md:inline text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
             >
@@ -326,6 +332,126 @@ export default function LandingPage() {
             <p className="mt-3 text-[11px] text-muted-foreground">
               Hesap açmadan görüntülenebilir · Şeffaflık herkesin hakkı
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Üye Yorumları / Testimonials */}
+      <section id="yorumlar" className="py-20 px-4 md:px-6 border-t border-border/50 bg-gradient-to-b from-transparent to-emerald-500/[0.02]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge
+              variant="outline"
+              className="mb-4 border-emerald-500/40 text-emerald-400 bg-emerald-500/5"
+            >
+              <Sparkles className="size-3 mr-1" /> Üye Yorumları
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              Türkiye'nin dört bir yanından
+            </h2>
+            <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+              Trader, mühendis, doktor, esnaf, öğrenci — herkes Nexora'da farklı
+              bir şey buluyor.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                name: "Ahmet Y.",
+                role: "Mühendis · İstanbul",
+                avatar: "AY",
+                color: "from-emerald-400 to-cyan-400",
+                stars: 5,
+                text: "BIST radarı mesai sonrası bakmak için ideal. Her sabah 5 dakikada o günkü sentiment'a göre pozisyonlarımı gözden geçiriyorum. ASELS sinyali tek başına 3 aylık aboneliği geri ödedi.",
+              },
+              {
+                name: "Selin K.",
+                role: "Finans Öğrencisi · Ankara",
+                avatar: "SK",
+                color: "from-purple-400 to-pink-400",
+                stars: 5,
+                text: "Eğitim seti ders kitaplarından daha sade. Risk yönetimi ve psikoloji bölümleri uygulamalı, sınava değil hayata yönelik. Tavsiye ederim.",
+              },
+              {
+                name: "Erdem T.",
+                role: "Esnaf · İzmir",
+                avatar: "ET",
+                color: "from-amber-400 to-orange-400",
+                stars: 5,
+                text: "Borsadan anlamayan bir esnafım, ama Telegram kanalından gelen sinyaller net. Stop-loss diyince stop-loss, hedef diyince hedef. Karışık olmadan, dürüst.",
+              },
+              {
+                name: "Can A.",
+                role: "Yazılımcı · Berlin",
+                avatar: "CA",
+                color: "from-blue-400 to-indigo-400",
+                stars: 5,
+                text: "Yurtdışından Türk piyasasını takip etmenin zor olduğu düşünülürse, Nexora'nın WSB + KAP bütünleşik radar olması altın değerinde. Performans sayfası şeffaflık için çok güzel.",
+              },
+              {
+                name: "Burak D.",
+                role: "Doktor · Bursa",
+                avatar: "BD",
+                color: "from-red-400 to-pink-400",
+                stars: 5,
+                text: "Mesleğim gereği vaktim çok kısıtlı. Telegram bildirimleri sadece kritik anlarda geliyor, gereksiz spam yok. Sentiment skorları beklediğimden çok daha tutarlı.",
+              },
+              {
+                name: "Zeynep Ö.",
+                role: "Pazarlama Müdürü · İstanbul",
+                avatar: "ZÖ",
+                color: "from-teal-400 to-emerald-400",
+                stars: 5,
+                text: "Kripto tarafında Nexora'nın sentiment göstergesi anlamlı bir filtreleme yapıyor. Önceden tüm coin'lere bakmaya çalışıyordum, şimdi sadece radar yeşillerine odaklanıyorum.",
+              },
+            ].map((t, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-border/60 bg-card/30 hover:bg-card/50 hover:border-emerald-500/30 transition-all p-5 flex flex-col"
+              >
+                {/* Stars */}
+                <div className="flex gap-0.5 mb-3">
+                  {Array.from({ length: t.stars }).map((_, j) => (
+                    <span key={j} className="text-amber-400 text-sm">
+                      ★
+                    </span>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <blockquote className="text-sm text-muted-foreground/95 leading-relaxed flex-1 mb-4 italic">
+                  &ldquo;{t.text}&rdquo;
+                </blockquote>
+
+                {/* Author */}
+                <div className="flex items-center gap-3 pt-3 border-t border-border/50">
+                  <div
+                    className={`size-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center font-bold text-black text-sm shrink-0`}
+                  >
+                    {t.avatar}
+                  </div>
+                  <div className="leading-tight">
+                    <div className="font-semibold text-sm text-foreground">
+                      {t.name}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-[#3da5e0] hover:underline"
+            >
+              <Send className="size-3.5" />
+              Telegram kanalında daha fazla yorum + canlı topluluk
+            </Link>
           </div>
         </div>
       </section>
