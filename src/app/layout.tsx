@@ -17,13 +17,62 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const SITE_URL = "https://nexora-trading.net";
+
 export const metadata: Metadata = {
-  title: "Nexora — BIST · NASDAQ · CRYPTO",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Nexora — Sentiment Radar · BIST · NASDAQ · CRYPTO",
+    template: "%s · Nexora",
+  },
   description:
-    "BIST + ABD hisse + kripto sentiment radarı, AI destekli sinyal üretimi. Topluluk ve resmi açıklama bazlı analiz platformu.",
+    "BIST + ABD hisse + kripto için sentiment radar, AI destekli sinyaller, topluluk ve resmi açıklama analizi. 76% isabet oranı, %20 indirimli referans programı.",
+  applicationName: "Nexora",
+  keywords: [
+    "BIST", "Borsa İstanbul", "kripto sinyal", "NASDAQ", "sentiment analiz",
+    "yatırım sinyali", "wallstreetbets", "kamuyu aydınlatma", "KAP", "crypto",
+    "trading bot", "Türkçe trading", "AI sinyal", "Nexora"
+  ],
+  authors: [{ name: "Nexora Trading", url: SITE_URL }],
+  creator: "Nexora",
+  publisher: "Nexora",
+  category: "finance",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    url: SITE_URL,
+    siteName: "Nexora",
+    title: "Nexora — Sentiment Radar · BIST · NASDAQ · CRYPTO",
+    description:
+      "AI destekli sentiment sinyalleri. BIST + ABD hisse + kripto. Topluluk ve resmi açıklama bazlı analiz.",
+    // OG image: app/opengraph-image.tsx tarafından otomatik üretilir (1200x630)
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@nexora_trading",
+    creator: "@nexora_trading",
+    title: "Nexora — Sentiment Radar",
+    description:
+      "BIST + ABD hisse + kripto sentiment sinyalleri. AI destekli, topluluk bazlı analiz.",
+    // Twitter image: app/twitter-image.tsx (re-export of opengraph-image)
+  },
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
+  },
+  alternates: {
+    canonical: SITE_URL,
   },
 };
 
