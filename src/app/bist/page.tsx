@@ -301,14 +301,10 @@ export default function BistPage() {
                     <TableHead>Skorlar</TableHead>
                     <TableHead>Açıklama</TableHead>
                     <TableHead>Sentiment</TableHead>
-                    <TableHead>Neden</TableHead>
-                    <TableHead>Link</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredRows.map((r, i) => {
-                    const midasUrl = `https://getmidas.com/tr/menkul-kiymetler/arama/${r.ticker}`;
-                    const tvUrl = `https://www.tradingview.com/chart/?symbol=BIST:${r.ticker}`;
                     return (
                       <TableRow key={r.id}>
                         <TableCell className="text-muted-foreground tabular-nums text-xs">{i + 1}</TableCell>
@@ -356,24 +352,6 @@ export default function BistPage() {
                         </TableCell>
                         <TableCell>
                           <SentimentBadge score={r.final_score} label={r.sentiment_label} />
-                        </TableCell>
-                        <TableCell className="max-w-[260px]">
-                          <span className="text-[11px] text-muted-foreground line-clamp-2" title={r.kap_summary || r.news_reason || ""}>
-                            {r.kap_summary || r.news_reason || "—"}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex gap-1">
-                            <a
-                              href={midasUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[10px] rounded border border-border px-1.5 py-0.5 hover:bg-accent"
-                              title="Midas'ta aç"
-                            >
-                              Midas
-                            </a>
-                          </div>
                         </TableCell>
                       </TableRow>
                     );

@@ -615,7 +615,10 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-5 text-xs text-muted-foreground">
+          <div className="flex items-center gap-5 text-xs text-muted-foreground flex-wrap">
+            <Link href="/performans" className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1">
+              📈 Geçmiş Performans
+            </Link>
             <Link href="/terms" className="hover:text-foreground transition-colors">
               Kullanım Şartları
             </Link>
