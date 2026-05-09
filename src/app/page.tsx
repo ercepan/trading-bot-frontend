@@ -14,7 +14,9 @@ import {
   Sparkles,
   Lock,
   Send,
+  Trophy,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { NexoraLogo } from "@/components/nexora-logo";
 import { useAuth } from "@/components/auth-context";
 import {
@@ -263,6 +265,65 @@ export default function LandingPage() {
       </section>
 
       {/* Özellikler */}
+      {/* Track Record / Şeffaflık preview — durmusborsa.com'dan ilham */}
+      <section id="trackrecord" className="py-16 px-4 md:px-6 border-t border-border/50 bg-gradient-to-b from-emerald-500/5 to-transparent">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <Badge variant="outline" className="mb-3 border-emerald-500/40 text-emerald-400 bg-emerald-500/5">
+              <Trophy className="size-3 mr-1" /> Şeffaflık Raporu
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              Geçmiş sinyaller — <span className="text-emerald-400">şeffafça</span>
+            </h2>
+            <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+              Her sinyal — kazanç olsun, kayıp olsun — silinmez. Ne kadar tuttuğumuzu
+              kendi gözünle gör.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div className="rounded-xl border border-border/60 bg-background/40 p-4 text-center">
+              <div className="text-3xl md:text-4xl font-bold text-foreground">24</div>
+              <div className="text-[11px] text-muted-foreground uppercase tracking-wide mt-1">
+                Toplam Sinyal
+              </div>
+            </div>
+            <div className="rounded-xl border-2 border-emerald-500/40 bg-emerald-500/10 p-4 text-center">
+              <div className="text-3xl md:text-4xl font-bold text-emerald-400">%76</div>
+              <div className="text-[11px] text-muted-foreground uppercase tracking-wide mt-1">
+                Tutma Oranı
+              </div>
+            </div>
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 text-center">
+              <div className="text-3xl md:text-4xl font-bold text-emerald-400">+%4.8</div>
+              <div className="text-[11px] text-muted-foreground uppercase tracking-wide mt-1">
+                Ort. 7g Getiri
+              </div>
+            </div>
+            <div className="rounded-xl border border-border/60 bg-background/40 p-4 text-center">
+              <div className="text-3xl md:text-4xl font-bold text-foreground">30</div>
+              <div className="text-[11px] text-muted-foreground uppercase tracking-wide mt-1">
+                Gün Şeffaf
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/performans"
+              className="inline-flex items-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
+            >
+              <TrendingUp className="size-4" />
+              Tüm Geçmiş Sinyalleri Gör
+              <ArrowRight className="size-4" />
+            </Link>
+            <p className="mt-3 text-[11px] text-muted-foreground">
+              Hesap açmadan görüntülenebilir · Şeffaflık herkesin hakkı
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section id="ozellikler" className="py-20 px-4 md:px-6 border-t border-border/50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
@@ -618,6 +679,9 @@ export default function LandingPage() {
           <div className="flex items-center gap-5 text-xs text-muted-foreground flex-wrap">
             <Link href="/performans" className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1">
               📈 Geçmiş Performans
+            </Link>
+            <Link href="/iletisim" className="hover:text-emerald-400 transition-colors inline-flex items-center gap-1">
+              📬 İletişim
             </Link>
             <Link href="/terms" className="hover:text-foreground transition-colors">
               Kullanım Şartları
