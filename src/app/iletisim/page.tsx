@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -11,9 +11,12 @@ import {
   XCircle,
   MessageSquare,
 } from "lucide-react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { NexoraLogo } from "@/components/nexora-logo";
 import { API_BASE } from "@/lib/api";
 import { TELEGRAM_CHANNEL_URL, TELEGRAM_CHANNEL_DISPLAY } from "@/lib/config";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 export default function IletisimPage() {
   const [name, setName] = useState("");
@@ -23,6 +26,8 @@ export default function IletisimPage() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<{ id: number } | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +40,10 @@ export default function IletisimPage() {
       setErr("Geçerli bir e-posta gir.");
       return;
     }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setErr("Bot doğrulaması bekleniyor — birkaç saniye bekle.");
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch(`${API_BASE}/api/contact`, {
@@ -45,6 +54,7 @@ export default function IletisimPage() {
           email: email.trim(),
           subject: subject.trim(),
           message: message.trim(),
+          turnstile_token: turnstileToken,
         }),
       });
       if (!res.ok) {
@@ -61,8 +71,14 @@ export default function IletisimPage() {
       setEmail("");
       setSubject("");
       setMessage("");
+      setTurnstileToken("");
+      // Token tek kullanımlık — widget'i resetle
+      turnstileRef.current?.reset();
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Gönderim başarısız");
+      // Token tüketilmiş olabilir, resetle
+      turnstileRef.current?.reset();
+      setTurnstileToken("");
     } finally {
       setSubmitting(false);
     }
@@ -197,9 +213,22 @@ export default function IletisimPage() {
               </div>
             )}
 
+            {TURNSTILE_SITE_KEY && (
+              <div className="flex justify-center pt-1">
+                <Turnstile
+                  ref={turnstileRef}
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onError={() => setTurnstileToken("")}
+                  onExpire={() => setTurnstileToken("")}
+                  options={{ theme: "dark", size: "flexible" }}
+                />
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={submitting || !name.trim() || !email.trim() || !message.trim()}
+              disabled={submitting || !name.trim() || !email.trim() || !message.trim() || (!!TURNSTILE_SITE_KEY && !turnstileToken)}
               className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-4 py-3 text-base transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? (
