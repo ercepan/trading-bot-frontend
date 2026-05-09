@@ -4,6 +4,8 @@ import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/components/auth-context";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -92,6 +94,8 @@ export default function RootLayout({
           <AppShell>{children}</AppShell>
         </AuthProvider>
         <Toaster richColors position="top-right" />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -48,6 +48,7 @@ import { useAuth } from "@/components/auth-context";
 import { LogOut, ShieldCheck, Users, FileText } from "lucide-react";
 import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
 import { EmailMissingBanner } from "@/components/email-missing-banner";
+import { OnboardingModal } from "@/components/onboarding-modal";
 import { TELEGRAM_CHANNEL_URL, TWITTER_URL } from "@/lib/config";
 import { XIcon } from "@/components/x-icon";
 
@@ -299,6 +300,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <SpkFooterNote />
       </SidebarInset>
       <SpkDisclaimerModal visible={!!user} />
+      <OnboardingModal />
     </SidebarProvider>
   );
 }
