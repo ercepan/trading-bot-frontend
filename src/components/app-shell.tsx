@@ -20,6 +20,7 @@ import {
   Send as TwitterIcon,
   GraduationCap,
   Gift,
+  UserCog,
 } from "lucide-react";
 import { NexoraLogo } from "@/components/nexora-logo";
 import Link from "next/link";
@@ -46,6 +47,7 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/components/auth-context";
 import { LogOut, ShieldCheck, Users, FileText } from "lucide-react";
 import { SpkDisclaimerModal, SpkFooterNote } from "@/components/spk-disclaimer";
+import { EmailMissingBanner } from "@/components/email-missing-banner";
 import { TELEGRAM_CHANNEL_URL, TWITTER_URL } from "@/lib/config";
 import { XIcon } from "@/components/x-icon";
 
@@ -61,6 +63,7 @@ const navAdmin = [
   { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
   { href: "/lab", label: "Strateji Laboratuvarı", icon: FlaskConical },
   { href: "/errors", label: "Hatalar", icon: AlertTriangle },
+  { href: "/profil", label: "Profilim", icon: UserCog },
   { href: "/settings", label: "Ayarlar", icon: Settings },
 ];
 
@@ -82,6 +85,7 @@ const navSubscriber = [
   { href: "/signals", label: "Hisse Sinyalleri", icon: Zap },
   { href: "/wsb", label: "ABD Radar", icon: Radar },
   { href: "/yenile", label: "Yenile", icon: Sparkles },
+  { href: "/profil", label: "Profilim", icon: UserCog },
 ];
 
 function HealthBadge() {
@@ -288,6 +292,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <HealthBadge />
           </div>
         </header>
+        <EmailMissingBanner />
         <main className="flex-1 p-4 md:p-6">{children}</main>
         <SpkFooterNote />
       </SidebarInset>

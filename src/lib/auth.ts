@@ -6,6 +6,7 @@ import { API_BASE } from "./api";
 export type User = {
   id: number;
   username: string;
+  email?: string | null;
   role: "admin" | "subscriber";
   subscription?: Subscription | null;
 };
@@ -210,6 +211,24 @@ async function getJson<T>(path: string): Promise<T> {
   return res.json();
 }
 
+async function patchJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "PATCH",
+    headers: authHeaders(),
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    let msg = `${res.status}`;
+    try {
+      const j = JSON.parse(txt);
+      msg = j.detail || j.error || msg;
+    } catch {}
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
 export const authApi = {
   signup: (username: string, password: string, code: string, email?: string) =>
     postJson<{ token: string; user: User }>("/api/auth/signup", {
@@ -224,6 +243,12 @@ export const authApi = {
     postJson<{ token: string; user: User }>("/api/auth/login", { username, password }),
 
   me: () => getJson<{ user: User; subscription: Subscription | null }>("/api/auth/me"),
+
+  updateEmail: (email: string) =>
+    patchJson<{ ok: boolean; email: string }>("/api/auth/email", { email }),
+
+  updatePassword: (current: string, newPwd: string) =>
+    patchJson<{ ok: boolean }>("/api/auth/password", { current, new: newPwd }),
 
   renew: (code: string) =>
     postJson<{ ok: boolean; expires_at: string }>("/api/auth/renew", { code }),

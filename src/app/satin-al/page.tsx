@@ -581,7 +581,7 @@ function SatinAlInner() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
-                  E-posta (önerilir)
+                  E-posta <span className="text-emerald-400">(önemli)</span>
                 </label>
                 <input
                   type="email"
@@ -591,10 +591,19 @@ function SatinAlInner() {
                   disabled={verifying}
                   className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 />
-                <p className="text-[11px] text-muted-foreground">
-                  Davet kodun + abonelik özeti otomatik mailine gelir. Telegram kullanıcı
-                  adı da yazabilirsin (mail gönderilmez).
-                </p>
+                {contact.trim() && contact.includes("@") ? (
+                  <p className="text-[11px] text-emerald-400 flex items-center gap-1">
+                    ✓ Davet kodun + abonelik özeti otomatik mailine gelecek.
+                  </p>
+                ) : contact.trim() ? (
+                  <p className="text-[11px] text-muted-foreground">
+                    Telegram kullanıcı adı da yazabilirsin (mail gönderilmez).
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-amber-400 flex items-start gap-1">
+                    ⚠ Boş geçersen kodu sadece bu ekranda göreceksin — kaydetmezsen kayıp olur.
+                  </p>
+                )}
               </div>
 
               {err && (

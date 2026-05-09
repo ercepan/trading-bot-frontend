@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 // Subscriber'a açık rotalar (bunlar dışı admin only)
 const SUBSCRIBER_ROUTES = [
   "/bist", "/signals", "/wsb", "/auth", "/dashboard", "/yenile",
-  "/haberler", "/egitim", "/referans",
+  "/haberler", "/egitim", "/referans", "/profil",
 ];
 // Auth gerekmeyen rotalar (landing + auth + legal + satin-al + iletisim + performans)
 const PUBLIC_ROUTES = [

@@ -46,10 +46,15 @@ function SignupForm() {
       setErr("Devam etmek için SPK uyarısını ve risk bildirimini onaylamalısın");
       return;
     }
+    const emailClean = email.trim().toLowerCase();
+    if (!emailClean || !emailClean.includes("@") || emailClean.length < 5) {
+      setErr("Geçerli bir e-posta gir (welcome + bitiş uyarısı için)");
+      return;
+    }
     setErr(null);
     setLoading(true);
     try {
-      await signup(username, password, code, email.trim() || undefined);
+      await signup(username, password, code, emailClean);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : "Kayıt başarısız");
     } finally {
@@ -124,19 +129,19 @@ function SignupForm() {
               <p className="text-[11px] text-muted-foreground">Yöneticiden aldığın 16 karakterlik kod</p>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
-                E-posta <span className="text-muted-foreground/60">(opsiyonel)</span>
-              </label>
+              <label className="text-xs font-medium text-muted-foreground">E-posta</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@domain.com"
+                required
+                minLength={5}
                 disabled={loading}
                 className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
               <p className="text-[11px] text-muted-foreground">
-                Hoş geldin maili + abonelik bitiş uyarısı için. Spam yok.
+                Welcome maili + abonelik bitiş uyarıları + parola sıfırlama için. Spam yok.
               </p>
             </div>
 
@@ -206,7 +211,7 @@ function SignupForm() {
 
             <button
               type="submit"
-              disabled={loading || !username || !password || !code || !acceptedTerms || !acceptedRisk}
+              disabled={loading || !username || !password || !code || !email.trim() || !acceptedTerms || !acceptedRisk}
               className="w-full rounded-md bg-primary text-primary-foreground py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <Sparkles className="size-3.5" />
