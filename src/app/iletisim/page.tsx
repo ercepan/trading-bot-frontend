@@ -139,7 +139,7 @@ export default function IletisimPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Erce"
+                  placeholder="Adınız Soyadınız"
                   disabled={submitting}
                   className="w-full mt-1 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 />
@@ -152,7 +152,7 @@ export default function IletisimPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ornek@gmail.com"
+                  placeholder="email@domain.com"
                   disabled={submitting}
                   className="w-full mt-1 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 />

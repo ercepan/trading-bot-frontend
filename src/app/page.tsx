@@ -105,6 +105,12 @@ export default function LandingPage() {
             >
               Fiyat
             </Link>
+            <Link
+              href="/iletisim"
+              className="hidden sm:inline text-sm text-muted-foreground hover:text-emerald-400 transition-colors px-3 py-1.5"
+            >
+              İletişim
+            </Link>
             {!loading && user ? (
               <Link
                 href={dashboardHref}
