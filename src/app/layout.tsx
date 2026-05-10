@@ -90,70 +90,30 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Splash screen — JS bundle yüklenirken siyah ekran yerine logo göster */}
+        {/* CSS-only splash — body::before pseudo, React tree'ye dokunmaz */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
-              #__nx_splash {
+              body::before {
+                content: 'NEXORA';
                 position: fixed; inset: 0; z-index: 9999;
-                display: flex; flex-direction: column;
-                align-items: center; justify-content: center;
+                display: flex; align-items: center; justify-content: center;
                 background: linear-gradient(135deg, #050505 0%, #0a0a0a 50%, #052e2a 100%);
-                color: #e7e7e7;
+                color: #10b981;
                 font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-                transition: opacity 0.3s ease-out;
+                font-size: 56px; font-weight: 900; letter-spacing: 2px;
+                pointer-events: none;
+                animation: nxSplashFade 0.4s 1.2s forwards;
               }
-              #__nx_splash .__nx_logo {
-                font-size: 56px; font-weight: 900; letter-spacing: 1px; line-height: 1;
-                margin-bottom: 16px;
+              @keyframes nxSplashFade {
+                from { opacity: 1; }
+                to   { opacity: 0; visibility: hidden; }
               }
-              #__nx_splash .__nx_logo .green { color: #10b981; }
-              #__nx_splash .__nx_sub {
-                font-size: 11px; letter-spacing: 4px; opacity: 0.5;
-                text-transform: uppercase; margin-bottom: 32px;
-              }
-              #__nx_splash .__nx_spin {
-                width: 28px; height: 28px;
-                border: 2px solid rgba(16,185,129,0.2);
-                border-top-color: #10b981;
-                border-radius: 50%;
-                animation: __nx_rot 0.8s linear infinite;
-              }
-              @keyframes __nx_rot { to { transform: rotate(360deg); } }
-              .__nx_splash_hidden { opacity: 0; pointer-events: none; }
             `,
           }}
         />
       </head>
       <body className="min-h-full bg-background text-foreground">
-        {/* Inline splash — DOM'a hemen eklenir, hydration'a kadar görünür */}
-        <div id="__nx_splash" aria-hidden="true">
-          <div className="__nx_logo">
-            <span className="green">N</span>EXORA
-          </div>
-          <div className="__nx_sub">BIST · NASDAQ · CRYPTO</div>
-          <div className="__nx_spin"></div>
-        </div>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                function hideSplash() {
-                  var el = document.getElementById('__nx_splash');
-                  if (el) {
-                    el.classList.add('__nx_splash_hidden');
-                    setTimeout(function() { el && el.remove(); }, 350);
-                  }
-                }
-                if (document.readyState === 'complete') {
-                  setTimeout(hideSplash, 80);
-                } else {
-                  window.addEventListener('load', function() { setTimeout(hideSplash, 80); });
-                }
-              })();
-            `,
-          }}
-        />
         <AuthProvider>
           <AppShell>{children}</AppShell>
         </AuthProvider>
