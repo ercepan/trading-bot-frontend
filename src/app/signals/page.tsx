@@ -266,6 +266,7 @@ export default function SignalsPage() {
   const [signals, setSignals] = useState<StockSignal[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"us" | "tr">("us");
 
   useEffect(() => {
     let alive = true;
@@ -293,14 +294,16 @@ export default function SignalsPage() {
     };
   }, []);
 
-  const buys = signals?.filter((s) => s.signal_type === "STRONG_BUY" || s.signal_type === "BUY") ?? [];
-  const sells = signals?.filter((s) => s.signal_type === "STRONG_SELL" || s.signal_type === "SELL") ?? [];
-  const watches = signals?.filter((s) => s.signal_type === "BEARISH_WATCH") ?? [];
-  const holds = signals?.filter((s) => s.signal_type === "HOLD") ?? [];
+  // Tüm sinyaller (özet kartlar için)
+  const allUs = signals?.filter((s) => s.market !== "tr") ?? [];
+  const allTr = signals?.filter((s) => s.market === "tr") ?? [];
 
-  // Market filtreleri
-  const usSignals = signals?.filter((s) => s.market !== "tr") ?? [];
-  const trSignals = signals?.filter((s) => s.market === "tr") ?? [];
+  // Aktif tab'a göre filtrelenmiş
+  const tabSignals = activeTab === "us" ? allUs : allTr;
+  const buys = tabSignals.filter((s) => s.signal_type === "STRONG_BUY" || s.signal_type === "BUY");
+  const sells = tabSignals.filter((s) => s.signal_type === "STRONG_SELL" || s.signal_type === "SELL");
+  const watches = tabSignals.filter((s) => s.signal_type === "BEARISH_WATCH");
+  const holds = tabSignals.filter((s) => s.signal_type === "HOLD");
 
   return (
     <div className="space-y-6">
@@ -319,6 +322,32 @@ export default function SignalsPage() {
           <CardContent className="pt-6 text-sm text-red-400">API hata: {err}</CardContent>
         </Card>
       )}
+
+      {/* Market tabs */}
+      <div className="flex gap-1 border-b border-border">
+        <button
+          onClick={() => setActiveTab("us")}
+          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+            activeTab === "us"
+              ? "text-emerald-400 border-emerald-400"
+              : "text-muted-foreground border-transparent hover:text-foreground"
+          }`}
+        >
+          🇺🇸 NASDAQ / NYSE
+          <span className="ml-2 text-xs opacity-60">{allUs.length}</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("tr")}
+          className={`px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+            activeTab === "tr"
+              ? "text-amber-400 border-amber-400"
+              : "text-muted-foreground border-transparent hover:text-foreground"
+          }`}
+        >
+          🇹🇷 BIST
+          <span className="ml-2 text-xs opacity-60">{allTr.length}</span>
+        </button>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
@@ -360,16 +389,14 @@ export default function SignalsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Toplam</CardDescription>
+            <CardDescription>{activeTab === "us" ? "🇺🇸 Toplam" : "🇹🇷 Toplam"}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-semibold tabular-nums">
-              {signals?.length ?? 0}
+              {tabSignals.length}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              <span className="text-emerald-400">🇺🇸 {usSignals.length}</span>
-              {" · "}
-              <span className="text-amber-400">🇹🇷 {trSignals.length}</span>
+              {holds.length} hold
             </p>
           </CardContent>
         </Card>
@@ -381,7 +408,7 @@ export default function SignalsPage() {
             <Skeleton key={i} className="h-56 w-full" />
           ))}
         </div>
-      ) : signals && signals.length > 0 ? (
+      ) : tabSignals.length > 0 ? (
         <>
           {buys.length > 0 && (
             <div className="space-y-3">
@@ -419,7 +446,9 @@ export default function SignalsPage() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center text-sm text-muted-foreground">
-            Henüz sinyal yok. Sistem 2 saatte bir üretir.
+            {activeTab === "us"
+              ? "🇺🇸 NASDAQ/NYSE sinyali yok. Sistem 2 saatte bir üretir."
+              : "🇹🇷 BIST sinyali yok. Sistem 2 saatte bir üretir."}
           </CardContent>
         </Card>
       )}

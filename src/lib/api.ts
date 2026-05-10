@@ -233,6 +233,16 @@ export type StockSignal = {
   updated_at: string;
   closed_at: string | null;
   outcome: string | null;
+  // Yeni — fundamental + analyst pro
+  fundamental_score?: number | null;
+  fundamental_notes?: string | null;
+  pe_ratio?: number | null;
+  eps_growth?: number | null;
+  profit_margin?: number | null;
+  analyst_target_mean?: number | null;
+  analyst_count?: number | null;
+  pro_score?: number | null;
+  pro_sources?: string | null;
 };
 
 export type LabRun = {
