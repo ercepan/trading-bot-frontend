@@ -212,6 +212,7 @@ export type StockSignal = {
   ticker: string;
   signal_type: string;
   confidence: number;
+  market?: string; // 'us' | 'tr'
   current_price: number | null;
   entry_zone_low: number | null;
   entry_zone_high: number | null;

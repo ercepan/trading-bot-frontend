@@ -27,19 +27,31 @@ import {
 function SignalBadge({ type }: { type: string }) {
   if (type === "STRONG_BUY")
     return (
-      <Badge className="bg-emerald-500/20 border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/30">
+      <Badge className="bg-emerald-500/25 border-emerald-500/60 text-emerald-300 hover:bg-emerald-500/30">
         <TrendingUp className="size-3 mr-1" /> STRONG BUY
       </Badge>
     );
   if (type === "BUY")
     return (
-      <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">
+      <Badge variant="outline" className="border-emerald-500/40 text-emerald-400">
         <TrendingUp className="size-3 mr-1" /> BUY
+      </Badge>
+    );
+  if (type === "STRONG_SELL")
+    return (
+      <Badge className="bg-red-500/25 border-red-500/60 text-red-300 hover:bg-red-500/30">
+        <TrendingDown className="size-3 mr-1" /> STRONG SELL
+      </Badge>
+    );
+  if (type === "SELL")
+    return (
+      <Badge variant="outline" className="border-red-500/40 text-red-400">
+        <TrendingDown className="size-3 mr-1" /> SELL
       </Badge>
     );
   if (type === "BEARISH_WATCH")
     return (
-      <Badge variant="outline" className="border-red-500/30 text-red-400">
+      <Badge variant="outline" className="border-amber-500/40 text-amber-400">
         <TrendingDown className="size-3 mr-1" /> BEARISH WATCH
       </Badge>
     );
@@ -52,18 +64,45 @@ function SignalBadge({ type }: { type: string }) {
 
 function SignalCard({ s }: { s: StockSignal }) {
   const isBuy = s.signal_type === "STRONG_BUY" || s.signal_type === "BUY";
-  const midasUrl = `https://getmidas.com/tr/menkul-kiymetler/arama/${s.ticker}`;
+  const isSell = s.signal_type === "STRONG_SELL" || s.signal_type === "SELL";
+  const isBist = s.market === "tr";
+  // Midas BIST sembolleri farklı path
+  const midasUrl = isBist
+    ? `https://getmidas.com/tr/menkul-kiymetler/${s.ticker.toLowerCase()}`
+    : `https://getmidas.com/tr/menkul-kiymetler/arama/${s.ticker}`;
   const wsbSearchUrl = `https://www.reddit.com/r/wallstreetbets/search?q=%24${s.ticker}&restrict_sr=1&sort=top&t=week`;
-  const tvUrl = `https://www.tradingview.com/chart/?symbol=${s.ticker}`;
-  const yahooUrl = `https://finance.yahoo.com/quote/${s.ticker}`;
+  const tvUrl = isBist
+    ? `https://www.tradingview.com/chart/?symbol=BIST:${s.ticker}`
+    : `https://www.tradingview.com/chart/?symbol=${s.ticker}`;
+  const yahooUrl = isBist
+    ? `https://finance.yahoo.com/quote/${s.ticker}.IS`
+    : `https://finance.yahoo.com/quote/${s.ticker}`;
 
   return (
-    <Card className={isBuy ? "border-emerald-500/20" : s.signal_type === "BEARISH_WATCH" ? "border-red-500/20" : ""}>
+    <Card
+      className={
+        isBuy
+          ? "border-emerald-500/30"
+          : isSell
+            ? "border-red-500/30"
+            : s.signal_type === "BEARISH_WATCH"
+              ? "border-amber-500/30"
+              : ""
+      }
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div>
             <CardTitle className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-xl">${s.ticker}</span>
+              <span className="font-mono text-xl">
+                {isBist ? "" : "$"}
+                {s.ticker}
+              </span>
+              {isBist && (
+                <Badge variant="outline" className="text-[10px] border-amber-500/40 text-amber-300">
+                  BIST
+                </Badge>
+              )}
               <SignalBadge type={s.signal_type} />
               <Badge variant="outline" className="text-xs">
                 conf {(s.confidence * 100).toFixed(0)}%
@@ -75,7 +114,9 @@ function SignalCard({ s }: { s: StockSignal }) {
           </div>
           <div className="text-right">
             <div className="text-xl font-semibold tabular-nums">
-              {s.current_price ? `$${s.current_price.toFixed(2)}` : "—"}
+              {s.current_price
+                ? `${isBist ? "₺" : "$"}${s.current_price.toFixed(2)}`
+                : "—"}
             </div>
             {s.price_5d_change_pct != null && (
               <div
@@ -91,14 +132,14 @@ function SignalCard({ s }: { s: StockSignal }) {
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {isBuy && s.entry_zone_low != null && (
+        {(isBuy || isSell) && s.entry_zone_low != null && (
           <div className="grid grid-cols-3 gap-2 text-sm">
             <div className="rounded-md border border-border/50 p-2">
               <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                 <Target className="size-3" /> Entry Zone
               </div>
               <div className="font-mono font-medium tabular-nums">
-                ${s.entry_zone_low.toFixed(2)} — ${s.entry_zone_high?.toFixed(2)}
+                {isBist ? "₺" : "$"}{s.entry_zone_low.toFixed(2)} — {isBist ? "₺" : "$"}{s.entry_zone_high?.toFixed(2)}
               </div>
             </div>
             <div className="rounded-md border border-red-500/30 bg-red-500/5 p-2">
@@ -106,7 +147,7 @@ function SignalCard({ s }: { s: StockSignal }) {
                 <Shield className="size-3" /> Stop
               </div>
               <div className="font-mono font-medium tabular-nums">
-                ${s.stop_loss?.toFixed(2) ?? "—"}
+                {isBist ? "₺" : "$"}{s.stop_loss?.toFixed(2) ?? "—"}
               </div>
               {s.stop_loss && s.current_price && (
                 <div className="text-[10px] text-muted-foreground">
@@ -119,18 +160,18 @@ function SignalCard({ s }: { s: StockSignal }) {
                 <Target className="size-3" /> Target
               </div>
               <div className="font-mono font-medium tabular-nums">
-                ${s.target?.toFixed(2) ?? "—"}
+                {isBist ? "₺" : "$"}{s.target?.toFixed(2) ?? "—"}
               </div>
               {s.target && s.current_price && (
                 <div className="text-[10px] text-muted-foreground">
-                  +{(((s.target - s.current_price) / s.current_price) * 100).toFixed(1)}%
+                  {s.target > s.current_price ? "+" : ""}{(((s.target - s.current_price) / s.current_price) * 100).toFixed(1)}%
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {s.risk_reward != null && isBuy && (
+        {s.risk_reward != null && (isBuy || isSell) && (
           <div className="flex items-center gap-2 text-xs">
             <span className="text-muted-foreground">Risk/Reward:</span>
             <span className="font-mono font-medium">{s.risk_reward.toFixed(2)}x</span>
@@ -139,7 +180,7 @@ function SignalCard({ s }: { s: StockSignal }) {
 
         <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono">
           {s.rsi_14 != null && <span>RSI {s.rsi_14.toFixed(0)}</span>}
-          {s.atr_14 != null && <span>ATR ${s.atr_14.toFixed(2)}</span>}
+          {s.atr_14 != null && <span>ATR {isBist ? "₺" : "$"}{s.atr_14.toFixed(2)}</span>}
           {s.analyst_score != null && (
             <span>
               AN{" "}
@@ -201,12 +242,16 @@ function SignalCard({ s }: { s: StockSignal }) {
           >
             Sentiment detay
           </Link>
-          {isBuy && (
+          {(isBuy || isSell) && (
             <a
               href={midasUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-2.5 py-1 hover:bg-emerald-500/30 transition-colors ml-auto"
+              className={`inline-flex items-center gap-1 text-xs rounded-md px-2.5 py-1 transition-colors ml-auto ${
+                isBuy
+                  ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30"
+                  : "bg-red-500/20 border border-red-500/40 text-red-300 hover:bg-red-500/30"
+              }`}
             >
               Midas'ta aç <ExternalLink className="size-3" />
             </a>
@@ -249,8 +294,13 @@ export default function SignalsPage() {
   }, []);
 
   const buys = signals?.filter((s) => s.signal_type === "STRONG_BUY" || s.signal_type === "BUY") ?? [];
+  const sells = signals?.filter((s) => s.signal_type === "STRONG_SELL" || s.signal_type === "SELL") ?? [];
   const watches = signals?.filter((s) => s.signal_type === "BEARISH_WATCH") ?? [];
   const holds = signals?.filter((s) => s.signal_type === "HOLD") ?? [];
+
+  // Market filtreleri
+  const usSignals = signals?.filter((s) => s.market !== "tr") ?? [];
+  const trSignals = signals?.filter((s) => s.market === "tr") ?? [];
 
   return (
     <div className="space-y-6">
@@ -270,10 +320,10 @@ export default function SignalsPage() {
         </Card>
       )}
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Aktif BUY</CardDescription>
+            <CardDescription>BUY</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-semibold tabular-nums text-emerald-400">
@@ -286,10 +336,23 @@ export default function SignalsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Bearish Watch</CardDescription>
+            <CardDescription>SELL</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-semibold tabular-nums text-red-400">
+              {sells.length}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {sells.filter((b) => b.signal_type === "STRONG_SELL").length} strong
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>Bearish Watch</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-semibold tabular-nums text-amber-400">
               {watches.length}
             </div>
             <p className="text-xs text-muted-foreground mt-1">izleme listesi</p>
@@ -304,7 +367,9 @@ export default function SignalsPage() {
               {signals?.length ?? 0}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {holds.length} hold
+              <span className="text-emerald-400">🇺🇸 {usSignals.length}</span>
+              {" · "}
+              <span className="text-amber-400">🇹🇷 {trSignals.length}</span>
             </p>
           </CardContent>
         </Card>
@@ -326,9 +391,17 @@ export default function SignalsPage() {
               ))}
             </div>
           )}
+          {sells.length > 0 && (
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold text-red-400">🔴 Satış Sinyalleri</h2>
+              {sells.map((s) => (
+                <SignalCard key={s.id} s={s} />
+              ))}
+            </div>
+          )}
           {watches.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-red-400">🔴 Bearish Watch</h2>
+              <h2 className="text-lg font-semibold text-amber-400">🟡 Bearish Watch</h2>
               {watches.map((s) => (
                 <SignalCard key={s.id} s={s} />
               ))}
