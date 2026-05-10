@@ -79,87 +79,112 @@ export function EquityCurve() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="size-5" /> Equity Curve
-        </CardTitle>
-        <CardDescription>
-          Son 90 gün portföy büyümesi · 6 saatte bir snapshot
-        </CardDescription>
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="size-5 text-emerald-400" /> Equity Curve
+            </CardTitle>
+            <CardDescription>
+              Son 90 gün portföy büyümesi · 6 saatte bir snapshot
+            </CardDescription>
+          </div>
+          {/* Legend */}
+          <div className="flex items-center gap-4 text-xs">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+              <span className="text-muted-foreground">Sanal</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-0.5 bg-blue-400" style={{ borderTop: "2px dashed #60a5fa" }} />
+              <span className="text-muted-foreground">Gerçek MEXC</span>
+            </div>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <Skeleton className="h-[240px] w-full" />
+          <Skeleton className="h-[280px] w-full" />
         ) : hasData ? (
-          <div className="h-[240px] w-full">
+          <div className="h-[280px] w-full -ml-2">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data!}>
+              <AreaChart data={data!} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
                 <defs>
                   <linearGradient id="eqVirtual" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="rgb(52 211 153)" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="rgb(52 211 153)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.55} />
+                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
                   </linearGradient>
                   <linearGradient id="eqReal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="rgb(96 165 250)" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="rgb(96 165 250)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#60a5fa" stopOpacity={0.4} />
+                    <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="hsl(var(--border))"
-                  opacity={0.3}
+                  stroke="#3a3a3a"
+                  vertical={false}
                 />
                 <XAxis
                   dataKey="label"
-                  tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 11, fill: "#a1a1aa", fontWeight: 500 }}
                   tickLine={false}
-                  axisLine={false}
+                  axisLine={{ stroke: "#3a3a3a" }}
+                  minTickGap={32}
                 />
                 <YAxis
                   domain={["auto", "auto"]}
-                  tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                  tick={{ fontSize: 11, fill: "#a1a1aa", fontWeight: 500 }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v) => `$${v.toFixed(0)}`}
+                  width={56}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "hsl(var(--background))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "6px",
-                    fontSize: "12px",
+                    backgroundColor: "#0f0f10",
+                    border: "1px solid #10b981",
+                    borderRadius: "8px",
+                    fontSize: "13px",
+                    boxShadow: "0 4px 12px rgba(16,185,129,0.2)",
                   }}
-                  formatter={(value) =>
-                    typeof value === "number" ? fmtUsd(value) : "—"
-                  }
+                  labelStyle={{ color: "#10b981", fontWeight: 600 }}
+                  formatter={(value, name) => [
+                    typeof value === "number" ? fmtUsd(value) : "—",
+                    name === "virtual" ? "Sanal" : "Gerçek MEXC",
+                  ]}
                 />
                 <ReferenceLine
                   y={initial}
-                  stroke="hsl(var(--muted-foreground))"
-                  strokeDasharray="3 3"
+                  stroke="#71717a"
+                  strokeDasharray="4 4"
                   label={{
-                    value: "start",
+                    value: `Başlangıç $${initial.toFixed(0)}`,
                     position: "insideTopRight",
-                    fill: "hsl(var(--muted-foreground))",
+                    fill: "#71717a",
                     fontSize: 10,
+                    fontWeight: 500,
                   }}
                 />
                 <Area
                   type="monotone"
                   dataKey="virtual"
-                  stroke="rgb(52 211 153)"
+                  stroke="#10b981"
                   fill="url(#eqVirtual)"
-                  strokeWidth={2}
-                  name="Sanal equity"
+                  strokeWidth={2.5}
+                  name="virtual"
+                  dot={false}
+                  activeDot={{ r: 5, fill: "#10b981", stroke: "#fff", strokeWidth: 2 }}
                 />
                 <Area
                   type="monotone"
                   dataKey="real"
-                  stroke="rgb(96 165 250)"
+                  stroke="#60a5fa"
                   fill="url(#eqReal)"
-                  strokeWidth={1.5}
-                  strokeDasharray="4 2"
-                  name="Gerçek MEXC"
+                  strokeWidth={2}
+                  strokeDasharray="6 3"
+                  name="real"
                   connectNulls
+                  dot={false}
+                  activeDot={{ r: 4, fill: "#60a5fa", stroke: "#fff", strokeWidth: 2 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
