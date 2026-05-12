@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     return [
       {
         // Public marka logoları — Shopier / 3rd-party cross-origin fetch için CORS aç
-        source: "/nexora-logo-:size*",
+        source: "/nexora-logo-512.png",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
