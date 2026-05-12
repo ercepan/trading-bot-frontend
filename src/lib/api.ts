@@ -1,6 +1,6 @@
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE ||
-  "https://trading-bot-senaryo-production.up.railway.app";
+// api.nexora-trading.net DNS/TLS issue var, geçici olarak Railway URL'i kullan
+// Düzeltilince process.env.NEXT_PUBLIC_API_BASE'i geri açacağız.
+export const API_BASE = "https://trading-bot-senaryo-production.up.railway.app";
 
 export type Tier = {
   tier_id: string;
