@@ -22,11 +22,15 @@ export type ReferralStats = {
   active_count: number;
   referees: { id: number; username: string; created_at: string; is_active: number }[];
   balance: {
+    // USD path (kripto/USDT ödemelerden)
     earned_total: number;
     withdrawn: number;
     available: number;
     min_payout: number;
     can_withdraw: boolean;
+    // TL path (Shopier ödemelerinden — gün hediyesi)
+    earned_days?: number;
+    days_label?: string;
   };
 };
 

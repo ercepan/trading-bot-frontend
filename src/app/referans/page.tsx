@@ -138,7 +138,7 @@ export default function ReferansPage() {
         </div>
 
         {/* Stat row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-6">
           <Card className="p-3 border-border/60">
             <div className="text-[11px] text-muted-foreground uppercase tracking-wide">Tıklama</div>
             <div className="text-2xl font-bold mt-1">{stats.click_count}</div>
@@ -152,12 +152,31 @@ export default function ReferansPage() {
             <div className="text-2xl font-bold mt-1 text-emerald-400">{stats.active_count}</div>
           </Card>
           <Card className="p-3 border-emerald-500/40 bg-emerald-500/5">
-            <div className="text-[11px] text-emerald-400 uppercase tracking-wide font-medium">Bakiye</div>
+            <div className="text-[11px] text-emerald-400 uppercase tracking-wide font-medium">
+              🎁 Gün hediyesi
+            </div>
             <div className="text-2xl font-bold mt-1 text-emerald-400">
+              {stats.balance.earned_days ?? 0}
+              <span className="text-sm font-normal text-emerald-400/70 ml-1">gün</span>
+            </div>
+          </Card>
+          <Card className="p-3 border-border/60">
+            <div className="text-[11px] text-muted-foreground uppercase tracking-wide">USDT bakiye</div>
+            <div className="text-2xl font-bold mt-1">
               ${stats.balance.available.toFixed(2)}
             </div>
           </Card>
         </div>
+
+        {(stats.balance.earned_days ?? 0) > 0 && (
+          <div className="mt-3 rounded-lg border border-emerald-500/40 bg-emerald-500/5 px-4 py-3 text-sm">
+            <span className="text-emerald-300">🎉</span>{" "}
+            <span className="text-emerald-200">
+              Davet ettiklerin TL ile abone oldu —{" "}
+              <b>{stats.balance.earned_days} gün</b> ücretsiz abonelik kazandın, otomatik aboneliğine eklendi.
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Senin linkin */}
@@ -204,9 +223,15 @@ export default function ReferansPage() {
             <strong className="text-foreground block mb-1">Nasıl kazanırım?</strong>
             <ul className="space-y-1 list-disc list-inside">
               <li>Linke tıklayan → çerez 30 gün saklanır</li>
-              <li>Ücretli abone olunca → otomatik komisyon</li>
-              <li>$25 → ${(25 * stats.commission_pct / 100).toFixed(2)}, $40 → ${(40 * stats.commission_pct / 100).toFixed(2)} kazanırsın</li>
-              <li>Bakiyen ${stats.balance.min_payout} olunca çekebilirsin</li>
+              <li>
+                <b className="text-emerald-400">₺ TL ödeyen</b> →
+                aboneliğine <b>{Math.round(30 * stats.commission_pct / 100)} gün</b> eklenir
+              </li>
+              <li>
+                <b>$ USDT ödeyen</b> → $25/$40 üzerinden ${(25 * stats.commission_pct / 100).toFixed(2)} / ${(40 * stats.commission_pct / 100).toFixed(2)} kredi
+              </li>
+              <li>Gün hediyesi otomatik — para çekimi gerekmez</li>
+              <li>USDT bakiyesi ${stats.balance.min_payout}+ olunca çekebilirsin</li>
             </ul>
           </div>
         </div>
