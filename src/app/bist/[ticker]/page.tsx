@@ -22,8 +22,8 @@ import {
   FileText,
 } from "lucide-react";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   Tooltip,
@@ -89,11 +89,29 @@ export default function BistTickerDetailPage({
     };
   }, [tk]);
 
-  const priceChartData = (history ?? []).map((h) => ({
-    label: fmtDate(h.scraped_at),
-    price: h.price_current,
-    sentiment: h.final_score * 100, // -100..+100 ölçeğine çek
-  }));
+  const priceChartData = (history ?? [])
+    .filter((h) => h.price_current != null && h.price_current > 0)
+    .map((h) => ({
+      label: fmtDate(h.scraped_at),
+      price: h.price_current,
+      sentiment: h.final_score * 100, // -100..+100 ölçeğine çek
+    }));
+
+  // Y eksenini fiyat aralığına oturt (varsayılan [0, dataMax] dalgalanmayı düzleştiriyor)
+  const prices = priceChartData.map((d) => d.price);
+  const priceMin = prices.length ? Math.min(...prices) : 0;
+  const priceMax = prices.length ? Math.max(...prices) : 0;
+  const pricePad = Math.max((priceMax - priceMin) * 0.15, priceMax * 0.01, 1);
+  const yDomain: [number, number] = [
+    Math.max(priceMin - pricePad, 0),
+    priceMax + pricePad,
+  ];
+  const priceAvg = prices.length ? prices.reduce((a, b) => a + b, 0) / prices.length : 0;
+  const priceFirst = prices[0] ?? 0;
+  const priceLast = prices[prices.length - 1] ?? 0;
+  const priceTrendUp = priceLast >= priceFirst;
+  const accent = priceTrendUp ? "#10b981" : "#ef4444";
+  const accentSoft = priceTrendUp ? "rgba(16,185,129,0.55)" : "rgba(239,68,68,0.55)";
 
   const midasUrl = `https://getmidas.com/tr/menkul-kiymetler/arama/${tk}`;
   const tvUrl = `https://www.tradingview.com/chart/?symbol=BIST:${tk}`;
@@ -212,31 +230,118 @@ export default function BistTickerDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>30 günlük tarihçe</CardTitle>
-          <CardDescription>Fiyat değişimi · 6 saatte bir snapshot</CardDescription>
+          <div className="flex items-start justify-between flex-wrap gap-3">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                {priceTrendUp ? (
+                  <TrendingUp className="size-5 text-emerald-400" />
+                ) : (
+                  <TrendingDown className="size-5 text-red-400" />
+                )}
+                30 günlük tarihçe
+              </CardTitle>
+              <CardDescription>
+                Fiyat değişimi · 6 saatte bir snapshot
+              </CardDescription>
+            </div>
+            {priceChartData.length > 1 && (
+              <div className="flex items-center gap-4 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: accent }} />
+                  <span className="text-muted-foreground">Fiyat</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className="w-3 h-0.5"
+                    style={{ borderTop: "2px dashed #71717a" }}
+                  />
+                  <span className="text-muted-foreground">
+                    Ortalama ₺{priceAvg.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <Skeleton className="h-[260px] w-full" />
+            <Skeleton className="h-[280px] w-full" />
           ) : priceChartData.length > 1 ? (
-            <div className="h-[260px] w-full">
+            <div className="h-[280px] w-full -ml-2">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={priceChartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                  <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} />
-                  <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickLine={false} axisLine={false} tickFormatter={(v) => `₺${v.toFixed(0)}`} />
+                <AreaChart
+                  data={priceChartData}
+                  margin={{ top: 8, right: 16, left: 0, bottom: 4 }}
+                >
+                  <defs>
+                    <linearGradient id="bistPrice" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={accent} stopOpacity={0.55} />
+                      <stop offset="100%" stopColor={accent} stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#3a3a3a"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 11, fill: "#a1a1aa", fontWeight: 500 }}
+                    tickLine={false}
+                    axisLine={{ stroke: "#3a3a3a" }}
+                    minTickGap={32}
+                  />
+                  <YAxis
+                    domain={yDomain}
+                    tick={{ fontSize: 11, fill: "#a1a1aa", fontWeight: 500 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) =>
+                      `₺${v >= 100 ? v.toFixed(0) : v.toFixed(2)}`
+                    }
+                    width={56}
+                  />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "hsl(var(--background))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "6px",
-                      fontSize: "12px",
+                      backgroundColor: "#0f0f10",
+                      border: `1px solid ${accent}`,
+                      borderRadius: "8px",
+                      fontSize: "13px",
+                      boxShadow: `0 4px 12px ${accentSoft}`,
                     }}
-                    formatter={(v) => (typeof v === "number" ? `₺${v.toFixed(2)}` : "—")}
+                    labelStyle={{ color: accent, fontWeight: 600 }}
+                    formatter={(v) =>
+                      typeof v === "number" ? [`₺${v.toFixed(2)}`, "Fiyat"] : ["—", "Fiyat"]
+                    }
                   />
-                  <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
-                  <Line type="monotone" dataKey="price" stroke="rgb(52 211 153)" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} name="Fiyat" />
-                </LineChart>
+                  <ReferenceLine
+                    y={priceAvg}
+                    stroke="#71717a"
+                    strokeDasharray="4 4"
+                    label={{
+                      value: `Ort ₺${priceAvg.toFixed(2)}`,
+                      position: "insideTopRight",
+                      fill: "#71717a",
+                      fontSize: 10,
+                      fontWeight: 500,
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="price"
+                    stroke={accent}
+                    fill="url(#bistPrice)"
+                    strokeWidth={2.5}
+                    name="Fiyat"
+                    dot={false}
+                    activeDot={{
+                      r: 5,
+                      fill: accent,
+                      stroke: "#fff",
+                      strokeWidth: 2,
+                    }}
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           ) : (

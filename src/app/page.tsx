@@ -182,15 +182,23 @@ export default function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/satin-al"
+              href="/odeme"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/20"
             >
               <Sparkles className="size-4" />
-              Paketleri incele · $25 / $40
+              Türk Lirası ile öde · ₺899 / ₺1499
             </Link>
             <Link
-              href="/auth/login"
+              href="/satin-al"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent text-foreground px-6 py-3 text-base transition-colors"
+            >
+              USDT ile öde · $25 / $40
+            </Link>
+          </div>
+          <div className="mt-3 flex justify-center">
+            <Link
+              href="/auth/login"
+              className="text-xs text-muted-foreground hover:text-foreground underline"
             >
               Davet kodum var · Giriş yap
             </Link>
@@ -636,10 +644,16 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                href="/satin-al?plan=signal"
+                href="/odeme?plan=signal"
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-emerald-500/40 hover:bg-emerald-500/10 text-emerald-400 font-semibold px-6 py-3 transition-colors"
               >
-                Sinyal — $25 al
+                ₺899 ile al · Türk Lirası
+              </Link>
+              <Link
+                href="/satin-al?plan=signal"
+                className="block text-center mt-2 text-[11px] text-muted-foreground hover:text-emerald-300 underline"
+              >
+                veya $25 USDT (kripto) ile öde
               </Link>
             </div>
 
@@ -691,11 +705,17 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                href="/satin-al?plan=education"
+                href="/odeme?plan=training"
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
               >
                 <Sparkles className="size-4" />
-                Eğitim + Sinyal — $40 al
+                ₺1499 ile al · Türk Lirası
+              </Link>
+              <Link
+                href="/satin-al?plan=education"
+                className="block text-center mt-2 text-[11px] text-emerald-300/80 hover:text-emerald-200 underline"
+              >
+                veya $40 USDT (kripto) ile öde
               </Link>
             </div>
           </div>
