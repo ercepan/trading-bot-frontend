@@ -85,8 +85,9 @@ function OdemeInner() {
   async function handleCheckout() {
     setErr(null);
 
-    if (!email.trim() || !email.includes("@")) {
-      setErr("Geçerli bir email adresi gir");
+    const trimmedEmail = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setErr("Geçerli bir email adresi gir (örn: kullanici@domain.com)");
       return;
     }
 

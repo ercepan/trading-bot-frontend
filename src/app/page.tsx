@@ -24,6 +24,8 @@ import {
   TELEGRAM_CHANNEL_DISPLAY,
   TWITTER_URL,
   TWITTER_USERNAME,
+  PLAN_PRICES_TRY,
+  formatTRY,
 } from "@/lib/config";
 import { XIcon } from "@/components/x-icon";
 import { captureReferralFromUrl, checkReferralCode } from "@/lib/referral";
@@ -186,7 +188,7 @@ export default function LandingPage() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/20"
             >
               <Sparkles className="size-4" />
-              Türk Lirası ile öde · ₺899 / ₺1499
+              Türk Lirası ile öde · {formatTRY(PLAN_PRICES_TRY.signal)} / {formatTRY(PLAN_PRICES_TRY.education)}
             </Link>
             <Link
               href="/satin-al"
@@ -647,7 +649,7 @@ export default function LandingPage() {
                 href="/odeme?plan=signal"
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-emerald-500/40 hover:bg-emerald-500/10 text-emerald-400 font-semibold px-6 py-3 transition-colors"
               >
-                ₺899 ile al · Türk Lirası
+                {formatTRY(PLAN_PRICES_TRY.signal)} ile al · Türk Lirası
               </Link>
               <Link
                 href="/satin-al?plan=signal"
@@ -709,7 +711,7 @@ export default function LandingPage() {
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 transition-colors"
               >
                 <Sparkles className="size-4" />
-                ₺1499 ile al · Türk Lirası
+                {formatTRY(PLAN_PRICES_TRY.education)} ile al · Türk Lirası
               </Link>
               <Link
                 href="/satin-al?plan=education"

@@ -19,3 +19,19 @@ export const TIKTOK_URL = `https://www.tiktok.com/@${TIKTOK_USERNAME}`;
 // Site
 export const SITE_URL = "https://nexora-trading.net";
 export const SITE_DISPLAY = "nexora-trading.net";
+
+// ---------------------------------------------------------------------------
+// Pricing (TL — Shopier ile senkron)
+// ---------------------------------------------------------------------------
+// Tek nokta: landing, /odeme ve diger yerler bunu kullanir.
+// Shopier'da fiyat degisirse SADECE buradan guncelle.
+export const PLAN_PRICES_TRY = {
+  signal:    899,   // Sinyal Paketi (30 gun)
+  education: 1499,  // Sinyal + Egitim Seti (30 gun)
+} as const;
+
+// Referral indirimi yuzdesi — backend (shopier_client.DISCOUNT_REF_PCT) ile senkron olmali.
+export const REFERRAL_DISCOUNT_PCT = 20;
+
+export const formatTRY = (amount: number): string =>
+  `₺${Math.round(amount).toLocaleString("tr-TR")}`;

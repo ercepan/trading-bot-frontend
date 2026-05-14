@@ -1,6 +1,8 @@
-// api.nexora-trading.net DNS/TLS issue var, geçici olarak Railway URL'i kullan
-// Düzeltilince process.env.NEXT_PUBLIC_API_BASE'i geri açacağız.
-export const API_BASE = "https://trading-bot-senaryo-production.up.railway.app";
+// Env override: Vercel'de NEXT_PUBLIC_API_BASE set edilirse onu kullan.
+// Default fallback: Railway production URL (api.nexora-trading.net cert provision olunca degis).
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE ||
+  "https://trading-bot-senaryo-production.up.railway.app";
 
 export type Tier = {
   tier_id: string;
@@ -276,7 +278,6 @@ export const api = {
   },
   stats: () => fetchJson<TradeStats>("/api/stats"),
   errors: () => fetchJson<ErrorLog[]>("/api/errors"),
-  errors_full: () => fetchJson<ErrorLog[]>("/api/errors"),
   real_balances: () => fetchJson<RealBalances>("/api/real_balances"),
   equity_curve: (days = 90) =>
     fetchJson<

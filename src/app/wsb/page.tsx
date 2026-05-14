@@ -308,6 +308,7 @@ export default function WsbPage() {
               ))}
             </div>
           ) : rows && rows.length > 0 ? (
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -389,6 +390,7 @@ export default function WsbPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           ) : (
             <div className="py-12 text-center text-sm text-muted-foreground">
               Henüz scrape yapılmamış. Bot her 6 saatte bir otomatik tarar.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -35,11 +35,22 @@ function BasariliInner() {
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [pollAttempts, setPollAttempts] = useState(0);
+  const aliveRef = useRef(true);
 
-  async function fetchOrder() {
+  // Unmount sonrasi state update yapilmasini engelle (memory leak guard)
+  useEffect(() => {
+    aliveRef.current = true;
+    return () => {
+      aliveRef.current = false;
+    };
+  }, []);
+
+  const fetchOrder = useCallback(async () => {
     if (!callbackId) {
-      setLoading(false);
-      setErr("Sipariş referansı bulunamadı");
+      if (aliveRef.current) {
+        setLoading(false);
+        setErr("Sipariş referansı bulunamadı");
+      }
       return;
     }
     try {
@@ -47,21 +58,22 @@ function BasariliInner() {
         `${API_BASE}/api/billing/shopier/order/${callbackId}`,
       );
       const data = await res.json();
+      if (!aliveRef.current) return;
       if (!res.ok) {
         setErr(data.detail || "Sipariş bulunamadı");
       } else {
         setOrder(data);
       }
     } catch (e) {
-      setErr(String(e));
+      if (aliveRef.current) setErr(String(e));
     } finally {
-      setLoading(false);
+      if (aliveRef.current) setLoading(false);
     }
-  }
+  }, [callbackId]);
 
   useEffect(() => {
     fetchOrder();
-  }, [callbackId]);
+  }, [fetchOrder]);
 
   // Polling — eğer status henüz "activated" değilse 5sn'de bir tekrar dene (webhook gelene kadar)
   useEffect(() => {
@@ -69,11 +81,12 @@ function BasariliInner() {
     if (order.status === "activated") return;
     if (pollAttempts >= 12) return; // max 60 sn polling
     const t = setTimeout(() => {
+      if (!aliveRef.current) return;
       setPollAttempts((n) => n + 1);
       fetchOrder();
     }, 5000);
     return () => clearTimeout(t);
-  }, [order, pollAttempts]);
+  }, [order, pollAttempts, fetchOrder]);
 
   function copyCode() {
     if (!order?.code) return;

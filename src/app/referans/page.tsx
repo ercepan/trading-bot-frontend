@@ -62,9 +62,17 @@ export default function ReferansPage() {
       setPayoutMsg({ kind: "err", text: "Geçerli tutar gir" });
       return;
     }
+    const trimmedAddr = payoutAddr.trim();
+    if (!/^0x[a-fA-F0-9]{40}$/.test(trimmedAddr)) {
+      setPayoutMsg({
+        kind: "err",
+        text: "Geçerli BSC (BEP-20) adresi gir — 0x ile başlamalı ve 42 karakter olmalı",
+      });
+      return;
+    }
     setSubmitting(true);
     try {
-      await referralApi.requestPayout(amt, payoutAddr.trim());
+      await referralApi.requestPayout(amt, trimmedAddr);
       setPayoutMsg({ kind: "ok", text: "Çekim talebin alındı, admin onayı bekleniyor" });
       setPayoutAmount("");
       setPayoutAddr("");
