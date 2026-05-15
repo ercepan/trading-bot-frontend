@@ -168,15 +168,20 @@ export default function DenePage() {
     }
   }
 
-  // Auto-submit when 6 digits filled
+  // Auto-submit when 6 digits filled — submittedRef double-submit'i önler
+  const submittedRef = useRef(false);
   useEffect(() => {
-    if (code.every((d) => d) && !verifyLoading) {
-      // Synthetic submit
+    if (code.every((d) => d) && !verifyLoading && !submittedRef.current) {
+      submittedRef.current = true;
       const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
       handleVerifySubmit(fakeEvent);
     }
+    // Kullanıcı kodu temizleyince flag'i sıfırla
+    if (code.some((d) => !d)) {
+      submittedRef.current = false;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code]);
+  }, [code, verifyLoading]);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -242,7 +247,7 @@ export default function DenePage() {
                     value={digit}
                     onChange={(e) => handleCodeChange(idx, e.target.value)}
                     onKeyDown={(e) => handleCodeKeyDown(idx, e)}
-                    onPaste={idx === 0 ? handleCodePaste : undefined}
+                    onPaste={handleCodePaste}
                     disabled={verifyLoading}
                     className="w-12 h-14 md:w-14 md:h-16 text-center text-2xl md:text-3xl font-bold bg-black/40 border border-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500/60 disabled:opacity-50"
                     autoComplete="one-time-code"
