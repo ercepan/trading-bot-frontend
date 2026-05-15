@@ -130,7 +130,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, subscription, logout, loading } = useAuth();
 
-  // Auth sayfalarında, landing'de, legal sayfalarda + public sayfalar (iletişim, performans, satin-al, odeme) sidebar yok
+  // Auth sayfalarında, landing'de, legal sayfalarda + public sayfalar (iletişim, performans, satin-al, odeme, dene) sidebar yok
   const isAuthPage = pathname?.startsWith("/auth/");
   const isPublicPage =
     pathname === "/" ||
@@ -139,6 +139,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname === "/satin-al" ||
     pathname === "/iletisim" ||
     pathname === "/performans" ||
+    pathname === "/dene" ||
     pathname?.startsWith("/odeme");
   if (isAuthPage || isPublicPage) {
     return <>{children}</>;
