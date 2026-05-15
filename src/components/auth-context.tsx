@@ -31,11 +31,12 @@ const SUBSCRIBER_ROUTES = [
   "/bist", "/signals", "/wsb", "/auth", "/dashboard", "/yenile",
   "/haberler", "/egitim", "/referans", "/profil",
 ];
-// Auth gerekmeyen rotalar (landing + auth + legal + satin-al + odeme + iletisim + performans)
+// Auth gerekmeyen rotalar (landing + auth + legal + satin-al + odeme + iletisim + performans + dene)
 const PUBLIC_ROUTES = [
   "/auth", "/terms", "/kvkk", "/satin-al",
   "/iletisim", "/performans",
   "/odeme",  // Shopier TRY ödeme akışı (anonim satın alma)
+  "/dene",   // 7 günlük ücretsiz trial signup (anonim)
 ];
 // "/" tek başına public (root landing)
 
