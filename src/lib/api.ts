@@ -325,6 +325,15 @@ export const api = {
 // ---------------------------------------------------------------------------
 type TrialSignupResult = {
   ok: boolean;
+  needs_verification?: boolean;
+  email?: string;
+  username?: string;
+  message?: string;
+  error?: string;
+};
+
+type TrialVerifyResult = {
+  ok: boolean;
   token?: string;
   username?: string;
   expires_at?: string;
@@ -333,7 +342,7 @@ type TrialSignupResult = {
 };
 
 export const trialApi = {
-  // Yeni akış: email + parola → otomatik hesap + JWT token → direkt dashboard
+  // Step 1: email + parola → hesap oluştur + 6 haneli kod gönder
   signup: async (
     email: string,
     password: string,
@@ -341,13 +350,41 @@ export const trialApi = {
   ): Promise<TrialSignupResult> => {
     const res = await fetch(`${API_BASE}/api/trial/signup`, {
       method: "POST",
-      credentials: "include", // browser fingerprint cookie için
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, device_id }),
     });
     const data = await res.json();
     if (!res.ok) {
       return { ok: false, error: data.detail || "Trial başlatılamadı" };
+    }
+    return data;
+  },
+
+  // Step 2: 6 haneli kodu doğrula → JWT token
+  verifyCode: async (email: string, code: string): Promise<TrialVerifyResult> => {
+    const res = await fetch(`${API_BASE}/api/trial/verify-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return { ok: false, error: data.detail || "Kod doğrulanamadı" };
+    }
+    return data;
+  },
+
+  // Yeniden kod gönder (kod kaybolduysa)
+  resendCode: async (email: string): Promise<{ ok: boolean; message?: string; error?: string }> => {
+    const res = await fetch(`${API_BASE}/api/trial/resend-code`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return { ok: false, error: data.detail || "Kod gönderilemedi" };
     }
     return data;
   },
