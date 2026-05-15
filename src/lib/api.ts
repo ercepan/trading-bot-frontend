@@ -321,14 +321,29 @@ export const api = {
 };
 
 // ---------------------------------------------------------------------------
-// Trial — 7 günlük ücretsiz Sinyal Paketi (email karşılığı)
+// Trial — 7 günlük ücretsiz Sinyal Paketi (tek-form signup)
 // ---------------------------------------------------------------------------
+type TrialSignupResult = {
+  ok: boolean;
+  token?: string;
+  username?: string;
+  expires_at?: string;
+  duration_days?: number;
+  error?: string;
+};
+
 export const trialApi = {
-  start: async (email: string): Promise<{ ok: boolean; message?: string; error?: string }> => {
-    const res = await fetch(`${API_BASE}/api/trial/start`, {
+  // Yeni akış: email + parola → otomatik hesap + JWT token → direkt dashboard
+  signup: async (
+    email: string,
+    password: string,
+    device_id?: string,
+  ): Promise<TrialSignupResult> => {
+    const res = await fetch(`${API_BASE}/api/trial/signup`, {
       method: "POST",
+      credentials: "include", // browser fingerprint cookie için
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, password, device_id }),
     });
     const data = await res.json();
     if (!res.ok) {

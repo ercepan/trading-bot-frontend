@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -12,14 +13,18 @@ import {
   Radar,
   BarChart3,
   ArrowRight,
+  Lock,
 } from "lucide-react";
 import { NexoraLogo } from "@/components/nexora-logo";
 import { trialApi } from "@/lib/api";
+import { setToken } from "@/lib/auth";
 
 export default function DenePage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<{ message: string } | null>(null);
+  const [success, setSuccess] = useState<{ username: string; expires_at: string } | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -31,22 +36,43 @@ export default function DenePage() {
       setErr("Geçerli bir email adresi gir (örn: kullanici@domain.com)");
       return;
     }
+    if (password.length < 6) {
+      setErr("Parola en az 6 karakter olmalı");
+      return;
+    }
 
     setLoading(true);
     try {
-      const res = await trialApi.start(trimmed);
-      if (!res.ok) {
+      // Device ID — basit local marker
+      let deviceId = "";
+      try {
+        deviceId = localStorage.getItem("nx_device_id") || "";
+        if (!deviceId) {
+          deviceId = crypto.randomUUID();
+          localStorage.setItem("nx_device_id", deviceId);
+        }
+      } catch {}
+
+      const res = await trialApi.signup(trimmed, password, deviceId);
+      if (!res.ok || !res.token) {
         setErr(res.error || "Bir hata oluştu");
-      } else {
-        setSuccess({
-          message:
-            res.message ||
-            "7 günlük denemen başladı! Email kutuna baktığında davet kodun olacak.",
-        });
+        setLoading(false);
+        return;
       }
+
+      // Token kaydet — kullanıcı zaten login
+      setToken(res.token);
+      setSuccess({
+        username: res.username || "",
+        expires_at: res.expires_at || "",
+      });
+
+      // 1.5 saniye başarı ekranı sonra dashboard'a yönlendir
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1800);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Bağlantı hatası");
-    } finally {
       setLoading(false);
     }
   }
@@ -61,7 +87,7 @@ export default function DenePage() {
             <div>
               <div className="font-bold">NEXORA</div>
               <div className="text-[10px] text-emerald-400 font-mono tracking-widest">
-                7 GÜN ÜCRETSİZ DENEME
+                7 GÜN ÜCRETSİZ
               </div>
             </div>
           </Link>
@@ -76,31 +102,15 @@ export default function DenePage() {
 
       <main className="max-w-3xl mx-auto px-6 py-12">
         {success ? (
-          <div className="space-y-6 text-center">
+          <div className="space-y-6 text-center py-12">
             <div className="inline-flex p-4 rounded-full bg-emerald-500/20 border border-emerald-500/40">
               <CheckCircle2 className="size-12 text-emerald-400" />
             </div>
-            <h1 className="text-3xl font-bold">Email kutunu kontrol et 📬</h1>
+            <h1 className="text-3xl font-bold">Hoş geldin, {success.username}! 🚀</h1>
             <p className="text-white/70 max-w-md mx-auto leading-relaxed">
-              {success.message}
+              Aboneliğin 7 gün boyunca aktif. Dashboard'a yönlendiriliyorsun…
             </p>
-            <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5 max-w-md mx-auto text-left space-y-2 text-sm">
-              <p className="text-white/80">
-                <strong className="text-emerald-400">Sonraki adım:</strong>
-              </p>
-              <ol className="space-y-2 text-white/60 list-decimal list-inside">
-                <li>Email kutunu aç (spam klasörünü de kontrol et)</li>
-                <li>"7 günlük Nexora denemen aktif" konulu maili bul</li>
-                <li>Maildeki butona tıkla, davet kodunla hesap aç</li>
-                <li>Sinyalleri ve radarları kullanmaya başla</li>
-              </ol>
-            </div>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 text-sm"
-            >
-              ← Ana sayfaya dön
-            </Link>
+            <Loader2 className="size-6 text-emerald-400 animate-spin mx-auto" />
           </div>
         ) : (
           <div className="space-y-10">
@@ -114,8 +124,8 @@ export default function DenePage() {
                 Nexora'yı 7 gün <span className="text-emerald-400">ücretsiz</span> dene
               </h1>
               <p className="text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
-                Sinyaller, BIST radar, WSB radar — tamamı 1 hafta açık.
-                Beğenirsen aylık ₺899 ile devam. Beğenmezsen kapı açık.
+                Email + parola gir, hesap anında açılır, dashboard'a girersin.
+                Beğenirsen aylık ₺899 ile devam.
               </p>
             </div>
 
@@ -159,7 +169,32 @@ export default function DenePage() {
                     placeholder="kullanici@domain.com"
                     required
                     autoComplete="email"
-                    className="w-full bg-black/40 border border-white/15 rounded-md pl-10 pr-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
+                    disabled={loading}
+                    className="w-full bg-black/40 border border-white/15 rounded-md pl-10 pr-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/60 disabled:opacity-60"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="trial-pass"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Parola (min 6 karakter)
+                </label>
+                <div className="relative">
+                  <Lock className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
+                  <input
+                    id="trial-pass"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    autoComplete="new-password"
+                    disabled={loading}
+                    className="w-full bg-black/40 border border-white/15 rounded-md pl-10 pr-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/60 disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -172,25 +207,25 @@ export default function DenePage() {
 
               <button
                 type="submit"
-                disabled={loading || !email.trim()}
+                disabled={loading || !email.trim() || password.length < 6}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold px-6 py-3.5 text-base transition-colors"
               >
                 {loading ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
-                    Hazırlanıyor...
+                    Hesap açılıyor...
                   </>
                 ) : (
                   <>
-                    7 Günü Başlat
+                    Hesabı Aç &amp; Başla
                     <ArrowRight className="size-4" />
                   </>
                 )}
               </button>
 
               <p className="text-[11px] text-white/40 text-center leading-relaxed">
-                Kart bilgisi vermiyorsun. Trial bitince hesabın silinmez,
-                sadece sinyallere erişim kapanır. İstediğin zaman ayrılırsın.
+                Kart bilgisi vermiyorsun. Kullanıcı adı otomatik üretilir.
+                Trial bitince hesabın silinmez, sadece sinyallere erişim kapanır.
               </p>
             </form>
 
