@@ -99,7 +99,21 @@ export type ErrorLog = {
 };
 
 async function fetchJson<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { cache: "no-store" });
+  // Authorization header — localStorage'daki JWT token'ı tüm API çağrılarına ekle.
+  // Admin-only endpoint'ler (portfolio, real_balances vs.) bunsuz 401 döner.
+  const headers: Record<string, string> = {};
+  try {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("tb_token");
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+    }
+  } catch {
+    // localStorage erişim hatası — header'sız devam (public endpoint'ler için OK)
+  }
+  const res = await fetch(`${API_BASE}${path}`, {
+    cache: "no-store",
+    headers,
+  });
   if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
   return res.json();
 }
