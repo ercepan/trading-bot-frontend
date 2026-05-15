@@ -184,17 +184,25 @@ export default function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/odeme"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/20"
+              href="/dene"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/30"
             >
               <Sparkles className="size-4" />
-              Türk Lirası ile öde · {formatTRY(PLAN_PRICES_TRY.signal)} / {formatTRY(PLAN_PRICES_TRY.education)}
+              7 gün ücretsiz dene · kart bilgisi yok
             </Link>
             <Link
-              href="/satin-al"
+              href="/odeme"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent text-foreground px-6 py-3 text-base transition-colors"
             >
-              USDT ile öde · $25 / $40
+              TL ile al · {formatTRY(PLAN_PRICES_TRY.signal)}
+            </Link>
+          </div>
+          <div className="mt-2 flex justify-center">
+            <Link
+              href="/satin-al"
+              className="text-xs text-muted-foreground hover:text-foreground underline"
+            >
+              veya USDT ile öde ($25 / $40)
             </Link>
           </div>
           <div className="mt-3 flex justify-center">

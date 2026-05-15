@@ -320,6 +320,24 @@ export const api = {
   health: () => fetchJson<{ status: string }>("/health"),
 };
 
+// ---------------------------------------------------------------------------
+// Trial — 7 günlük ücretsiz Sinyal Paketi (email karşılığı)
+// ---------------------------------------------------------------------------
+export const trialApi = {
+  start: async (email: string): Promise<{ ok: boolean; message?: string; error?: string }> => {
+    const res = await fetch(`${API_BASE}/api/trial/start`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return { ok: false, error: data.detail || "Trial başlatılamadı" };
+    }
+    return data;
+  },
+};
+
 export const fmtUsd = (n: number | null | undefined, dp = 2) =>
   n == null || Number.isNaN(n)
     ? "—"
