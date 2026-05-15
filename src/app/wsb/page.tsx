@@ -22,6 +22,7 @@ import Link from "next/link";
 import { api, fmtDate, WsbSnapshotMeta, WsbTicker } from "@/lib/api";
 import { AdminOnly } from "@/components/admin-only";
 import { FreshnessBadge } from "@/components/freshness-badge";
+import { LegalDisclaimer } from "@/components/legal-disclaimer";
 import {
   TrendingUp,
   TrendingDown,
@@ -230,6 +231,7 @@ export default function WsbPage() {
 
   return (
     <div className="space-y-6">
+      <LegalDisclaimer compact />
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">

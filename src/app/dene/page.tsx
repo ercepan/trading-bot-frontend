@@ -29,6 +29,7 @@ export default function DenePage() {
   // Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -54,6 +55,10 @@ export default function DenePage() {
     }
     if (password.length < 6) {
       setErr("Parola en az 6 karakter olmalı");
+      return;
+    }
+    if (!acceptedTerms) {
+      setErr("Devam etmek için yasal uyarıları okuyup kabul etmen gerekir");
       return;
     }
 
@@ -397,6 +402,40 @@ export default function DenePage() {
                 </div>
               </div>
 
+              {/* SPK / Yatırım Tavsiyesi Uyarısı + Onay */}
+              <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 space-y-2">
+                <div className="flex items-start gap-2">
+                  <input
+                    id="accept-terms"
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    disabled={loading}
+                    className="mt-1 size-4 rounded border-white/30 bg-black/40 accent-emerald-500 cursor-pointer"
+                  />
+                  <label
+                    htmlFor="accept-terms"
+                    className="text-[12px] text-white/70 leading-relaxed cursor-pointer select-none"
+                  >
+                    Nexora&apos;daki sinyaller, BIST/kripto radarı ve bot performansı
+                    bilgilendirme amaçlıdır;{" "}
+                    <strong className="text-amber-300">
+                      yatırım tavsiyesi değildir
+                    </strong>
+                    . Geçmiş performans gelecek getiriyi garanti etmez, yüksek kayıp
+                    riski vardır. Tüm işlem kararlarımı kendim alırım.{" "}
+                    <Link href="/terms" target="_blank" className="text-emerald-400 underline">
+                      Kullanım Şartları
+                    </Link>{" "}
+                    ve{" "}
+                    <Link href="/kvkk" target="_blank" className="text-emerald-400 underline">
+                      KVKK Aydınlatma
+                    </Link>
+                    &apos;yı okudum, kabul ediyorum.
+                  </label>
+                </div>
+              </div>
+
               {err && (
                 <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 rounded-md px-3 py-2">
                   {err}
@@ -405,7 +444,12 @@ export default function DenePage() {
 
               <button
                 type="submit"
-                disabled={loading || !email.trim() || password.length < 6}
+                disabled={
+                  loading ||
+                  !email.trim() ||
+                  password.length < 6 ||
+                  !acceptedTerms
+                }
                 className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold px-6 py-3.5 text-base transition-colors"
               >
                 {loading ? (

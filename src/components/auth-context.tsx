@@ -27,9 +27,12 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 // Subscriber'a açık rotalar (bunlar dışı admin only)
+// PRIVACY: /dashboard subscriber listesinden ÇIKTI (MEXC bakiye + trade $ hassas)
+// /performans public olarak anonim performans gösterir.
 const SUBSCRIBER_ROUTES = [
-  "/bist", "/signals", "/wsb", "/auth", "/dashboard", "/yenile",
+  "/bist", "/signals", "/wsb", "/auth", "/yenile",
   "/haberler", "/egitim", "/referans", "/profil",
+  "/performans",  // anonim, herkese acik
 ];
 // Auth gerekmeyen rotalar (landing + auth + legal + satin-al + odeme + iletisim + performans + dene)
 const PUBLIC_ROUTES = [

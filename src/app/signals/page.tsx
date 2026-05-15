@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api, fmtDate, fmtUsd, StockSignal } from "@/lib/api";
+import { LegalDisclaimer } from "@/components/legal-disclaimer";
 import {
   Zap,
   TrendingUp,
@@ -307,6 +308,7 @@ export default function SignalsPage() {
 
   return (
     <div className="space-y-6">
+      <LegalDisclaimer compact />
       <div>
         <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
           <Zap className="size-5" /> Hisse Sinyalleri
