@@ -145,7 +145,11 @@ export default function DenePage() {
       setToken(res.token);
       setSuccessUsername(res.username || "");
       setStep("success");
-      setTimeout(() => router.push("/dashboard"), 1800);
+      // Hard navigation — AuthProvider'ı sıfırdan mount et ki token'ı okuyabilsin.
+      // router.push() yumuşak navigation, useEffect race condition yaratıyor.
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 1500);
     } catch (e) {
       setVerifyErr(e instanceof Error ? e.message : "Bağlantı hatası");
       setVerifyLoading(false);
