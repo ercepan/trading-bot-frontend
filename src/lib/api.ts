@@ -343,6 +343,8 @@ type TrialVerifyResult = {
 
 export const trialApi = {
   // Step 1: email + parola → hesap oluştur + 6 haneli kod gönder
+  // NOT: credentials:'include' kullanmıyoruz çünkü cross-origin'de (frontend Vercel,
+  // backend Railway) Allow-Credentials=false. Device tracking body'deki device_id ile.
   signup: async (
     email: string,
     password: string,
@@ -350,7 +352,6 @@ export const trialApi = {
   ): Promise<TrialSignupResult> => {
     const res = await fetch(`${API_BASE}/api/trial/signup`, {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, device_id }),
     });
