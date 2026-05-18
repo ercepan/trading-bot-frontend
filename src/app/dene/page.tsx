@@ -151,9 +151,10 @@ export default function DenePage() {
       setSuccessUsername(res.username || "");
       setStep("success");
       // Hard navigation — AuthProvider'ı sıfırdan mount et ki token'ı okuyabilsin.
-      // router.push() yumuşak navigation, useEffect race condition yaratıyor.
+      // /bist → subscriber'ın ana sayfası (/dashboard admin-only, oraya gidersek
+      // route guard /bist'e geri atar = flash). Direkt /bist'e götür.
       setTimeout(() => {
-        window.location.href = "/dashboard";
+        window.location.href = "/bist";
       }, 1500);
     } catch (e) {
       setVerifyErr(e instanceof Error ? e.message : "Bağlantı hatası");
@@ -220,7 +221,7 @@ export default function DenePage() {
             </div>
             <h1 className="text-3xl font-bold">Hoş geldin, {successUsername}! 🚀</h1>
             <p className="text-white/70 max-w-md mx-auto leading-relaxed">
-              Aboneliğin 7 gün boyunca aktif. Dashboard'a yönlendiriliyorsun…
+              Aboneliğin 7 gün boyunca aktif. BIST radarına yönlendiriliyorsun…
             </p>
             <Loader2 className="size-6 text-emerald-400 animate-spin mx-auto" />
           </div>
