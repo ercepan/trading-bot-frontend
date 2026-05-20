@@ -3,13 +3,6 @@
 import { useState } from "react";
 import { useAuth } from "@/components/auth-context";
 import { authApi } from "@/lib/auth";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { User, Mail, Lock, Loader2, CheckCircle2, XCircle, ShieldCheck } from "lucide-react";
 
 export default function ProfilPage() {
@@ -94,114 +87,147 @@ export default function ProfilPage() {
   if (!user) return null;
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <User className="size-6 text-emerald-400" /> Profil
+    <div className="max-w-3xl space-y-8">
+      {/* Hero */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <User className="size-3.5 text-emerald-400" />
+          <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+            05 / Hesap · Güvenlik
+          </span>
+        </div>
+        <h1
+          className="font-display font-medium tracking-tight"
+          style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+        >
+          Profil{" "}
+          <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+            ayarları.
+          </em>
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Hesap bilgilerini yönet, parolanı değiştir.
+        <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+          Hesap bilgileri · e-posta · parola
         </p>
       </div>
 
-      {/* Hesap bilgileri */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <ShieldCheck className="size-4 text-emerald-400" /> Hesap
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 text-sm">
-          <div className="flex justify-between border-b border-border pb-2">
-            <span className="text-muted-foreground">Kullanıcı adı</span>
-            <span className="font-mono">{user.username}</span>
+      {/* Hesap özet */}
+      <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-6 md:p-7 space-y-4">
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="size-3.5 text-emerald-400" />
+          <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+            Hesap Özet
+          </span>
+        </div>
+        <div className="grid md:grid-cols-3 gap-3">
+          <div className="bg-white/[0.02] border border-white/10 p-4">
+            <div className="font-mono text-[10px] text-white/45 uppercase tracking-[0.22em]">Kullanıcı Adı</div>
+            <div className="font-mono text-sm mt-2 text-white/85">@{user.username}</div>
           </div>
-          <div className="flex justify-between border-b border-border pb-2">
-            <span className="text-muted-foreground">Rol</span>
-            <span className="font-medium">
-              {user.role === "admin" ? "Admin" : "Abone"}
-            </span>
+          <div className="bg-white/[0.02] border border-white/10 p-4">
+            <div className="font-mono text-[10px] text-white/45 uppercase tracking-[0.22em]">Rol</div>
+            <div className="font-mono text-sm mt-2 text-white/85 uppercase tracking-[0.18em]">
+              {user.role === "admin" ? (
+                <span className="text-amber-300">Admin</span>
+              ) : (
+                <span className="text-emerald-400">Abone</span>
+              )}
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">E-posta</span>
-            <span className={user.email ? "" : "text-amber-400"}>
+          <div className="bg-white/[0.02] border border-white/10 p-4">
+            <div className="font-mono text-[10px] text-white/45 uppercase tracking-[0.22em]">E-Posta</div>
+            <div className={`font-mono text-xs mt-2 ${user.email ? "text-white/85" : "text-amber-300"}`}>
               {user.email || "(eklenmemiş)"}
-            </span>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* E-posta güncelle */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Mail className="size-4 text-emerald-400" /> E-posta
-          </CardTitle>
-          <CardDescription className="text-xs">
-            Welcome maili, abonelik bitiş uyarıları ve parola sıfırlama için kullanılır.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onUpdateEmail} className="space-y-3">
+      <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-6 md:p-7 space-y-5">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <Mail className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              E-posta · Bildirim Kanalı
+            </span>
+          </div>
+          <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.18em]">
+            Welcome · abonelik uyarısı · parola sıfırlama
+          </p>
+        </div>
+        <form onSubmit={onUpdateEmail} className="space-y-4">
+          <div>
+            <label className="block font-mono text-[10px] text-white/45 uppercase tracking-[0.22em] mb-2">
+              Yeni E-posta
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="email@domain.com"
               disabled={emailSubmit}
-              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+              className="w-full bg-white/[0.02] border border-white/15 px-3 py-3 text-sm focus:outline-none focus:border-emerald-400 focus:bg-emerald-500/[0.04] transition-all disabled:opacity-60"
             />
-            {emailMsg && (
-              <div
-                className={`text-xs flex items-center gap-1.5 ${
-                  emailMsg.type === "ok" ? "text-emerald-400" : "text-red-400"
-                }`}
-              >
-                {emailMsg.type === "ok" ? (
-                  <CheckCircle2 className="size-3.5" />
-                ) : (
-                  <XCircle className="size-3.5" />
-                )}
-                {emailMsg.text}
-              </div>
-            )}
-            <button
-              type="submit"
-              disabled={emailSubmit || !email.trim()}
-              className="rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-4 py-2 text-sm disabled:opacity-50 inline-flex items-center gap-2"
+          </div>
+          {emailMsg && (
+            <div
+              className={`font-mono text-[11px] flex items-center gap-2 px-4 py-2.5 uppercase tracking-wider border ${
+                emailMsg.type === "ok"
+                  ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-300"
+                  : "border-red-500/30 bg-red-500/[0.06] text-red-400"
+              }`}
             >
-              {emailSubmit && <Loader2 className="size-3.5 animate-spin" />}
-              {user.email ? "E-postayı güncelle" : "E-posta ekle"}
-            </button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* Parola değiştir */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Lock className="size-4 text-emerald-400" /> Parola
-          </CardTitle>
-          <CardDescription className="text-xs">
-            Hesap güvenliğin için periyodik olarak değiştir. En az 6 karakter.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onUpdatePwd} className="space-y-3">
-            <div>
-              <label className="text-xs text-muted-foreground">Mevcut parola</label>
-              <input
-                type="password"
-                value={currentPwd}
-                onChange={(e) => setCurrentPwd(e.target.value)}
-                autoComplete="current-password"
-                disabled={pwdSubmit}
-                className="w-full mt-1 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-              />
+              {emailMsg.type === "ok" ? (
+                <CheckCircle2 className="size-3.5 shrink-0" />
+              ) : (
+                <XCircle className="size-3.5 shrink-0" />
+              )}
+              <span className="normal-case tracking-normal">{emailMsg.text}</span>
             </div>
+          )}
+          <button
+            type="submit"
+            disabled={emailSubmit || !email.trim()}
+            className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-black px-6 py-3 text-sm font-semibold inline-flex items-center gap-2 transition-all"
+          >
+            {emailSubmit && <Loader2 className="size-3.5 animate-spin" />}
+            {user.email ? "E-postayı Güncelle" : "E-posta Ekle"}
+          </button>
+        </form>
+      </div>
+
+      {/* Parola */}
+      <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-6 md:p-7 space-y-5">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <Lock className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              Parola · Hesap Güvenliği
+            </span>
+          </div>
+          <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.18em]">
+            Min 6 karakter · periyodik değiştir
+          </p>
+        </div>
+        <form onSubmit={onUpdatePwd} className="space-y-4">
+          <div>
+            <label className="block font-mono text-[10px] text-white/45 uppercase tracking-[0.22em] mb-2">
+              Mevcut Parola
+            </label>
+            <input
+              type="password"
+              value={currentPwd}
+              onChange={(e) => setCurrentPwd(e.target.value)}
+              autoComplete="current-password"
+              disabled={pwdSubmit}
+              className="w-full bg-white/[0.02] border border-white/15 px-3 py-3 text-sm focus:outline-none focus:border-emerald-400 focus:bg-emerald-500/[0.04] transition-all disabled:opacity-60"
+            />
+          </div>
+          <div className="grid md:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-muted-foreground">Yeni parola</label>
+              <label className="block font-mono text-[10px] text-white/45 uppercase tracking-[0.22em] mb-2">
+                Yeni Parola
+              </label>
               <input
                 type="password"
                 value={newPwd}
@@ -209,11 +235,13 @@ export default function ProfilPage() {
                 autoComplete="new-password"
                 minLength={6}
                 disabled={pwdSubmit}
-                className="w-full mt-1 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                className="w-full bg-white/[0.02] border border-white/15 px-3 py-3 text-sm focus:outline-none focus:border-emerald-400 focus:bg-emerald-500/[0.04] transition-all disabled:opacity-60"
               />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground">Yeni parola (tekrar)</label>
+              <label className="block font-mono text-[10px] text-white/45 uppercase tracking-[0.22em] mb-2">
+                Tekrar
+              </label>
               <input
                 type="password"
                 value={confirmPwd}
@@ -221,34 +249,36 @@ export default function ProfilPage() {
                 autoComplete="new-password"
                 minLength={6}
                 disabled={pwdSubmit}
-                className="w-full mt-1 rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                className="w-full bg-white/[0.02] border border-white/15 px-3 py-3 text-sm focus:outline-none focus:border-emerald-400 focus:bg-emerald-500/[0.04] transition-all disabled:opacity-60"
               />
             </div>
-            {pwdMsg && (
-              <div
-                className={`text-xs flex items-center gap-1.5 ${
-                  pwdMsg.type === "ok" ? "text-emerald-400" : "text-red-400"
-                }`}
-              >
-                {pwdMsg.type === "ok" ? (
-                  <CheckCircle2 className="size-3.5" />
-                ) : (
-                  <XCircle className="size-3.5" />
-                )}
-                {pwdMsg.text}
-              </div>
-            )}
-            <button
-              type="submit"
-              disabled={pwdSubmit || !currentPwd || !newPwd || !confirmPwd}
-              className="rounded-md bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-4 py-2 text-sm disabled:opacity-50 inline-flex items-center gap-2"
+          </div>
+          {pwdMsg && (
+            <div
+              className={`font-mono text-[11px] flex items-center gap-2 px-4 py-2.5 uppercase tracking-wider border ${
+                pwdMsg.type === "ok"
+                  ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-300"
+                  : "border-red-500/30 bg-red-500/[0.06] text-red-400"
+              }`}
             >
-              {pwdSubmit && <Loader2 className="size-3.5 animate-spin" />}
-              Parolayı değiştir
-            </button>
-          </form>
-        </CardContent>
-      </Card>
+              {pwdMsg.type === "ok" ? (
+                <CheckCircle2 className="size-3.5 shrink-0" />
+              ) : (
+                <XCircle className="size-3.5 shrink-0" />
+              )}
+              <span className="normal-case tracking-normal">{pwdMsg.text}</span>
+            </div>
+          )}
+          <button
+            type="submit"
+            disabled={pwdSubmit || !currentPwd || !newPwd || !confirmPwd}
+            className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-black px-6 py-3 text-sm font-semibold inline-flex items-center gap-2 transition-all"
+          >
+            {pwdSubmit && <Loader2 className="size-3.5 animate-spin" />}
+            Parolayı Değiştir
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
