@@ -181,40 +181,63 @@ function SatinAlInner() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-[#050505] text-white relative overflow-hidden">
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[900px] rounded-full bg-emerald-500/[0.05] blur-[140px]" />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
+          }}
+        />
+      </div>
+
       {/* Header */}
-      <header className="border-b border-border/50 bg-background/85 backdrop-blur sticky top-0 z-10">
+      <header className="border-b border-white/10 bg-black/30 backdrop-blur-md sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-              <NexoraLogo className="size-8" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="size-10 rounded-md bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center group-hover:bg-emerald-500/25 transition-colors">
+              <span className="font-display text-emerald-400 text-xl leading-none" style={{ fontStyle: "italic", fontWeight: 600 }}>
+                N
+              </span>
             </div>
             <div className="leading-tight">
-              <div className="font-bold tracking-tight text-base">
-                <span className="text-emerald-400">N</span>EXORA
-              </div>
-              <div className="text-[8px] text-muted-foreground tracking-[0.25em] uppercase">
-                BIST · NASDAQ · CRYPTO
+              <div className="font-display text-base leading-none">Nexora</div>
+              <div className="font-mono text-[9px] text-white/40 uppercase tracking-[0.25em] mt-1">
+                Davet Kodu Satın Al
               </div>
             </div>
           </Link>
           <Link
             href="/"
-            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+            className="font-mono text-[11px] text-white/45 hover:text-emerald-300 uppercase tracking-[0.22em] inline-flex items-center gap-2 transition-colors"
           >
-            <ArrowLeft className="size-4" /> Ana sayfa
+            <ArrowLeft className="size-3.5" /> Ana sayfa
           </Link>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-10 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <Sparkles className="size-7 text-emerald-400" /> Davet Kodu Satın Al
+      <main className="max-w-2xl mx-auto px-4 py-12 space-y-8 relative z-10">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <Sparkles className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              Anonim Alım · USDT (BEP-20)
+            </span>
+          </div>
+          <h1
+            className="font-display font-medium tracking-tight"
+            style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+          >
+            Kodunu{" "}
+            <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+              al.
+            </em>
           </h1>
-          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Hesap açmadan, Telegram'a yazmadan — sadece USDT BEP-20 ile öde, kodun anında
-            ekranda çıksın. Sonra hesabını açıp 30 gün boyunca panele erişirsin.
+          <p className="text-white/55 text-sm leading-relaxed max-w-xl">
+            Hesap açmadan, Telegram'a yazmadan — sadece USDT BEP-20 ile öde, kodun anında ekranda çıksın. Sonra hesabını açıp 30 gün panele erişirsin.
           </p>
         </div>
 

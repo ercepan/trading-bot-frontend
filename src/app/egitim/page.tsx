@@ -239,62 +239,56 @@ export default function EgitimPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-8 max-w-5xl">
       {/* HERO */}
-      <div className="relative overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 md:p-8">
-        <div className="absolute -top-20 -right-20 size-72 rounded-full bg-emerald-500/10 blur-3xl" />
-        <div className="relative">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="size-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-              <GraduationCap className="size-8 text-emerald-400" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                Nexora <span className="text-emerald-400">Eğitim Seti</span>
-              </h1>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                Sıfırdan profesyonele — kripto + Türk borsası için kapsamlı rehber
-              </p>
-            </div>
+      <div className="space-y-5">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <GraduationCap className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              08 / Eğitim Seti · Premium
+            </span>
           </div>
+          <h1
+            className="font-display font-medium tracking-tight"
+            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+          >
+            Sıfırdan{" "}
+            <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+              profesyonele.
+            </em>
+          </h1>
+          <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+            Kripto · Türk borsası · risk · psikoloji
+          </p>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-            <div className="rounded-lg border border-border/60 bg-background/40 p-3">
-              <div className="text-2xl font-bold text-emerald-400">{TOTAL_LESSONS}</div>
-              <div className="text-[11px] text-muted-foreground uppercase tracking-wide">
-                Ders
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-background/40 p-3">
-              <div className="text-2xl font-bold text-emerald-400">5</div>
-              <div className="text-[11px] text-muted-foreground uppercase tracking-wide">
-                Kategori
-              </div>
-            </div>
-            <div className="rounded-lg border border-border/60 bg-background/40 p-3">
-              <div className="text-2xl font-bold text-emerald-400">~2sa</div>
-              <div className="text-[11px] text-muted-foreground uppercase tracking-wide">
-                Toplam okuma
-              </div>
-            </div>
-            <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-              <div className="text-2xl font-bold text-amber-400 flex items-center gap-1">
-                ${PRICE_USD}
-                <Star className="size-4 fill-amber-400 text-amber-400" />
-              </div>
-              <div className="text-[11px] text-muted-foreground uppercase tracking-wide">
-                Premium / ay
-              </div>
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-4">
+            <div className="font-display text-2xl font-medium tabular-nums text-emerald-400 tracking-tight">{TOTAL_LESSONS}</div>
+            <div className="font-mono text-[10px] text-white/45 mt-2 uppercase tracking-[0.22em]">Ders</div>
           </div>
+          <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-4">
+            <div className="font-display text-2xl font-medium tabular-nums text-emerald-400 tracking-tight">5</div>
+            <div className="font-mono text-[10px] text-white/45 mt-2 uppercase tracking-[0.22em]">Kategori</div>
+          </div>
+          <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-4">
+            <div className="font-display text-2xl font-medium tabular-nums text-emerald-400 tracking-tight">~2sa</div>
+            <div className="font-mono text-[10px] text-white/45 mt-2 uppercase tracking-[0.22em]">Toplam Okuma</div>
+          </div>
+          <div className="bg-amber-500/[0.06] border border-amber-500/30 p-4">
+            <div className="font-display text-2xl font-medium tabular-nums text-amber-400 tracking-tight inline-flex items-center gap-1.5">
+              ${PRICE_USD}
+              <Star className="size-3.5 fill-amber-400 text-amber-400" />
+            </div>
+            <div className="font-mono text-[10px] text-amber-300/70 mt-2 uppercase tracking-[0.22em]">Premium · ay</div>
+          </div>
+        </div>
 
-          <div className="mt-5 text-sm text-muted-foreground leading-relaxed">
-            🎯 <span className="text-foreground font-medium">Kimler için?</span>{" "}
-            Yeni başlayanlar, deneyimli ama metodolojisi olmayan trader'lar, bilanço
-            okumayı öğrenmek isteyen yatırımcılar.{" "}
-            <span className="text-foreground font-medium">Format:</span> Kolay dilde,
-            somut örneklerle.
-          </div>
+        <div className="border-l-2 border-emerald-500/30 bg-emerald-500/[0.03] pl-4 py-3 pr-3">
+          <p className="text-sm text-white/70 leading-relaxed">
+            <strong className="text-white/90">Kimler için?</strong> Yeni başlayanlar, deneyimli ama metodolojisi olmayan trader'lar, bilanço okumayı öğrenmek isteyen yatırımcılar. <strong className="text-white/90">Format:</strong> Kolay dilde, somut örneklerle.
+          </p>
         </div>
       </div>
 

@@ -89,14 +89,25 @@ export default function YenilePage() {
     : null;
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <Sparkles className="size-6 text-emerald-400" /> Aboneliği Yenile
+    <div className="space-y-8 max-w-3xl">
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Sparkles className="size-3.5 text-emerald-400" />
+          <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+            06 / Abonelik · USDT (BEP-20)
+          </span>
+        </div>
+        <h1
+          className="font-display font-medium tracking-tight"
+          style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+        >
+          Aboneliği{" "}
+          <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+            yenile.
+          </em>
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Sadece <strong className="text-foreground">USDT (BEP-20 / BNB Smart Chain)</strong> kabul ediyoruz.
-          Aşağıdaki adrese gönder → TX hash'i yapıştır → sistem otomatik doğrular ve kodun anında üretilir.
+        <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+          USDT gönder · TX hash yapıştır · kod anında üretilir
         </p>
       </div>
 

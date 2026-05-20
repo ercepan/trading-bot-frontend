@@ -71,21 +71,32 @@ export default function HaberlerPage() {
   }, undefined);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">
-            <Newspaper className="size-5" /> Haberler
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <Newspaper className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              07 / Haberler · Çoklu Kaynak
+            </span>
             <FreshnessBadge timestamp={latestTs} />
+          </div>
+          <h1
+            className="font-display font-medium tracking-tight"
+            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+          >
+            Piyasa{" "}
+            <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+              haberleri.
+            </em>
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            BIST + Forex + Kripto + Ekonomi · 8 kategoriden derlenmiş haberler ·
-            BIST hisseleri otomatik etiketlenir.
+          <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+            BIST · Forex · Kripto · Ekonomi · 8 kategori
           </p>
         </div>
         <button
           onClick={load}
-          className="text-xs px-3 py-1.5 rounded-md border border-border hover:bg-accent inline-flex items-center gap-1"
+          className="font-mono text-[10px] uppercase tracking-[0.22em] border border-white/15 hover:border-emerald-400/40 hover:bg-emerald-500/[0.04] px-3 py-2 text-white/60 hover:text-emerald-300 inline-flex items-center gap-2 transition-all"
         >
           <RefreshCw className="size-3" /> Yenile
         </button>
