@@ -155,140 +155,207 @@ export default function LandingPage() {
         </div>
       )}
 
-      {/* Hero */}
-      <section className={`relative pb-20 px-4 md:px-6 overflow-hidden ${refBanner ? "pt-44" : "pt-32"}`}>
-        {/* Background glow */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-emerald-500/10 blur-[120px]" />
-          <div className="absolute top-40 left-1/4 w-[400px] h-[400px] rounded-full bg-emerald-500/5 blur-[100px]" />
+      {/* Hero — Editorial × Terminal redesign */}
+      <section className={`relative pb-24 px-6 md:px-12 lg:px-16 overflow-hidden ${refBanner ? "pt-40" : "pt-24 md:pt-28"}`}>
+        {/* Background atmosphere */}
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[900px] rounded-full bg-emerald-500/[0.07] blur-[140px]" />
+          <div className="absolute top-[55%] right-[2%] size-[420px] rounded-full bg-amber-500/[0.04] blur-[110px]" />
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+              backgroundSize: "80px 80px",
+            }}
+          />
         </div>
 
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 mb-6">
-            <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs text-emerald-300">Topluluk · Resmi Açıklama · AI Sentiment</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1]">
-            Borsada{" "}
-            <span className="bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent">
-              sakin kal
-            </span>
-            ,
-            <br className="hidden sm:inline" />
-            doğru veriyle hareket et.
-          </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground leading-relaxed">
-            BIST100 ve ABD hisselerinin nabzını topluluk mention'ı, resmi
-            açıklamalar ve AI sentiment ile tek panelde topla. Sinyaller her 2
-            saatte taze, Telegram'a anlık.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/dene"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 text-base transition-colors shadow-lg shadow-emerald-500/30"
-            >
-              <Sparkles className="size-4" />
-              7 gün ücretsiz dene · kart bilgisi yok
-            </Link>
-            <Link
-              href="/odeme"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md border border-border hover:bg-accent text-foreground px-6 py-3 text-base transition-colors"
-            >
-              TL ile al · {formatTRY(PLAN_PRICES_TRY.signal)}
-            </Link>
-          </div>
-          <div className="mt-2 flex justify-center">
-            <Link
-              href="/satin-al"
-              className="text-xs text-muted-foreground hover:text-foreground underline"
-            >
-              veya USDT ile öde ($25 / $40)
-            </Link>
-          </div>
-          <div className="mt-3 flex justify-center">
-            <Link
-              href="/auth/login"
-              className="text-xs text-muted-foreground hover:text-foreground underline"
-            >
-              Davet kodum var · Giriş yap
-            </Link>
-          </div>
-          {/* Sosyal kanal CTA'lar — Telegram (sinyal) + X (sosyal) */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <a
-              href={TELEGRAM_CHANNEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-[#0088cc]/40 bg-[#0088cc]/10 hover:bg-[#0088cc]/20 text-[#3da5e0] px-4 py-2 text-sm transition-colors"
-            >
-              <Send className="size-3.5" />
-              <span>Telegram</span>
-              <span className="text-[#3da5e0]/70 font-mono text-[12px]">{TELEGRAM_CHANNEL_DISPLAY}</span>
-            </a>
-            <a
-              href={TWITTER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.03] hover:bg-white/10 text-white px-4 py-2 text-sm transition-colors"
-            >
-              <XIcon className="size-3.5" />
-              <span>X (Twitter)</span>
-              <span className="text-white/60 font-mono text-[12px]">@{TWITTER_USERNAME}</span>
-            </a>
-          </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            USDT BEP-20 · Otomatik onay · 30 sn içinde kod ekranda · Tek cihaz, 30 gün
-          </p>
-        </div>
+        <style>{`
+          @keyframes nxFadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+          .nx-reveal { opacity: 0; animation: nxFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        `}</style>
 
-        {/* Mock dashboard preview */}
-        <div className="mt-16 max-w-4xl mx-auto">
-          <div className="relative rounded-xl border border-border bg-card/50 backdrop-blur p-1 shadow-2xl shadow-emerald-500/5">
-            <div className="rounded-lg bg-background/80 p-5 space-y-3">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <div className="text-xs text-muted-foreground uppercase tracking-wider">
-                  Canlı Örnek · BIST Radar
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          {/* SOL — Editorial başlık (7 sütun) */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Kicker */}
+            <div className="nx-reveal flex items-center gap-3" style={{ animationDelay: "0.15s" }}>
+              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+                01 / BIST · NASDAQ · Crypto · Live
+              </span>
+            </div>
+
+            {/* Massive editorial headline */}
+            <h1
+              className="font-display nx-reveal font-medium tracking-tight"
+              style={{
+                animationDelay: "0.25s",
+                fontSize: "clamp(2.5rem, 7vw, 6.5rem)",
+                lineHeight: "0.96",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Borsada{" "}
+              <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+                sakin kal,
+              </em>
+              <br />
+              doğru veriyle hareket et.
+            </h1>
+
+            {/* Body */}
+            <p
+              className="nx-reveal max-w-xl text-base md:text-lg leading-relaxed text-white/65 font-light"
+              style={{ animationDelay: "0.45s" }}
+            >
+              Topluluk mention'ı, resmi açıklamalar ve AI sentiment — üç ayrı
+              veri kaynağını tek bir skor altında topla. BIST 100 ve ABD
+              hisseleri, her 2 saatte taze, Telegram'a anlık.
+            </p>
+
+            {/* CTA */}
+            <div className="nx-reveal flex flex-wrap items-center gap-3 pt-2" style={{ animationDelay: "0.65s" }}>
+              <Link
+                href="/dene"
+                className="group inline-flex items-center gap-3 bg-emerald-500 text-black px-7 py-4 text-sm md:text-base font-semibold hover:bg-emerald-400 transition-all hover:scale-[1.02]"
+              >
+                <Sparkles className="size-4" />
+                <span>7 gün ücretsiz dene</span>
+                <span className="font-mono text-xs opacity-60 group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+              <Link
+                href="/odeme"
+                className="inline-flex items-center gap-2 border border-white/15 hover:border-white/40 px-6 py-4 text-sm md:text-base text-white/80 hover:text-white transition-all"
+              >
+                TL ile al · {formatTRY(PLAN_PRICES_TRY.signal)}
+              </Link>
+            </div>
+
+            {/* Alt linkler */}
+            <div
+              className="nx-reveal flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-white/50"
+              style={{ animationDelay: "0.8s" }}
+            >
+              <Link href="/satin-al" className="hover:text-white underline-offset-4 hover:underline">
+                veya USDT ile öde ($25 / $40)
+              </Link>
+              <span className="size-1 rounded-full bg-white/20" />
+              <Link href="/auth/login" className="hover:text-white underline-offset-4 hover:underline">
+                Davet kodum var · Giriş yap
+              </Link>
+            </div>
+
+            {/* Social pills */}
+            <div className="nx-reveal flex flex-wrap items-center gap-2 pt-2" style={{ animationDelay: "0.95s" }}>
+              <a
+                href={TELEGRAM_CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-[#0088cc]/30 bg-[#0088cc]/[0.08] hover:bg-[#0088cc]/[0.15] text-[#3da5e0] px-4 py-1.5 text-xs transition-colors"
+              >
+                <Send className="size-3" />
+                <span>Telegram</span>
+                <span className="text-[#3da5e0]/60 font-mono text-[11px]">{TELEGRAM_CHANNEL_DISPLAY}</span>
+              </a>
+              <a
+                href={TWITTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] hover:bg-white/[0.08] text-white/80 hover:text-white px-4 py-1.5 text-xs transition-colors"
+              >
+                <XIcon className="size-3" />
+                <span>X (Twitter)</span>
+                <span className="text-white/50 font-mono text-[11px]">@{TWITTER_USERNAME}</span>
+              </a>
+            </div>
+
+            {/* Fine print */}
+            <div
+              className="nx-reveal flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 text-[11px] text-white/35 font-mono uppercase tracking-[0.18em]"
+              style={{ animationDelay: "1.1s" }}
+            >
+              <span>Kart bilgisi yok</span>
+              <span className="size-1 rounded-full bg-white/20" />
+              <span>30 sn'de içeride</span>
+              <span className="size-1 rounded-full bg-white/20" />
+              <span>Tek cihaz · 30 gün</span>
+            </div>
+          </div>
+
+          {/* SAĞ — Terminal canlı widget (5 sütun) */}
+          <div
+            className="lg:col-span-5 lg:pl-10 lg:border-l lg:border-white/10 nx-reveal"
+            style={{ animationDelay: "0.75s" }}
+          >
+            <div className="bg-black/40 border border-white/10 backdrop-blur-sm shadow-[0_8px_60px_-12px_rgba(16,185,129,0.15)]">
+              {/* Terminal header */}
+              <div className="border-b border-white/10 px-5 py-3 flex items-center justify-between bg-white/[0.02]">
+                <div className="flex items-center gap-2.5">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.7)]" />
+                  <span className="font-mono text-[10px] text-white/65 uppercase tracking-[0.22em]">
+                    BIST Radar · Canlı
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] text-emerald-400">
-                  <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  güncellendi
-                </div>
+                <span className="font-mono text-[10px] text-white/40">örnek</span>
               </div>
-              <div className="grid grid-cols-3 gap-3 text-xs">
+
+              {/* Terminal rows */}
+              <div className="divide-y divide-white/5">
                 {[
-                  { t: "TUPRS", c: "Petrol Rafineri", s: "+0.75", b: true },
-                  { t: "GUBRF", c: "Gübre Fabrikaları", s: "+0.64", b: true },
-                  { t: "HUBVC", c: "Hub Girişim", s: "-1.00", b: false },
-                ].map((r) => (
+                  { t: "TUPRS", c: "Tüpraş Petrol",  s: "+0.75", bull: true,  vol: "892M" },
+                  { t: "GUBRF", c: "Gübre Fabrikaları", s: "+0.64", bull: true,  vol: "234M" },
+                  { t: "EREGL", c: "Ereğli Demir Çelik", s: "+0.41", bull: true,  vol: "1.2B" },
+                  { t: "HUBVC", c: "Hub Girişim",   s: "-1.00", bull: false, vol: "87M"  },
+                ].map((r, i) => (
                   <div
                     key={r.t}
-                    className="rounded-md border border-border p-3 hover:border-emerald-500/30 transition-colors"
+                    className="group px-5 py-3.5 flex items-center justify-between hover:bg-white/[0.025] transition-colors"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono font-semibold">{r.t}</span>
-                      <span
-                        className={`text-[10px] px-1.5 py-0.5 rounded ${
-                          r.b
-                            ? "bg-emerald-500/15 text-emerald-400"
-                            : "bg-red-500/15 text-red-400"
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="font-mono text-[10px] text-white/25 w-5 shrink-0">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="font-mono text-sm font-semibold truncate">{r.t}</div>
+                        <div className="text-[10px] text-white/40 truncate">{r.c}</div>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0 pl-3">
+                      <div
+                        className={`font-mono text-sm font-semibold ${
+                          r.bull ? "text-emerald-400" : "text-red-400"
                         }`}
                       >
-                        {r.b ? "yükseliş" : "düşüş"}
-                      </span>
-                    </div>
-                    <div className="text-[10px] text-muted-foreground mt-1">
-                      {r.c}
-                    </div>
-                    <div
-                      className={`text-sm font-mono mt-2 ${
-                        r.b ? "text-emerald-400" : "text-red-400"
-                      }`}
-                    >
-                      skor {r.s}
+                        {r.s}
+                      </div>
+                      <div className="text-[10px] text-white/30 font-mono">{r.vol}</div>
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* Terminal footer */}
+              <div className="border-t border-white/10 px-5 py-3 flex items-center justify-between bg-white/[0.02]">
+                <span className="font-mono text-[10px] text-white/40 uppercase tracking-[0.18em]">
+                  Top 4 · 24h
+                </span>
+                <Link href="/dene" className="font-mono text-[10px] text-emerald-400 hover:text-emerald-300 uppercase tracking-[0.18em] inline-flex items-center gap-1.5">
+                  Tamamı <span>→</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Editorial figure caption */}
+            <div className="mt-5 flex items-start gap-3 max-w-sm ml-auto">
+              <div className="font-mono text-[9px] text-white/30 uppercase tracking-[0.22em] mt-1 shrink-0">
+                Fig.01
+              </div>
+              <p className="text-[11px] text-white/40 leading-relaxed font-light">
+                Topluluk + resmi açıklama + AI sentiment skoruyla canlı BIST
+                radarı. Demo veri — gerçek ekran üyelikte.
+              </p>
             </div>
           </div>
         </div>
