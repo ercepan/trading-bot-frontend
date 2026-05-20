@@ -34,36 +34,40 @@ function KpiCard({
   delta,
   icon: Icon,
   loading,
+  kicker,
 }: {
   title: string;
   value: string;
   delta?: { value: string; positive: boolean } | null;
   icon: React.ComponentType<{ className?: string }>;
   loading?: boolean;
+  kicker?: string;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
-        <CardDescription>{title}</CardDescription>
-        <Icon className="size-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        {loading ? (
-          <Skeleton className="h-8 w-28" />
-        ) : (
-          <div className="text-2xl font-semibold tabular-nums">{value}</div>
-        )}
-        {delta && !loading ? (
-          <p
-            className={`text-xs mt-1 tabular-nums ${
-              delta.positive ? "text-emerald-400" : "text-red-400"
-            }`}
-          >
-            {delta.value}
-          </p>
-        ) : null}
-      </CardContent>
-    </Card>
+    <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-5 group hover:border-white/20 transition-colors">
+      <div className="flex items-center justify-between mb-3">
+        <div className="font-mono text-[10px] text-white/45 uppercase tracking-[0.22em]">
+          {kicker} {title}
+        </div>
+        <Icon className="size-3.5 text-white/35" />
+      </div>
+      {loading ? (
+        <Skeleton className="h-9 w-32" />
+      ) : (
+        <div className="font-display text-3xl md:text-4xl font-medium tabular-nums tracking-tight">
+          {value}
+        </div>
+      )}
+      {delta && !loading ? (
+        <p
+          className={`font-mono text-[10px] mt-2 tabular-nums uppercase tracking-[0.15em] ${
+            delta.positive ? "text-emerald-400" : "text-red-400"
+          }`}
+        >
+          {delta.value}
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -105,20 +109,29 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Portföy Özeti</h1>
-        <p className="text-sm text-muted-foreground">
-          Multi-asset canlı takip · 15 sn'de bir yenilenir
-        </p>
+    <div className="space-y-8">
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+            01 / Multi-asset · 15 sn yenileme
+          </span>
+        </div>
+        <h1
+          className="font-display font-medium tracking-tight"
+          style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+        >
+          Portföy{" "}
+          <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+            özeti.
+          </em>
+        </h1>
       </div>
 
       {err && (
-        <Card className="border-red-500/30 bg-red-500/5">
-          <CardContent className="pt-6 text-sm text-red-400">
-            API'ye erişilemedi: {err}
-          </CardContent>
-        </Card>
+        <div className="font-mono text-[11px] text-red-400 bg-red-500/[0.06] border border-red-500/30 px-4 py-3 uppercase tracking-wider">
+          API'ye erişilemedi: {err}
+        </div>
       )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -182,72 +195,78 @@ export default function DashboardPage() {
 
       <EquityCurve />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>MEXC Bakiye Dağılımı</CardTitle>
-          <CardDescription>
-            Canlı hesaptaki gerçek USDT — spot + futures cüzdanı (kuruşu kuruşuna)
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-md border border-border/50 p-4 space-y-1">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Wallet className="size-3.5" /> Spot Cüzdan
-              </div>
-              {loading ? (
-                <Skeleton className="h-7 w-28" />
-              ) : (
-                <div className="text-xl font-semibold tabular-nums">
-                  {fmtUsd(balances?.spot_usdt, 4)}
-                </div>
-              )}
-              {balances?.spot_error ? (
-                <div className="text-[11px] text-red-400">{balances.spot_error}</div>
-              ) : null}
+      <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-6 md:p-8 space-y-5">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[11px] text-white/45 uppercase tracking-[0.28em]">
+              02 / MEXC Bakiye Dağılımı
+            </span>
+          </div>
+          <p className="font-mono text-[10px] text-white/35 uppercase tracking-[0.18em]">
+            Canlı USDT · spot + futures · kuruşu kuruşuna
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="bg-white/[0.02] border border-white/10 p-5 space-y-2">
+            <div className="flex items-center gap-2 font-mono text-[10px] text-white/45 uppercase tracking-[0.2em]">
+              <Wallet className="size-3" /> Spot Cüzdan
             </div>
-            <div className="rounded-md border border-border/50 p-4 space-y-1">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Coins className="size-3.5" /> Futures Cüzdan
+            {loading ? (
+              <Skeleton className="h-9 w-32" />
+            ) : (
+              <div className="font-display text-2xl font-medium tabular-nums tracking-tight">
+                {fmtUsd(balances?.spot_usdt, 4)}
               </div>
-              {loading ? (
-                <Skeleton className="h-7 w-28" />
-              ) : (
-                <div className="text-xl font-semibold tabular-nums">
-                  {fmtUsd(balances?.futures_usdt, 4)}
-                </div>
-              )}
-              {balances?.futures_error ? (
-                <div className="text-[11px] text-red-400">{balances.futures_error}</div>
-              ) : null}
+            )}
+            {balances?.spot_error ? (
+              <div className="font-mono text-[10px] text-red-400">{balances.spot_error}</div>
+            ) : null}
+          </div>
+          <div className="bg-white/[0.02] border border-white/10 p-5 space-y-2">
+            <div className="flex items-center gap-2 font-mono text-[10px] text-white/45 uppercase tracking-[0.2em]">
+              <Coins className="size-3" /> Futures Cüzdan
             </div>
-            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-1">
-              <div className="flex items-center gap-2 text-xs text-emerald-400">
-                <DollarSign className="size-3.5" /> Toplam (Live)
+            {loading ? (
+              <Skeleton className="h-9 w-32" />
+            ) : (
+              <div className="font-display text-2xl font-medium tabular-nums tracking-tight">
+                {fmtUsd(balances?.futures_usdt, 4)}
               </div>
-              {loading ? (
-                <Skeleton className="h-7 w-28" />
-              ) : (
-                <div className="text-xl font-semibold tabular-nums text-emerald-400">
-                  {fmtUsd(balances?.total_usdt, 4)}
-                </div>
-              )}
-              <div className="text-[11px] text-muted-foreground">
-                Sanal başlangıç: {fmtUsd(portfolio?.starting_capital)}
+            )}
+            {balances?.futures_error ? (
+              <div className="font-mono text-[10px] text-red-400">{balances.futures_error}</div>
+            ) : null}
+          </div>
+          <div className="bg-emerald-500/[0.06] border-2 border-emerald-500/40 p-5 space-y-2 shadow-[0_8px_40px_-12px_rgba(16,185,129,0.3)]">
+            <div className="flex items-center gap-2 font-mono text-[10px] text-emerald-400 uppercase tracking-[0.2em]">
+              <DollarSign className="size-3" /> Toplam · Live
+            </div>
+            {loading ? (
+              <Skeleton className="h-9 w-32" />
+            ) : (
+              <div className="font-display text-2xl font-medium tabular-nums tracking-tight text-emerald-400">
+                {fmtUsd(balances?.total_usdt, 4)}
               </div>
+            )}
+            <div className="font-mono text-[9px] text-white/40 uppercase tracking-[0.18em]">
+              Sanal başlangıç: {fmtUsd(portfolio?.starting_capital)}
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Tier Dağılımı</CardTitle>
-          <CardDescription>
-            Sanal sermaye + performans — her tier bağımsız çalışır
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-black/40 border border-white/10 backdrop-blur-sm p-6 md:p-8 space-y-5">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-[11px] text-white/45 uppercase tracking-[0.28em]">
+              03 / Tier Dağılımı
+            </span>
+          </div>
+          <p className="font-mono text-[10px] text-white/35 uppercase tracking-[0.18em]">
+            Sanal sermaye + performans · her tier bağımsız
+          </p>
+        </div>
+        <div>
           {loading && !portfolio ? (
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -257,13 +276,13 @@ export default function DashboardPage() {
           ) : (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Tier</TableHead>
-                  <TableHead>Sembol</TableHead>
-                  <TableHead>Market</TableHead>
-                  <TableHead className="text-right">Equity</TableHead>
-                  <TableHead className="text-right">Başlangıç</TableHead>
-                  <TableHead className="text-right">P&amp;L %</TableHead>
+                <TableRow className="border-white/10 hover:bg-transparent">
+                  <TableHead className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">Tier</TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">Sembol</TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">Market</TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 text-right">Equity</TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 text-right">Başlangıç</TableHead>
+                  <TableHead className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 text-right">P&amp;L %</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -302,8 +321,8 @@ export default function DashboardPage() {
               </TableBody>
             </Table>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
