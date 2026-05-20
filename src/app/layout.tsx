@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Geist, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 import { Toaster } from "@/components/ui/sonner";
@@ -7,18 +7,19 @@ import { AuthProvider } from "@/components/auth-context";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// Design system fonts — editorial × tech startup × trading terminal
+// Design system fonts — modern fintech × Türkçe-first
 const geist = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
-// Instrument Serif — Vercel/Linear/Resend tarzı, okunabilirlik + zarif italic
-const instrumentSerif = Instrument_Serif({
+// Plus Jakarta Sans — modern geometric, Türkçe karakterlere optimal,
+// display kullanımı için bold+italic var. Trading + fintech vibe.
+const jakarta = Plus_Jakarta_Sans({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600", "700", "800"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -96,7 +97,7 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${geist.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
+      className={`${geist.variable} ${jakarta.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
       suppressHydrationWarning
     >
       <head>

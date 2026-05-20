@@ -128,9 +128,9 @@
   html {
     @apply font-sans;
   }
-  /* Instrument Serif sadece weight 400 ships — display utility her zaman 400 */
+  /* Plus Jakarta Sans display — bold + tight tracking, fintech vibe */
   .font-display {
-    font-weight: 400 !important;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 }
