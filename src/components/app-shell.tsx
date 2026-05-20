@@ -140,6 +140,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname === "/iletisim" ||
     pathname === "/performans" ||
     pathname === "/dene" ||
+    pathname === "/preview" ||
     pathname?.startsWith("/odeme");
   if (isAuthPage || isPublicPage) {
     return <>{children}</>;
