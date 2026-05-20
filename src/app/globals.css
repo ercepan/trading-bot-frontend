@@ -128,4 +128,9 @@
   html {
     @apply font-sans;
   }
+  /* Instrument Serif sadece weight 400 ships — display utility her zaman 400 */
+  .font-display {
+    font-weight: 400 !important;
+    letter-spacing: -0.01em;
+  }
 }

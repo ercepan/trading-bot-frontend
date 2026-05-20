@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Geist, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/app-shell";
 import { Toaster } from "@/components/ui/sonner";
@@ -14,11 +14,13 @@ const geist = Geist({
   display: "swap",
 });
 
-const fraunces = Fraunces({
+// Instrument Serif — Vercel/Linear/Resend tarzı, okunabilirlik + zarif italic
+const instrumentSerif = Instrument_Serif({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
-  axes: ["opsz", "SOFT"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -94,7 +96,7 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${geist.variable} ${fraunces.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
+      className={`${geist.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full antialiased dark`}
       suppressHydrationWarning
     >
       <head>
