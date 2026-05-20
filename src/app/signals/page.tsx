@@ -309,13 +309,24 @@ export default function SignalsPage() {
   return (
     <div className="space-y-6">
       <LegalDisclaimer compact />
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <Zap className="size-5" /> Hisse Sinyalleri
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Zap className="size-3.5 text-emerald-400" />
+          <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+            03 / Birleşik Sinyaller · Semi-Auto
+          </span>
+        </div>
+        <h1
+          className="font-display font-medium tracking-tight"
+          style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+        >
+          Hisse{" "}
+          <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+            sinyalleri.
+          </em>
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Topluluk + analist + teknik analiz birleşik sinyal · Semi-auto
-          (Midas'ta manuel al/sat) · 2 saatte bir güncellenir
+        <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+          Topluluk + analist + teknik · 2 saatte bir güncellenir
         </p>
       </div>
 

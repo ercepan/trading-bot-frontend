@@ -169,13 +169,25 @@ export default function BistPage() {
     <div className="space-y-6">
       <LegalDisclaimer compact />
       <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">
-            <Globe className="size-5" /> BIST100 Radar
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <Globe className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              01 / Türk Borsası · BIST 100
+            </span>
             <FreshnessBadge timestamp={scrapedAt} />
+          </div>
+          <h1
+            className="font-display font-medium tracking-tight flex items-baseline gap-3"
+            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+          >
+            BIST{" "}
+            <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+              radarı.
+            </em>
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Türk borsası · resmi açıklama + Türkçe haber + AI sentiment
+          <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+            Resmi açıklama + Türkçe haber + AI sentiment
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">

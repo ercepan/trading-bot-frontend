@@ -233,14 +233,25 @@ export default function WsbPage() {
     <div className="space-y-6">
       <LegalDisclaimer compact />
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2 flex-wrap">
-            <Radar className="size-5" /> ABD Sosyal Sentiment Radarı
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <Radar className="size-3.5 text-emerald-400" />
+            <span className="font-mono text-[11px] text-white/55 uppercase tracking-[0.28em]">
+              02 / ABD · Sosyal Forum Sentiment
+            </span>
             <FreshnessBadge timestamp={scrapedAt} />
+          </div>
+          <h1
+            className="font-display font-medium tracking-tight"
+            style={{ fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: "1", letterSpacing: "-0.02em" }}
+          >
+            WSB{" "}
+            <em className="text-emerald-400" style={{ fontStyle: "italic", fontWeight: 600 }}>
+              radarı.
+            </em>
           </h1>
-          <p className="text-sm text-muted-foreground">
-            ABD topluluk forumlarında en çok konuşulan hisseler · 24 saat sıralama ve
-            mention momentum
+          <p className="font-mono text-[10px] text-white/45 uppercase tracking-[0.18em]">
+            En çok konuşulan ABD hisseleri · 24 saat mention momentum
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">
