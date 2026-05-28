@@ -110,17 +110,17 @@ export default function PreviewLanding() {
               Giriş
             </Link>
             <Link
-              href="/dene"
+              href="/satin-al"
               className="bg-emerald-500 text-black px-4 py-2 rounded-sm text-sm font-semibold hover:bg-emerald-400 transition-colors"
             >
-              7 gün ücretsiz dene
+              Premium paketleri
             </Link>
           </nav>
           <Link
-            href="/dene"
+            href="/satin-al"
             className="md:hidden bg-emerald-500 text-black px-3 py-1.5 rounded-sm text-xs font-semibold"
           >
-            Dene
+            Premium
           </Link>
         </header>
 
@@ -174,10 +174,10 @@ export default function PreviewLanding() {
                 style={{ animationDelay: "0.75s" }}
               >
                 <Link
-                  href="/dene"
+                  href="/satin-al"
                   className="group inline-flex items-center gap-3 bg-emerald-500 text-black px-7 py-4 text-sm md:text-base font-semibold hover:bg-emerald-400 transition-all hover:scale-[1.02]"
                 >
-                  <span>7 gün ücretsiz dene</span>
+                  <span>Premium paketleri incele</span>
                   <span className="mono text-xs opacity-60 group-hover:translate-x-1 transition-transform">
                     →
                   </span>
