@@ -218,11 +218,11 @@ export default function LandingPage() {
             {/* CTA */}
             <div className="nx-reveal flex flex-wrap items-center gap-3 pt-2" style={{ animationDelay: "0.65s" }}>
               <Link
-                href="/dene"
+                href="/satin-al"
                 className="group inline-flex items-center gap-3 bg-emerald-500 text-black px-7 py-4 text-sm md:text-base font-semibold hover:bg-emerald-400 transition-all hover:scale-[1.02]"
               >
                 <Sparkles className="size-4" />
-                <span>7 gün ücretsiz dene</span>
+                <span>Premium paketleri incele</span>
                 <span className="font-mono text-xs opacity-60 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
               <Link
@@ -341,7 +341,7 @@ export default function LandingPage() {
                 <span className="font-mono text-[10px] text-white/40 uppercase tracking-[0.18em]">
                   Top 4 · 24h
                 </span>
-                <Link href="/dene" className="font-mono text-[10px] text-emerald-400 hover:text-emerald-300 uppercase tracking-[0.18em] inline-flex items-center gap-1.5">
+                <Link href="/satin-al" className="font-mono text-[10px] text-emerald-400 hover:text-emerald-300 uppercase tracking-[0.18em] inline-flex items-center gap-1.5">
                   Tamamı <span>→</span>
                 </Link>
               </div>

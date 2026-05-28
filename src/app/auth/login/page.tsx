@@ -175,10 +175,10 @@ export default function LoginPage() {
               Davet kodu ile kayıt
             </Link>
             <Link
-              href="/dene"
+              href="/satin-al"
               className="font-mono text-[10px] text-white/50 hover:text-emerald-300 uppercase tracking-[0.18em] transition-colors"
             >
-              7 gün ücretsiz dene →
+              Premium paketleri →
             </Link>
           </div>
         </form>
