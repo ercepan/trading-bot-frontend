@@ -215,21 +215,15 @@ export default function LandingPage() {
               hisseleri, her 2 saatte taze, Telegram'a anlık.
             </p>
 
-            {/* CTA */}
+            {/* CTA — tek buton: ödeme yöntemi seçimi /paketler hub'ında */}
             <div className="nx-reveal flex flex-wrap items-center gap-3 pt-2" style={{ animationDelay: "0.65s" }}>
               <Link
-                href="/satin-al"
+                href="/paketler"
                 className="group inline-flex items-center gap-3 bg-emerald-500 text-black px-7 py-4 text-sm md:text-base font-semibold hover:bg-emerald-400 transition-all hover:scale-[1.02]"
               >
                 <Sparkles className="size-4" />
                 <span>Premium paketleri incele</span>
                 <span className="font-mono text-xs opacity-60 group-hover:translate-x-1 transition-transform">→</span>
-              </Link>
-              <Link
-                href="/odeme"
-                className="inline-flex items-center gap-2 border border-white/15 hover:border-white/40 px-6 py-4 text-sm md:text-base text-white/80 hover:text-white transition-all"
-              >
-                TL ile al · {formatTRY(PLAN_PRICES_TRY.signal)}
               </Link>
             </div>
 
@@ -251,15 +245,11 @@ export default function LandingPage() {
               </span>
             </Link>
 
-            {/* Alt linkler */}
+            {/* Alt linkler — tek satır, mevcut kullanıcılar için */}
             <div
               className="nx-reveal flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-white/50"
               style={{ animationDelay: "0.8s" }}
             >
-              <Link href="/satin-al" className="hover:text-white underline-offset-4 hover:underline">
-                veya USDT ile öde ($25 / $40)
-              </Link>
-              <span className="size-1 rounded-full bg-white/20" />
               <Link href="/auth/login" className="hover:text-white underline-offset-4 hover:underline">
                 Davet kodum var · Giriş yap
               </Link>

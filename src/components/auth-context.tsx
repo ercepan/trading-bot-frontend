@@ -38,9 +38,10 @@ const SUBSCRIBER_ROUTES = [
 const PUBLIC_ROUTES = [
   "/auth", "/terms", "/kvkk", "/satin-al",
   "/iletisim", "/performans",
-  "/odeme",   // Shopier TRY ödeme akışı (anonim satın alma)
-  "/dene",    // 7 günlük ücretsiz trial signup (anonim)
-  "/preview", // landing redesign preview (deneme)
+  "/odeme",     // Shopier TRY ödeme akışı (anonim satın alma)
+  "/dene",      // 7 günlük ücretsiz trial signup (anonim — şu an gizli redirect /satin-al'a)
+  "/preview",   // landing redesign preview (deneme)
+  "/paketler",  // Ödeme yöntemi (TL vs Kripto) hub'ı
 ];
 // "/" tek başına public (root landing)
 
