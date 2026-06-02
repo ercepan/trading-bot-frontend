@@ -156,7 +156,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const isAdmin = user.role === "admin";
-  const navItems = isAdmin ? navAdmin : navSubscriber;
+  const isLimited = !isAdmin && Boolean(subscription?.is_limited);
+
+  // Sentiment-only tier (₺200) için sidebar'da sadece BIST, WSB radar, Eğitim (gated),
+  // Profil, Referans kalır. /signals, /lab, /history, /errors, /yenile gizlenir.
+  // Eğitim listede ama kullanıcı tıklarsa /egitim sayfası içinde "Premium gerekli" diyor.
+  const LIMITED_TIER_VISIBLE = new Set<string>([
+    "/dashboard", "/bist", "/wsb", "/egitim", "/referans", "/profil", "/settings",
+  ]);
+  const baseNav = isAdmin ? navAdmin : navSubscriber;
+  const navItems = isLimited
+    ? baseNav.filter((item) => LIMITED_TIER_VISIBLE.has(item.href))
+    : baseNav;
 
   // Subscription gün kalan
   const daysLeft = subscription?.expires_at

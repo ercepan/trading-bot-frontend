@@ -120,6 +120,8 @@ export type Subscription = {
   device_id?: string | null;
   status?: string;
   is_premium?: boolean | number;
+  /** True ise Sentiment-Only tier (₺200): sadece BIST + WSB radar + Profil + Referans erişimi. */
+  is_limited?: boolean | number;
 };
 
 export type PaymentPlan = {
