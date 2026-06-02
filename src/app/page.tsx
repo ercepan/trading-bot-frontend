@@ -233,6 +233,24 @@ export default function LandingPage() {
               </Link>
             </div>
 
+            {/* Track Record — şeffaflık social proof */}
+            <Link
+              href="/performans"
+              className="nx-reveal group inline-flex items-center gap-3 border-l-2 border-emerald-500/40 bg-emerald-500/[0.04] pl-4 py-2.5 pr-5 hover:bg-emerald-500/[0.08] hover:border-emerald-500/60 transition-all max-w-fit"
+              style={{ animationDelay: "0.7s" }}
+            >
+              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-mono text-[10px] text-emerald-300 uppercase tracking-[0.22em]">
+                Track Record
+              </span>
+              <span className="text-sm text-white/75">
+                Tüm geçmiş sinyaller şeffaf — kayıp dahil
+              </span>
+              <span className="font-mono text-xs text-emerald-400 group-hover:translate-x-1 transition-transform">
+                →
+              </span>
+            </Link>
+
             {/* Alt linkler */}
             <div
               className="nx-reveal flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-white/50"

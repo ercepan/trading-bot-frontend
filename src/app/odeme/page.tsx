@@ -21,8 +21,10 @@ import {
   type ReferralCheck,
 } from "@/lib/referral";
 
+type PlanId = "intro" | "signal" | "training";
+
 type ShopierPlan = {
-  id: "signal" | "training";
+  id: PlanId;
   name: string;
   price_try: number;
   duration_days: number;
@@ -34,10 +36,10 @@ type ShopierPlan = {
 
 function OdemeInner() {
   const searchParams = useSearchParams();
-  const planParam = (searchParams.get("plan") as "signal" | "training") || "signal";
+  const planParam = (searchParams.get("plan") as PlanId) || "signal";
 
   const [plans, setPlans] = useState<ShopierPlan[] | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState<"signal" | "training">(planParam);
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>(planParam);
   const [email, setEmail] = useState("");
   const [creating, setCreating] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -202,7 +204,7 @@ function OdemeInner() {
         ) : (
           <>
             {/* Plan cards — editorial terminal */}
-            <div className="nx-reveal grid md:grid-cols-2 gap-4" style={{ animationDelay: "0.5s" }}>
+            <div className="nx-reveal grid md:grid-cols-3 gap-4" style={{ animationDelay: "0.5s" }}>
               {plans.map((p) => {
                 const isSel = selectedPlan === p.id;
                 const finalTry = hasValidRef ? p.price_with_ref_try : p.price_try;
