@@ -175,7 +175,7 @@ export default function LoginPage() {
               Davet kodu ile kayıt
             </Link>
             <Link
-              href="/satin-al"
+              href="/paketler"
               className="font-mono text-[10px] text-white/50 hover:text-emerald-300 uppercase tracking-[0.18em] transition-colors"
             >
               Premium paketleri →

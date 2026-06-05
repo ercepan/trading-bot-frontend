@@ -110,14 +110,14 @@ export default function PreviewLanding() {
               Giriş
             </Link>
             <Link
-              href="/satin-al"
+              href="/paketler"
               className="bg-emerald-500 text-black px-4 py-2 rounded-sm text-sm font-semibold hover:bg-emerald-400 transition-colors"
             >
               Premium paketleri
             </Link>
           </nav>
           <Link
-            href="/satin-al"
+            href="/paketler"
             className="md:hidden bg-emerald-500 text-black px-3 py-1.5 rounded-sm text-xs font-semibold"
           >
             Premium
@@ -174,7 +174,7 @@ export default function PreviewLanding() {
                 style={{ animationDelay: "0.75s" }}
               >
                 <Link
-                  href="/satin-al"
+                  href="/paketler"
                   className="group inline-flex items-center gap-3 bg-emerald-500 text-black px-7 py-4 text-sm md:text-base font-semibold hover:bg-emerald-400 transition-all hover:scale-[1.02]"
                 >
                   <span>Premium paketleri incele</span>

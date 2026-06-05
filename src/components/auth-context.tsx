@@ -34,6 +34,13 @@ const SUBSCRIBER_ROUTES = [
   "/haberler", "/egitim", "/referans", "/profil",
   "/performans",  // anonim, herkese acik
 ];
+
+// Sentiment-only tier (₺200 intro, is_limited=True) için ENGELLİ rotalar.
+// Backend require_full_subscriber bunları 403 dönüyor; frontend de erken
+// redirect ile UX'i temiz tutar (kullanıcı 403 görmek yerine /paketler hub'ına).
+const LIMITED_TIER_BLOCKED = [
+  "/signals", "/lab", "/history", "/positions", "/errors", "/yenile",
+];
 // Auth gerekmeyen rotalar (landing + auth + legal + satin-al + odeme + iletisim + performans + dene)
 const PUBLIC_ROUTES = [
   "/auth", "/terms", "/kvkk", "/satin-al",
@@ -110,6 +117,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Subscriber admin sayfasına gitmeye çalıştı → BIST'e yönlendir
         router.replace("/bist");
         return;
+      }
+      // Sentiment-only (is_limited) tier: full-tier sayfalarına izin verme
+      // (backend 403 dönüyor, frontend de erken redirect → daha iyi UX).
+      if (subscription?.is_limited) {
+        const isBlocked = LIMITED_TIER_BLOCKED.some(
+          (r) => pathname === r || pathname?.startsWith(r + "/")
+        );
+        if (isBlocked) {
+          router.replace("/paketler?from=limited");
+          return;
+        }
       }
     }
   }, [loading, user, subscription, pathname, router]);

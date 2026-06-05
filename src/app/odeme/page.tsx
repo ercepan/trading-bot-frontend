@@ -48,10 +48,27 @@ function OdemeInner() {
   const [refCheck, setRefCheck] = useState<ReferralCheck | null>(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/billing/shopier/plans`)
+    // searchParams güncellenince selectedPlan state'ini de senkronla
+    // (önceki bug: useState sadece ilk render'da planParam okuyordu, sonraki
+    // URL güncellemelerinde — geri/ileri navigasyon — stale kalıyordu).
+    const newPlan = (searchParams.get("plan") as PlanId) || "signal";
+    setSelectedPlan(newPlan);
+
+    // AbortController ile race ve setState-after-unmount koruması:
+    // kullanıcı /odeme'den hızlıca başka sayfaya navigate ettiğinde
+    // in-flight fetch'ler unmount sonrası setState yapmasın.
+    const ac = new AbortController();
+
+    fetch(`${API_BASE}/api/billing/shopier/plans`, { signal: ac.signal })
       .then((r) => r.json())
-      .then((d) => setPlans(d.plans || []))
-      .catch(() => setPlans([]));
+      .then((d) => {
+        if (ac.signal.aborted) return;
+        setPlans(d.plans || []);
+      })
+      .catch((e) => {
+        if (e?.name === "AbortError") return;
+        setPlans([]);
+      });
 
     const urlRef = searchParams.get("ref");
     let codeToCheck: string | null = null;
@@ -64,6 +81,7 @@ function OdemeInner() {
     if (codeToCheck) {
       setRefCode(codeToCheck);
       checkReferralCode(codeToCheck).then((res) => {
+        if (ac.signal.aborted) return;
         setRefCheck(res);
         if (!res.valid) {
           clearReferralCode();
@@ -71,6 +89,10 @@ function OdemeInner() {
         }
       });
     }
+
+    return () => {
+      ac.abort();
+    };
   }, [searchParams]);
 
   const currentPlan = plans?.find((p) => p.id === selectedPlan);
