@@ -25,6 +25,68 @@ import {
   Activity,
 } from "lucide-react";
 
+type Timeframe = "short" | "medium" | "long";
+
+const TF_LABEL: Record<Timeframe, string> = {
+  short: "Kısa Vade",
+  medium: "Orta Vade",
+  long: "Uzun Vade",
+};
+const TF_SUB: Record<Timeframe, string> = {
+  short: "günler–2 hafta · teknik",
+  medium: "1–3 ay · ana motor",
+  long: "6–12 ay+ · trend + temel",
+};
+
+// Seçili vadenin sinyalini döndür (eski kayıtlarda alt-alanlar yoksa başlığa düşer)
+function sigForTf(s: StockSignal, tf: Timeframe): string {
+  const v =
+    tf === "short"
+      ? s.signal_type_short
+      : tf === "long"
+        ? s.signal_type_long
+        : s.signal_type_medium;
+  return v || s.signal_type;
+}
+
+// Küçük vade rozeti (yön noktası)
+function tfDot(type: string | null | undefined) {
+  if (type === "STRONG_BUY" || type === "BUY")
+    return { c: "text-emerald-400", d: "●", t: type === "STRONG_BUY" ? "Güçlü Al" : "Al" };
+  if (type === "STRONG_SELL" || type === "SELL")
+    return { c: "text-red-400", d: "●", t: type === "STRONG_SELL" ? "Güçlü Sat" : "Sat" };
+  return { c: "text-muted-foreground", d: "○", t: "Bekle" };
+}
+
+// Bir kartın 3 vadesini tek şeritte göster
+function TfStrip({ s, active }: { s: StockSignal; active: Timeframe }) {
+  const rows: { tf: Timeframe; label: string }[] = [
+    { tf: "short", label: "KISA" },
+    { tf: "medium", label: "ORTA" },
+    { tf: "long", label: "UZUN" },
+  ];
+  return (
+    <div className="flex items-center gap-2 text-[11px] font-mono">
+      {rows.map(({ tf, label }) => {
+        const dot = tfDot(sigForTf(s, tf));
+        const isActive = tf === active;
+        return (
+          <span
+            key={tf}
+            className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 ${
+              isActive ? "bg-white/[0.06] ring-1 ring-white/15" : ""
+            }`}
+            title={dot.t}
+          >
+            <span className="text-white/40">{label}</span>
+            <span className={dot.c}>{dot.d}</span>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function SignalBadge({ type }: { type: string }) {
   if (type === "STRONG_BUY")
     return (
@@ -63,9 +125,10 @@ function SignalBadge({ type }: { type: string }) {
   );
 }
 
-function SignalCard({ s }: { s: StockSignal }) {
-  const isBuy = s.signal_type === "STRONG_BUY" || s.signal_type === "BUY";
-  const isSell = s.signal_type === "STRONG_SELL" || s.signal_type === "SELL";
+function SignalCard({ s, activeTf }: { s: StockSignal; activeTf: Timeframe }) {
+  const displayType = sigForTf(s, activeTf);
+  const isBuy = displayType === "STRONG_BUY" || displayType === "BUY";
+  const isSell = displayType === "STRONG_SELL" || displayType === "SELL";
   const isBist = s.market === "tr";
   // Midas BIST sembolleri farklı path
   const midasUrl = isBist
@@ -86,7 +149,7 @@ function SignalCard({ s }: { s: StockSignal }) {
           ? "border-emerald-500/30"
           : isSell
             ? "border-red-500/30"
-            : s.signal_type === "BEARISH_WATCH"
+            : displayType === "BEARISH_WATCH"
               ? "border-amber-500/30"
               : ""
       }
@@ -104,11 +167,14 @@ function SignalCard({ s }: { s: StockSignal }) {
                   BIST
                 </Badge>
               )}
-              <SignalBadge type={s.signal_type} />
+              <SignalBadge type={displayType} />
               <Badge variant="outline" className="text-xs">
-                conf {(s.confidence * 100).toFixed(0)}%
+                güven {(s.confidence * 100).toFixed(0)}%
               </Badge>
             </CardTitle>
+            <div className="mt-2">
+              <TfStrip s={s} active={activeTf} />
+            </div>
             <CardDescription className="mt-1">
               {fmtDate(s.created_at)}
             </CardDescription>
@@ -268,6 +334,7 @@ export default function SignalsPage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"us" | "tr">("us");
+  const [timeframe, setTimeframe] = useState<Timeframe>("medium");
 
   useEffect(() => {
     let alive = true;
@@ -299,12 +366,13 @@ export default function SignalsPage() {
   const allUs = signals?.filter((s) => s.market !== "tr") ?? [];
   const allTr = signals?.filter((s) => s.market === "tr") ?? [];
 
-  // Aktif tab'a göre filtrelenmiş
+  // Aktif tab'a göre filtrelenmiş — sinyal SEÇİLİ VADEYE göre değerlendirilir
   const tabSignals = activeTab === "us" ? allUs : allTr;
-  const buys = tabSignals.filter((s) => s.signal_type === "STRONG_BUY" || s.signal_type === "BUY");
-  const sells = tabSignals.filter((s) => s.signal_type === "STRONG_SELL" || s.signal_type === "SELL");
-  const watches = tabSignals.filter((s) => s.signal_type === "BEARISH_WATCH");
-  const holds = tabSignals.filter((s) => s.signal_type === "HOLD");
+  const st = (s: StockSignal) => sigForTf(s, timeframe);
+  const buys = tabSignals.filter((s) => st(s) === "STRONG_BUY" || st(s) === "BUY");
+  const sells = tabSignals.filter((s) => st(s) === "STRONG_SELL" || st(s) === "SELL");
+  const watches = tabSignals.filter((s) => st(s) === "BEARISH_WATCH");
+  const holds = tabSignals.filter((s) => st(s) === "HOLD");
 
   return (
     <div className="space-y-6">
@@ -360,6 +428,31 @@ export default function SignalsPage() {
           🇹🇷 BIST
           <span className="ml-2 text-xs opacity-60">{allTr.length}</span>
         </button>
+      </div>
+
+      {/* Vade sekmeleri — kısa / orta / uzun */}
+      <div className="space-y-1.5">
+        <div className="flex flex-wrap gap-1.5">
+          {(["short", "medium", "long"] as Timeframe[]).map((tf) => {
+            const active = timeframe === tf;
+            return (
+              <button
+                key={tf}
+                onClick={() => setTimeframe(tf)}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all border ${
+                  active
+                    ? "bg-emerald-500/15 border-emerald-500/50 text-emerald-300"
+                    : "border-border text-muted-foreground hover:text-foreground hover:border-white/20"
+                }`}
+              >
+                {TF_LABEL[tf]}
+              </button>
+            );
+          })}
+        </div>
+        <p className="font-mono text-[10px] text-white/40 uppercase tracking-[0.18em] pl-1">
+          {TF_SUB[timeframe]} · sinyaller bu vadeye göre gösteriliyor
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
@@ -427,7 +520,7 @@ export default function SignalsPage() {
             <div className="space-y-3">
               <h2 className="text-lg font-semibold text-emerald-400">🟢 Alım Sinyalleri</h2>
               {buys.map((s) => (
-                <SignalCard key={s.id} s={s} />
+                <SignalCard key={s.id} s={s} activeTf={timeframe} />
               ))}
             </div>
           )}
@@ -435,7 +528,7 @@ export default function SignalsPage() {
             <div className="space-y-3">
               <h2 className="text-lg font-semibold text-red-400">🔴 Satış Sinyalleri</h2>
               {sells.map((s) => (
-                <SignalCard key={s.id} s={s} />
+                <SignalCard key={s.id} s={s} activeTf={timeframe} />
               ))}
             </div>
           )}
@@ -443,7 +536,7 @@ export default function SignalsPage() {
             <div className="space-y-3">
               <h2 className="text-lg font-semibold text-amber-400">🟡 Bearish Watch</h2>
               {watches.map((s) => (
-                <SignalCard key={s.id} s={s} />
+                <SignalCard key={s.id} s={s} activeTf={timeframe} />
               ))}
             </div>
           )}
@@ -451,7 +544,7 @@ export default function SignalsPage() {
             <div className="space-y-3">
               <h2 className="text-lg font-semibold text-muted-foreground">⚪ Hold</h2>
               {holds.map((s) => (
-                <SignalCard key={s.id} s={s} />
+                <SignalCard key={s.id} s={s} activeTf={timeframe} />
               ))}
             </div>
           )}

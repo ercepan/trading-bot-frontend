@@ -259,6 +259,14 @@ export type StockSignal = {
   analyst_count?: number | null;
   pro_score?: number | null;
   pro_sources?: string | null;
+  // Çok zaman dilimli (kısa/orta/uzun vade)
+  signal_type_short?: string | null;
+  signal_type_medium?: string | null;
+  signal_type_long?: string | null;
+  dir_short?: number | null;
+  dir_medium?: number | null;
+  dir_long?: number | null;
+  entry_ref?: number | null;
 };
 
 export type LabRun = {
